@@ -47,4 +47,4 @@ Une sortie structurée n'y change rien : « Le schéma garantit la forme, jamais
 
 ## Dans ce carnet
 
-Le carnet s'applique la même règle. Chaque chiffre de l'accueil, du planning et des séances vient d'un registre, `data/mesures.yml`, où il a sa source dans le cours. Les pages ne citent que des identifiants, et la validation refuse tout chiffre qui n'en vient pas. Le projet interne n'y apparaît que sous deux libellés génériques, et un contrôle local vérifie, avant chaque commit, qu'aucun terme confidentiel n'est publié.
+Le carnet s'applique la même règle. Aucun nombre n'est écrit à la main dans ses pages : chacun est lu ou calculé dans les fichiers de données (`data/seances.yml`, `data/concepts.csv`, `data/mesures.yml`), et le tableau de bord indique de quel fichier il vient. Les résultats de séance gardent leur source dans le cours, et la validation refuse tout chiffre écrit hors du registre. Le projet interne n'y apparaît que sous deux libellés génériques, et un contrôle local vérifie, avant chaque commit, qu'aucun terme confidentiel n'est publié.

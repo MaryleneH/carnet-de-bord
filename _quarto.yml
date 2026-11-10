@@ -4,7 +4,6 @@ project:
   execute-dir: project
   render:
     - index.qmd
-    - planning.qmd
     - seances/*.qmd
     - cours/*.qmd
     - cours/*.md
@@ -20,10 +19,8 @@ website:
   search: false
   navbar:
     left:
-      - text: Accueil
+      - text: Tableau de bord
         href: index.qmd
-      - text: Planning
-        href: planning.qmd
       - text: Séances
         href: seances/index.qmd
       - text: Cours

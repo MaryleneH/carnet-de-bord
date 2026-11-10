@@ -1,8 +1,9 @@
 # Registre des chiffres du carnet.
 #
-# Tout chiffre affiché sur l'accueil, le planning et les pages de séance vient
-# d'ici, avec sa source précise (séance et partie du cours). Les pages citent
-# les mesures par leur identifiant : {identifiant} dans un texte de seances.yml.
+# Les résultats chiffrés des séances viennent d'ici, avec leur source précise
+# (séance et partie du cours) ; la durée des séances aussi. Les indicateurs
+# d'avancement du tableau de bord sont calculés depuis seances.yml et
+# concepts.csv. Un texte de seances.yml cite une mesure par {identifiant}.
 #
 # Règles vérifiées par R/valider.R :
 #   - identifiant unique, en minuscules (lettres, chiffres, tirets) ;
