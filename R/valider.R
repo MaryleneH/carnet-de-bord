@@ -50,7 +50,8 @@ textes_libres <- function(s) {
     vapply(s$commits, function(co) ou_sinon(co$message, ""), character(1)),
     unlist(s$a_cocher),
     unlist(lapply(s$points_en_attente, function(p) c(p$intitule, p$detail))),
-    s$jalon$critere
+    s$jalon$critere,
+    s$journal$fait, unlist(s$journal$appris), s$journal$suite
   )
 }
 
@@ -113,8 +114,10 @@ est_date_valide <- function(x) {
 
 est_entier <- function(x) is.numeric(x) && length(x) == 1 && x == round(x) && x > 0
 
-valider_seances <- function(seances, ids_mesures) {
+valider_seances <- function(seances, mesures) {
   f <- "seances.yml"
+  ids_mesures <- vapply(mesures, function(m) m$id, character(1))
+  unites <- setNames(vapply(mesures, function(m) m$unite, character(1)), ids_mesures)
   ids <- character()
   numeros <- integer()
   libelles_vus <- character()
@@ -151,6 +154,9 @@ valider_seances <- function(seances, ids_mesures) {
     }
     if (!is.null(s$duree) && !(s$duree %in% ids_mesures)) {
       arreter_regle(f, ou, "durée : identifiant absent de mesures.yml")
+    }
+    if (!is.null(s$duree) && !identical(unites[[s$duree]], "h")) {
+      arreter_regle(f, ou, "durée : la mesure citée doit être en heures (h)")
     }
     for (i in s$incidents) {
       if (!est_entier(i$chapitre)) arreter_regle(f, ou, "incident sans chapitre du cours")
@@ -219,8 +225,8 @@ valider_concepts <- function(concepts) {
 
 valider_tout <- function(dossier = "data") {
   d <- lire_tout(dossier)
-  ids_mesures <- valider_registre(d)
-  valider_seances(d$seances, ids_mesures)
+  valider_registre(d)
+  valider_seances(d$seances, d$mesures)
   valider_concepts(d$concepts)
   invisible(d)
 }

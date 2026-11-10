@@ -29,6 +29,26 @@ seances:
       - Des relevés rejouables dans `mesures/`, adossés au journal `journal/appels.jsonl`
     lien: /seances/seance-01.qmd
     cours: /cours/seance-01-cours.md
+    # Journal de la séance, repris du cours (chapitres 1 et 15)
+    journal:
+      fait: >-
+        Mesure du serveur de modèles du SSP Cloud avant toute construction :
+        capacités (JSON, schéma, appel d'outil, graine), fenêtre de contexte,
+        embeddings et débit, avec des scripts rejouables et une enveloppe d'appel
+        journalisée.
+      appris:
+        - Mesurer un serveur avant de concevoir, avec des scripts rejouables.
+        - "Rendre reproductible un appel qui ne l'est pas : empreinte, journal, rejeu."
+        - Modifier du code sans changer ses résultats, et le prouver.
+        - Distinguer forme et vérité, respect et contrainte, obéissance et jugement.
+        - Concevoir une expérience avec facteurs, constantes, témoin, répétition et ordre aléatoire.
+        - Lire une similarité cosinus et un modèle de coût.
+        - Vérifier un chiffre arrondi par intervalles.
+        - Mettre un intervalle de confiance sur un taux.
+        - Tout tracer dans Git sans rien divulguer.
+      suite: >-
+        Le banc de fiabilité : chiffrer les faiblesses du modèle, avec des taux et
+        leur intervalle de Wilson. Critère de fin : l'`ADR-001` est écrit.
     # Annexe B du cours
     incidents:
       - incident: Erreur `404` sur l'adresse de base du serveur
