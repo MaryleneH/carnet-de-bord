@@ -1,5 +1,5 @@
-source("R/lire.R")
-source("R/valider.R")
+source(if (file.exists("R/lire.R")) "R/lire.R" else "../../R/lire.R")
+source(if (file.exists("R/valider.R")) "R/valider.R" else "../../R/valider.R")
 
 copier_fixture_valide <- function() {
   dir <- tempfile("fixture-")
