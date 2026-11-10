@@ -11,14 +11,13 @@ Adresse du site : `https://maryleneh.github.io/carnet-de-bord/`
 
 | Page | Fichier | Contenu |
 | --- | --- | --- |
-| Accueil | `index.qmd` | où j'en suis, dernière séance, prochaine étape, points en attente, chiffres clés |
-| Planning | `planning.qmd` | frise des séances du laboratoire et avancement du projet interne |
-| Séances | `seances/` | une carte par séance, une page par séance faite |
+| Tableau de bord | `index.qmd` | quatre onglets : **Vue d'ensemble** (indicateurs d'avancement, où j'en suis, dernière séance, prochaine étape, points en attente, compétences), **Laboratoire** (frise des séances et jalons), **Compétences** (niveau de chaque concept), **Journal** (fait, appris, suite) |
+| Séances | `seances/` | une carte par séance, une page par séance faite, avec ses résultats sourcés |
 | Cours | `cours/` | un cours détaillé par séance, avec table des matières |
 | Méthode | `methode.qmd` | les principes du laboratoire, cités du cours |
 
-- **Données** : `data/seances.yml` (registre des séances) et `data/mesures.yml` (registre des chiffres, chacun avec sa source). `data/concepts.csv` est conservé, sans être affiché.
-- **Rendu des pages** : `R/pages.R` lit les deux registres et produit le contenu des pages.
+- **Données** : `data/seances.yml` (séances, journal, avancement du projet interne), `data/mesures.yml` (résultats et durées des séances, chacun avec sa source dans le cours) et `data/concepts.csv` (suivi des compétences : vu, pratiqué, maîtrisé).
+- **Rendu des pages** : `R/pages.R` lit ces données, calcule les indicateurs et produit le contenu des pages.
 - **Mise en forme** : un seul fichier, `styles/carnet.scss` (variables en tête, thèmes clair et sombre). Police Source Serif 4 auto-hébergée dans `styles/polices/` (licence OFL). Aucun CDN, aucune police distante.
 - **Filtres Lua** (`filters/`) : encadrés du cours en callouts, typographie française (espaces insécables), tableaux défilants sur téléphone.
 
@@ -27,14 +26,15 @@ Adresse du site : `https://maryleneh.github.io/carnet-de-bord/`
 `R/valider.R` arrête la validation, la CI et le rendu si l'une de ces règles est enfreinte :
 
 - **Confidentialité** : le projet interne n'apparaît que sous deux libellés génériques, sans aucun autre champ, et aucun texte du laboratoire n'en parle.
-- **Aucun chiffre sans source** : sur l'accueil, le planning et les séances, chaque chiffre vient de `data/mesures.yml`, où il a sa source (séance et partie du cours). Dans `seances.yml`, un chiffre se cite par `{identifiant}` ; un chiffre écrit en dur est refusé. Les identifiants (`404`, numéro de commit, `ADR-001`, n° de publication) s'écrivent en `code` ou après « n° ».
-- **Cohérence** : statuts autorisés, dates valides, une séance faite a une date et une durée.
+- **Aucun chiffre sans source** : aucun nombre n'est tapé dans une page. Les indicateurs d'avancement sont calculés depuis `seances.yml` et `concepts.csv`, et le tableau de bord indique de quel fichier ils viennent. Les résultats des séances viennent de `data/mesures.yml`, où chacun a sa source (séance et partie du cours) ; dans `seances.yml`, un chiffre se cite par `{identifiant}`, et un chiffre écrit en dur est refusé. Les identifiants (`404`, numéro de commit, `ADR-001`, n° de publication) s'écrivent en `code` ou après « n° ».
+- **Cohérence** : statuts autorisés, dates valides, une séance faite a une date et une durée en heures.
 
 ## Ajouter une séance
 
 1. Ajouter les chiffres de la séance dans `data/mesures.yml`, chacun avec sa source.
-2. Compléter la séance dans `data/seances.yml` (statut, date, durée, livrables, incidents, points en attente).
-3. Ajouter le cours `cours/seance-NN-cours.md` et la page `seances/seance-NN.qmd`.
+2. Compléter la séance dans `data/seances.yml` (statut, date, durée, livrables, journal, incidents, points en attente).
+3. Mettre à jour les niveaux des concepts dans `data/concepts.csv` (dates de vu, pratiqué, maîtrisé).
+4. Ajouter le cours `cours/seance-NN-cours.md` et la page `seances/seance-NN.qmd`.
 
 ## Travailler en local
 
