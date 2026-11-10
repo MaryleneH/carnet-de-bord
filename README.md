@@ -45,6 +45,13 @@ Le fichier `data/mesures.csv` accepte uniquement les serveurs `albert` et `sspcl
 
 ## Publication
 
-La publication se fait automatiquement sur push vers `main` via `.github/workflows/publish.yml`.
+La publication se fait automatiquement à chaque push sur `main` (ou à la demande depuis l'onglet **Actions** → *Run workflow*) via `.github/workflows/publish.yml`, en deux jobs :
+
+1. **build** : valide les données, lance les tests, rend le site Quarto dans `_site/` et l'envoie comme artefact GitHub Pages ;
+2. **deploy** : publie cet artefact sur GitHub Pages (environnement `github-pages`).
+
+Le site est déployé directement depuis GitHub Actions : il n'y a **pas de branche `gh-pages`** et le site rendu n'est jamais commité dans le dépôt.
+
+Prérequis, à faire une seule fois : dans **Settings → Pages → Build and deployment**, choisir **Source : GitHub Actions**.
 
 Adresse du site : `https://maryleneh.github.io/carnet-de-bord/`
