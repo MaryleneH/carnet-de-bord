@@ -33,6 +33,18 @@ jobs:
         with:
           version: 1.6.39
 
+      - name: Initialize gh-pages branch if missing
+        run: |
+          if ! git ls-remote --exit-code --heads origin gh-pages >/dev/null 2>&1; then
+            git checkout --orphan gh-pages
+            git reset --hard
+            touch .nojekyll
+            git add .nojekyll
+            git -c user.name="github-actions[bot]" -c user.email="github-actions[bot]@users.noreply.github.com" commit -m "Initialize gh-pages branch"
+            git push origin gh-pages
+            git checkout "$GITHUB_SHA"
+          fi
+
       - name: Publish to GitHub Pages
         uses: quarto-dev/quarto-actions/publish@v2
         with:
