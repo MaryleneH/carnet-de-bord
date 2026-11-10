@@ -11,6 +11,7 @@ URL_DEPOT <- "https://github.com/MaryleneH/carnet-de-bord/blob/main/"
 CLASSES_ETAT <- c(
   "fait" = "etat-fait", "en cours" = "etat-en-cours", "à planifier" = "etat-a-planifier",
   "prévu" = "etat-prevu", "en attente" = "etat-en-attente",
+  "rédigé" = "etat-redige", "à venir" = "etat-a-venir",
   "non vu" = "niveau-non-vu", "vu" = "niveau-vu", "pratiqué" = "niveau-pratique",
   "maîtrisé" = "niveau-maitrise"
 )
@@ -35,6 +36,8 @@ derniere_seance <- function(d) {
   faites[[length(faites)]]
 }
 prochaine_seance <- function(d) Filter(function(s) s$statut != "fait", seances_labo(d))[[1]]
+# Séances dont le chapitre de cours est rédigé (champ cours de seances.yml).
+seances_redigees <- function(d) Filter(function(s) !is.null(s$cours), seances_labo(d))
 seance_numero <- function(d, numero) Filter(function(s) s$numero == numero, seances_labo(d))[[1]]
 
 # Niveau de chaque concept : le plus haut atteint.
@@ -236,8 +239,33 @@ parcours <- function(d) {
   )
   paste0(
     "::: {.carte .bloc .bloc-parcours}\n\n### Où j'en suis\n\n",
+    "::: {.parcours-corps}\n\n",
+    "::: {.parcours-labo}\n\n[Séances]{.sous-libelle}\n\n",
     "::: {.parcours role=\"list\"}\n\n", paste(lignes, collapse = ""), ":::\n\n",
-    legende, "\n\n",
+    legende, "\n\n:::\n\n",
+    avancement_cours(d),
+    ":::\n\n:::\n\n"
+  )
+}
+
+# Avancement du cours, qui s'écrit séance après séance.
+avancement_cours <- function(d) {
+  total <- length(seances_labo(d))
+  redigees <- seances_redigees(d)
+  n <- length(redigees)
+  suivante <- Filter(function(s) is.null(s$cours), seances_labo(d))
+  chapitres <- vapply(redigees, function(s) {
+    sprintf("[Séance %d : %s](%s)", as.integer(s$numero), s$titre, s$cours)
+  }, character(1))
+  paste0(
+    "::: {.cours-avancement}\n\n[Cours]{.sous-libelle}\n\n",
+    "[", n, "]{.indicateur-valeur} [", pluriel(n, "séance rédigée", "séances rédigées"), " sur ", total, "]{.indicateur-total}\n\n",
+    barre_progression("Séances du cours rédigées", n, total), "\n\n",
+    if (n > 0) paste0(liste_md(chapitres), "\n\n") else "",
+    if (length(suivante) > 0) {
+      sprintf("[Prochain chapitre : séance %d, %s]{.indicateur-detail}\n\n", as.integer(suivante[[1]]$numero), titre_complet(suivante[[1]]))
+    } else "",
+    "[Plan complet du cours](/cours/index.qmd)\n\n",
     ":::\n\n"
   )
 }
@@ -537,17 +565,32 @@ page_seance <- function(d, id) {
 
 # ── Cours ────────────────────────────────────────────────────────────────────
 
-liste_cours <- function(d) {
-  ss <- Filter(function(s) !is.null(s$cours), seances_labo(d))
-  cartes <- vapply(ss, function(s) {
-    paste0(
-      "::: {.carte .carte-cours}\n\n",
-      "[", surtitre_seance(s), "]{.carte-surtitre}\n\n",
-      "## [", s$titre, "](", s$cours, ") {.carte-titre}\n\n",
-      "Le cours détaillé de la séance : chaque étape expliquée, ses résultats, ",
-      "ses pièges, des questions de contrôle et une bibliographie vérifiée.\n\n",
-      ":::\n\n"
-    )
+# Plan du cours : les séances du plan, par semaine ; les chapitres rédigés sont liés.
+plan_du_cours <- function(d) {
+  labo <- seances_labo(d)
+  n <- length(seances_redigees(d))
+  semaines <- sort(unique(vapply(labo, function(s) as.integer(s$semaine), integer(1))))
+  blocs <- vapply(semaines, function(w) {
+    etapes <- vapply(Filter(function(s) s$semaine == w, labo), function(s) {
+      redige <- !is.null(s$cours)
+      etat <- if (redige) "rédigé" else "à venir"
+      titre <- if (redige) sprintf("[%s](%s)", titre_complet(s), s$cours) else titre_complet(s)
+      paste0(
+        "::: {.frise-etape .", CLASSES_ETAT[[etat]], " role=\"listitem\"}\n\n",
+        "[Séance ", as.integer(s$numero), if (!is.null(s$date)) paste0(" · ", date_longue(s$date)) else "",
+        "]{.frise-quand} ", badge(etat), "\n\n",
+        "[", titre, "]{.frise-titre}\n\n:::\n\n"
+      )
+    }, character(1))
+    paste0("### Semaine ", w, "\n\n::: {.frise role=\"list\"}\n\n", paste(etapes, collapse = ""), ":::\n\n")
   }, character(1))
-  paste0("::: {.grille-cartes}\n\n", paste(cartes, collapse = ""), ":::\n\n")
+  paste0(
+    "::: {.onglet-etroit}\n\n",
+    "Chaque séance du laboratoire ajoute un chapitre à ce cours, rédigé à partir de son ",
+    "fichier de séance. Les séances à venir suivent le plan du laboratoire.\n\n",
+    "[", n, " ", pluriel(n, "séance rédigée", "séances rédigées"), " sur ", length(labo), "]{.niveaux-total} ",
+    barre_progression("Séances du cours rédigées", n, length(labo)), "\n\n",
+    paste(blocs, collapse = ""),
+    source_fichier("data/seances.yml"), "\n\n:::\n\n"
+  )
 }
