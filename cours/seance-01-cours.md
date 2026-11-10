@@ -1,6 +1,6 @@
 ---
 title: "Séance 1 — Ce que le serveur accepte réellement"
-subtitle: "Cours détaillé · laboratoire externe · assistant d'étude statistique sourcée"
+subtitle: "Cours détaillé du laboratoire · assistant d'étude statistique sourcée"
 date: 2026-11-10
 toc: true
 toc-depth: 2
