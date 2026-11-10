@@ -1,46 +1,62 @@
 # Carnet de bord
 
-Ce dépôt publie un tableau de bord personnel Quarto pour suivre deux projets en parallèle :
-- **Laboratoire** (public)
-- **Projet interne** : aucun détail publié ici
+Site Quarto **public** qui suit deux projets menés en parallèle :
 
-## Ajouter une séance au journal
+- le **laboratoire**, public : un assistant d'étude statistique sourcée, construit avec le serveur de modèles du SSP Cloud, l'API Albert et des données publiques ;
+- le **projet interne**, qui n'apparaît ici que par son avancement, sous deux libellés génériques.
 
-Éditez `data/journal.csv` et ajoutez une ligne :
-- `date` au format `AAAA-MM-JJ`
-- `projet` = `labo`
-- `etape` = `J1..J15`
-- `duree_h` > 0 et <= 10
+Adresse du site : `https://maryleneh.github.io/carnet-de-bord/`
 
-## Valider et prévisualiser en local
+## Structure du site
+
+| Page | Fichier | Contenu |
+| --- | --- | --- |
+| Accueil | `index.qmd` | où j'en suis, dernière séance, prochaine étape, points en attente, chiffres clés |
+| Planning | `planning.qmd` | frise des séances du laboratoire et avancement du projet interne |
+| Séances | `seances/` | une carte par séance, une page par séance faite |
+| Cours | `cours/` | un cours détaillé par séance, avec table des matières |
+| Méthode | `methode.qmd` | les principes du laboratoire, cités du cours |
+
+- **Données** : `data/seances.yml` (registre des séances) et `data/mesures.yml` (registre des chiffres, chacun avec sa source). `data/concepts.csv` est conservé, sans être affiché.
+- **Rendu des pages** : `R/pages.R` lit les deux registres et produit le contenu des pages.
+- **Mise en forme** : un seul fichier, `styles/carnet.scss` (variables en tête, thèmes clair et sombre). Police Source Serif 4 auto-hébergée dans `styles/polices/` (licence OFL). Aucun CDN, aucune police distante.
+- **Filtres Lua** (`filters/`) : encadrés du cours en callouts, typographie française (espaces insécables), tableaux défilants sur téléphone.
+
+## Règles vérifiées à chaque rendu
+
+`R/valider.R` arrête la validation, la CI et le rendu si l'une de ces règles est enfreinte :
+
+- **Confidentialité** : le projet interne n'apparaît que sous deux libellés génériques, sans aucun autre champ, et aucun texte du laboratoire n'en parle.
+- **Aucun chiffre sans source** : sur l'accueil, le planning et les séances, chaque chiffre vient de `data/mesures.yml`, où il a sa source (séance et partie du cours). Dans `seances.yml`, un chiffre se cite par `{identifiant}` ; un chiffre écrit en dur est refusé. Les identifiants (`404`, numéro de commit, `ADR-001`, n° de publication) s'écrivent en `code` ou après « n° ».
+- **Cohérence** : statuts autorisés, dates valides, une séance faite a une date et une durée.
+
+## Ajouter une séance
+
+1. Ajouter les chiffres de la séance dans `data/mesures.yml`, chacun avec sa source.
+2. Compléter la séance dans `data/seances.yml` (statut, date, durée, livrables, incidents, points en attente).
+3. Ajouter le cours `cours/seance-NN-cours.md` et la page `seances/seance-NN.qmd`.
+
+## Travailler en local
 
 1. Restaurer les paquets :
    ```r
    renv::restore()
    ```
-2. Valider les données :
+2. Valider les données et lancer les tests :
    ```r
    source("R/valider.R")
    valider_tout("data")
-   ```
-3. Lancer les tests :
-   ```r
    testthat::test_dir("tests/testthat")
    ```
-4. Rendre le tableau de bord :
+3. Rendre le site :
    ```bash
-   quarto render index.qmd
+   quarto render
    ```
-
-## Règle de confidentialité
-
-Le site est public.
-
-Le projet interne n'apparaît dans aucune donnée publique : toute ligne de `journal.csv` ou de `jalons.csv` qui ne concerne pas le laboratoire fait échouer la validation avec :
-
-> Confidentialité : seul le laboratoire figure dans les données publiques
-
-Le fichier `data/mesures.csv` accepte uniquement les serveurs `albert` et `sspcloud`.
+4. **Avant chaque commit**, contrôler qu'aucun terme confidentiel n'est publié :
+   ```bash
+   scripts/controle_public.sh
+   ```
+   Le script lit `~/.liste-rouge-carnet` (un terme par ligne, hors du dépôt), cherche chaque terme dans les sources et dans `_site/`, et échoue au premier terme trouvé sans jamais afficher la liste. Il sert en local seulement, pas dans la CI.
 
 ## Publication
 
@@ -52,5 +68,3 @@ La publication se fait automatiquement à chaque push sur `main` (ou à la deman
 Le site est déployé directement depuis GitHub Actions : il n'y a **pas de branche `gh-pages`** et le site rendu n'est jamais commité dans le dépôt.
 
 Prérequis, à faire une seule fois : dans **Settings → Pages → Build and deployment**, choisir **Source : GitHub Actions**.
-
-Adresse du site : `https://maryleneh.github.io/carnet-de-bord/`
