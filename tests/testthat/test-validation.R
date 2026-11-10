@@ -8,9 +8,10 @@ test_that("valider.R se source depuis tests/testthat", {
 copier_fixture_valide <- function() {
   dir <- tempfile("fixture-")
   dir.create(dir)
+  fixtures_dir <- if (dir.exists("tests/testthat/fixtures")) "tests/testthat/fixtures" else "fixtures"
   fichiers <- c("journal.csv", "plan_labo.csv", "plan_produit.csv", "jalons.csv", "concepts.csv", "mesures.csv")
   for (f in fichiers) {
-    file.copy(file.path("tests/testthat/fixtures", f), file.path(dir, f), overwrite = TRUE)
+    file.copy(file.path(fixtures_dir, f), file.path(dir, f), overwrite = TRUE)
   }
   dir
 }
