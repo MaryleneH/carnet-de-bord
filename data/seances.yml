@@ -1,0 +1,162 @@
+# Registre des séances du laboratoire.
+#
+# Règles vérifiées par R/valider.R :
+#   - statut : fait, à planifier, prévu ;
+#   - une séance faite a une date et une durée ;
+#   - la durée est l'identifiant d'une mesure de data/mesures.yml ;
+#   - aucun chiffre dans les textes, sauf dans le `code`, les numéros (n° …)
+#     et les références {identifiant} à data/mesures.yml ;
+#   - confidentialité : seul le laboratoire figure ici, et aucun texte ne
+#     mentionne d'autre projet.
+
+seances:
+  - id: labo-01
+    projet: labo
+    numero: 1
+    semaine: 1
+    date: 2026-11-10
+    titre: Ce que le serveur accepte réellement
+    statut: fait
+    duree: duree-seance-01
+    objectif: >-
+      Savoir ce que le serveur de modèles accepte réellement, avant de construire
+      quoi que ce soit. Critère de fin : chaque inconnue a une réponse, prouvée par
+      une requête que l'on peut rejouer. Ce critère est atteint pour le serveur du
+      SSP Cloud.
+    livrables:
+      - Les scripts de mesure `sonde.py`, `capacites.py` et `limites.py`
+      - L'enveloppe d'appel `llm.py`, avec journal et rejeu
+      - Des relevés rejouables dans `mesures/`, adossés au journal `journal/appels.jsonl`
+    lien: /seances/seance-01.qmd
+    cours: /cours/seance-01-cours.md
+    # Journal de la séance, repris du cours (chapitres 1 et 15)
+    journal:
+      fait: >-
+        Mesure du serveur de modèles du SSP Cloud avant toute construction :
+        capacités (JSON, schéma, appel d'outil, graine), fenêtre de contexte,
+        embeddings et débit, avec des scripts rejouables et une enveloppe d'appel
+        journalisée.
+      appris:
+        - Mesurer un serveur avant de concevoir, avec des scripts rejouables.
+        - "Rendre reproductible un appel qui ne l'est pas : empreinte, journal, rejeu."
+        - Modifier du code sans changer ses résultats, et le prouver.
+        - Distinguer forme et vérité, respect et contrainte, obéissance et jugement.
+        - Concevoir une expérience avec facteurs, constantes, témoin, répétition et ordre aléatoire.
+        - Lire une similarité cosinus et un modèle de coût.
+        - Vérifier un chiffre arrondi par intervalles.
+        - Mettre un intervalle de confiance sur un taux.
+        - Tout tracer dans Git sans rien divulguer.
+      suite: >-
+        Le banc de fiabilité : chiffrer les faiblesses du modèle, avec des taux et
+        leur intervalle de Wilson. Critère de fin : l'`ADR-001` est écrit.
+    # Annexe B du cours
+    incidents:
+      - incident: Erreur `404` sur l'adresse de base du serveur
+        cause: Une adresse de base n'est pas un point d'arrivée
+        correction: Appeler `/api/models` ou `/api/chat/completions`
+        chapitre: 2
+      - incident: Formulaire d'accès à Albert introuvable
+        cause: Remplacé par une connexion ProConnect
+        correction: Passer par le Playground d'Albert ; formulaire DataPass en cas de refus
+        chapitre: 2
+      - incident: Approximation de {approximation-initiale} caractères par token trop basse
+        cause: Règle empirique valable pour l'anglais
+        correction: "Mesure sur notre texte : {caracteres-par-token} caractères par token"
+        chapitre: 3
+      - incident: Vérification du rejeu sans effet
+        cause: "`git diff` ignore un fichier non suivi"
+        correction: Commiter d'abord, rejouer ensuite, comparer enfin
+        chapitre: 5
+      - incident: Version de `llm.py` commitée en retard
+        cause: Le dépôt contient la première version ({lignes-llm-v1} lignes)
+        correction: Commiter la version avec embeddings et durées
+        chapitre: 5
+      - incident: "`ModuleNotFoundError: No module named 'llm'`"
+        cause: Fichier nommé `LLM.py` ; la casse compte sous Linux
+        correction: Noms de modules en minuscules
+        chapitre: 14
+      - incident: Fichiers écrits hors du dépôt
+        cause: Chemins relatifs au dossier de lancement
+        correction: Chemins ancrés sur le dossier du script
+        chapitre: 14
+    # Annexe C du cours
+    commits:
+      - hash: a124409
+        message: "feat: enveloppe d'appel au modèle avec journal et rejeu"
+      - hash: 179d17d
+        message: "feat: test des capacités du serveur, relevé rejouable"
+    a_cocher:
+      - "`llm.py`, version avec embeddings et durées, commité"
+      - "`limites.py`, `mesures/limites.json` et le journal des appels commités"
+      - Rejeu de `limites.json` identique
+      - Journal de la séance complété et commité
+      - "`git push`"
+    points_en_attente:
+      - intitule: Accès à Albert
+        detail: relancer `capacites.py` et `limites.py` avec ses variables et `LLM_MODELE_EMB=bge-m3`
+        statut: en attente
+      - intitule: Données de l'EcoDef n° 273
+        detail: chercher un fichier plus précis que les chiffres arrondis de la publication
+        statut: en attente
+      - intitule: Carnet de bord
+        detail: créé, c'est ce site
+        statut: fait
+
+  - id: labo-02
+    projet: labo
+    numero: 2
+    semaine: 1
+    titre: Banc de fiabilité
+    sous_titre: taux et intervalles de confiance
+    statut: à planifier
+    objectif: >-
+      Chiffrer les faiblesses du modèle : chaque test est répété une cinquantaine de
+      fois, pour obtenir des taux avec leur intervalle de Wilson. Critère de fin :
+      l'`ADR-001` est écrit.
+    livrables:
+      - "`mesures/rapport_banc.md`"
+      - Un premier enregistrement de décision d'architecture, l'`ADR-001`
+
+  # Plan prévisionnel du laboratoire (repris de l'ancien plan_labo.csv).
+  - {id: labo-03, projet: labo, numero: 3, semaine: 1, statut: prévu,
+     titre: "Maîtriser état, nœuds, arêtes et arrêt humain",
+     livrables: [Graphe à trois nœuds avec checkpoint SQLite]}
+  - {id: labo-04, projet: labo, numero: 4, semaine: 1, statut: prévu,
+     titre: Poser le cœur de la garantie sans modèle,
+     livrables: [Registre de faits, Rendu et contrôleur]}
+  - {id: labo-05, projet: labo, numero: 5, semaine: 1, statut: prévu,
+     titre: Traverser les neuf étapes,
+     livrables: [Graphe complet, "Note d'une page en `.docx`"],
+     jalon: {id: L1, critere: "Une commande produit une note d'une page, chiffres tracés"}}
+  - {id: labo-06, projet: labo, numero: 6, semaine: 2, statut: prévu,
+     titre: Éprouver le contrôleur,
+     livrables: [Tests par mutation, Lexique des quantités]}
+  - {id: labo-07, projet: labo, numero: 7, semaine: 2, statut: prévu,
+     titre: Générer la spécification fiche par fiche,
+     livrables: [Schémas des fiches, "Nœud `specifier`"]}
+  - {id: labo-08, projet: labo, numero: 8, semaine: 2, statut: prévu,
+     titre: Rendre la spécification contestable puis figée,
+     livrables: [Boucle contester-réviser-figer, Journal des décisions]}
+  - {id: labo-09, projet: labo, numero: 9, semaine: 2, statut: prévu,
+     titre: Calculer sans laisser le modèle coder,
+     livrables: [Quatre indicateurs paramétrés, Invariants, Secret primaire]}
+  - {id: labo-10, projet: labo, numero: 10, semaine: 2, statut: prévu,
+     titre: Rédiger des sections sourcées,
+     livrables: [Rédaction par section, "`.docx` avec annexe de traçabilité"],
+     jalon: {id: L2, critere: "Note de quatre pages, spécification figée, CI verte"}}
+  - {id: labo-11, projet: labo, numero: 11, semaine: 3, statut: prévu,
+     titre: Cadrer à partir d'un corpus local,
+     livrables: [Fiches de sources, Recherche, "Nœud `cadrer`"]}
+  - {id: labo-12, projet: labo, numero: 12, semaine: 3, statut: prévu,
+     titre: Générer le projet par gabarits,
+     livrables: [Gabarit R, Workflow GitHub Actions]}
+  - {id: labo-13, projet: labo, numero: 13, semaine: 3, statut: prévu,
+     titre: Proposer visuels et plan selon le format,
+     livrables: ["Cinq gabarits `ggplot2`", "Plans court, moyen et long"]}
+  - {id: labo-14, projet: labo, numero: 14, semaine: 3, statut: prévu,
+     titre: Mesurer le système complet,
+     livrables: [Rapport d'évaluation]}
+  - {id: labo-15, projet: labo, numero: 15, semaine: 3, statut: prévu,
+     titre: Rendre le dépôt lisible,
+     livrables: [README, ADR, Rapport, Mode rejeu],
+     jalon: {id: L3, critere: "Dépôt public rejouable sans modèle, rapport d'évaluation"}}

@@ -1,0 +1,50 @@
+---
+title: "Méthode"
+subtitle: "Les principes du laboratoire, tels que les énonce le cours de la séance 1"
+---
+
+Le laboratoire suit trois principes. Chacun est cité ici avec les mots du [cours de la séance 1](/cours/seance-01-cours.md), qui les développe.
+
+## Mesurer avant de construire
+
+« L'architecture dépend de faits que nous ignorions. » Taille de la fenêtre de contexte, sorties structurées, appels d'outils, vitesse : chaque choix de conception repose sur une propriété du serveur. « Concevoir avant de savoir, c'est bâtir sur des hypothèses qui céderont au premier essai réel. »
+
+Le serveur peut aussi changer : « Un modèle servi par un tiers est une dépendance qui change sans prévenir. » D'où l'instrument de mesure : « La seule défense est un instrument de mesure que l'on peut relancer à tout moment, ce que sont nos scripts. » Et une discipline : « Commencer simple, et ne compliquer que si la mesure le justifie. »
+
+::: {.callout-note title="À retenir"}
+On ne conçoit pas sur des hypothèses : on mesure d'abord. Un modèle hébergé par un tiers peut changer sans prévenir ; seule une mesure rejouable le détecte. On commence simple et on ne complique que sur preuve. Enfin, aucun chiffre publiable ne vient du modèle.
+:::
+
+[Chapitre 1 du cours](/cours/seance-01-cours.md#chapitre-1){.lien-cours}
+
+## Journal et rejeu
+
+« Relancer un appel ne le reproduit pas. » Le hasard de l'échantillonnage n'en est qu'une cause : le serveur lui-même fait varier les réponses. Conséquence : « pour reproduire une analyse, il faut enregistrer ce que le modèle a réellement répondu. »
+
+Tous les appels passent donc par une même enveloppe, `llm.py`. Elle donne à chaque appel une empreinte, l'inscrit dans un journal où l'on ne fait qu'ajouter des lignes, et sait rejouer les réponses enregistrées, sans réseau ni clé. Le même rejeu sert de test de non-régression quand on modifie le code.
+
+::: {.callout-note title="À retenir"}
+Relancer un appel ne le reproduit pas : on enregistre donc ce que le modèle a répondu. L'empreinte (SHA-256 d'un JSON canonique) donne à chaque appel une clé stable. Le journal en ajout seul garde tout, refus compris. Le rejeu rend les scripts testables sans réseau ni clé. Le champ `preuve` relie chaque résultat à son appel.
+:::
+
+::: {.callout-note title="À retenir"}
+Une refactorisation change la structure sans changer le comportement, et c'est un test qui le prouve. Faute de tests unitaires, les relevés commités servent de tests de caractérisation, et le rejeu les vérifie. Il faut commiter avant de comparer. Le format du journal et la formule de la clé sont un contrat avec le passé.
+:::
+
+[Chapitres 4 et 5 du cours](/cours/seance-01-cours.md#chapitre-4){.lien-cours}
+
+## Aucun chiffre sans source
+
+« Un modèle de langage produit le texte le plus plausible compte tenu de ce qu'il a lu. Plausible ne veut pas dire vérifié. » Un service statistique ne peut pas publier un chiffre faux. D'où la règle qui commande toute l'architecture :
+
+1. Le modèle ne calcule aucun chiffre et n'en cite aucun de mémoire.
+2. Chaque chiffre publiable vient d'un **registre de faits** : un identifiant, une valeur, une source, une définition, une date.
+3. Le modèle cite des identifiants ; un programme déterministe remplace les identifiants par les valeurs et vérifie que chaque chiffre du texte a une source.
+
+Une sortie structurée n'y change rien : « Le schéma garantit la forme, jamais la vérité : un nombre produit par le modèle reste sans source. »
+
+[Chapitres 1 et 6 du cours](/cours/seance-01-cours.md#chapitre-6){.lien-cours}
+
+## Dans ce carnet
+
+Le carnet s'applique la même règle. Aucun nombre n'est écrit à la main dans ses pages : chacun est lu ou calculé dans les fichiers de données (`data/seances.yml`, `data/concepts.csv`, `data/mesures.yml`), et le tableau de bord indique de quel fichier il vient. Les résultats de séance gardent leur source dans le cours, et la validation refuse tout chiffre écrit hors du registre. Un contrôle local vérifie, avant chaque commit, qu'aucun terme confidentiel n'est publié.

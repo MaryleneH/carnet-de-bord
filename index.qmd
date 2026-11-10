@@ -1,0 +1,12 @@
+---
+title: "Carnet de bord"
+page-layout: full
+---
+
+[Ce carnet suit le **laboratoire** : un assistant d'étude statistique sourcée, construit en public sur le SSP Cloud et l'API Albert, avec des données publiques.]{.intro}
+
+```{r}
+#| output: asis
+source("R/pages.R", encoding = "UTF-8")
+cat(page_tableau_de_bord(charger()))
+```
