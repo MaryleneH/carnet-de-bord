@@ -1,0 +1,7 @@
+jalon,projet,critere,date_prevue,etat,date_atteinte
+L1,labo,"Une commande produit une note d'une page, chiffres tracés",,À faire,
+L2,labo,"Note de quatre pages, spécification figée, CI verte",,À faire,
+L3,labo,"Dépôt public rejouable sans modèle, rapport d'évaluation",,À faire,
+fin_P1,produit,Chiffres d'une étude passée reproduits,,À faire,
+fin_P3,produit,Brouillon et spécification jugés utilisables,,À faire,
+fin_P5,produit,"Étude réelle publiée, critères de succès mesurés",,À faire,

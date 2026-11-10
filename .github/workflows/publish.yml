@@ -1,0 +1,39 @@
+name: Publish Quarto to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup R
+        uses: r-lib/actions/setup-r@v2
+
+      - name: Setup renv
+        uses: r-lib/actions/setup-renv@v2
+
+      - name: Validate data and run tests
+        run: |
+          Rscript -e 'source("R/valider.R"); valider_tout("data"); testthat::test_dir("tests/testthat", stop_on_failure = TRUE)'
+
+      - name: Setup Quarto
+        uses: quarto-dev/quarto-actions/setup@v2
+        with:
+          version: 1.6.39
+
+      - name: Publish to GitHub Pages
+        uses: quarto-dev/quarto-actions/publish@v2
+        with:
+          target: gh-pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
