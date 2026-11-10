@@ -9,6 +9,10 @@ project:
     - cours/*.md
     - methode.qmd
   pre-render: R/date_maj.R
+  # icônes de repli, déclarées par filters/icones.lua
+  resources:
+    - icones/favicon-32.png
+    - icones/apple-touch-icon.png
 
 lang: fr
 
@@ -17,6 +21,8 @@ website:
   description: "Carnet de bord du laboratoire d'agent d'études statistiques : séances, planning, cours et méthode."
   site-url: "https://maryleneh.github.io/carnet-de-bord/"
   search: false
+  # une page de carnet cornée, avec une estimation et son intervalle de confiance
+  favicon: icones/favicon.svg
   page-navigation: true
   # Barre latérale du cours : le plan (cours/index.qmd) en tête, puis chaque
   # chapitre du dossier cours/, ajouté seul dès que son fichier existe.
@@ -62,3 +68,4 @@ filters:
     at: pre-ast
   - filters/tableaux.lua
   - filters/typo-fr.lua
+  - filters/icones.lua
