@@ -3,7 +3,7 @@ title: "Carnet de bord"
 page-layout: full
 ---
 
-[Le **laboratoire**, public, construit un assistant d'étude statistique sourcée, sur le SSP Cloud et l'API Albert, avec des données publiques. Le **projet interne** n'apparaît ici que par son avancement.]{.intro}
+[Ce carnet suit le **laboratoire** : un assistant d'étude statistique sourcée, construit en public sur le SSP Cloud et l'API Albert, avec des données publiques.]{.intro}
 
 ```{r}
 #| output: asis

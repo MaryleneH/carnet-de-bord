@@ -10,7 +10,7 @@ URL_DEPOT <- "https://github.com/MaryleneH/carnet-de-bord/blob/main/"
 
 CLASSES_ETAT <- c(
   "fait" = "etat-fait", "en cours" = "etat-en-cours", "à planifier" = "etat-a-planifier",
-  "prévu" = "etat-prevu", "préparé" = "etat-prepare", "en attente" = "etat-en-attente",
+  "prévu" = "etat-prevu", "en attente" = "etat-en-attente",
   "non vu" = "niveau-non-vu", "vu" = "niveau-vu", "pratiqué" = "niveau-pratique",
   "maîtrisé" = "niveau-maitrise"
 )
@@ -29,7 +29,6 @@ seance <- function(d, id) trouver(d$seances, id, "séance")
 
 ordonner <- function(ss) ss[order(vapply(ss, function(s) as.numeric(s$numero), numeric(1)))]
 seances_labo <- function(d) ordonner(Filter(function(s) identical(s$projet, "labo"), d$seances))
-seances_internes <- function(d) Filter(function(s) identical(s$projet, "interne"), d$seances)
 seances_faites <- function(d) Filter(function(s) s$statut == "fait", seances_labo(d))
 derniere_seance <- function(d) {
   faites <- seances_faites(d)
@@ -231,19 +230,15 @@ parcours <- function(d) {
       paste(vapply(ss, point_parcours, character(1)), collapse = " "), "\n\n:::\n\n"
     )
   }, character(1))
-  phase <- trouver(seances_internes(d), "interne-phase", "ligne interne")
   legende <- paste0(
     "[[[]{.pastille .etat-fait} fait]{.legende-item} [[]{.pastille .etat-a-planifier} à planifier]{.legende-item} ",
     "[[]{.pastille .etat-prevu} prévu]{.legende-item} [[L]{.jalon} jalon]{.legende-item}]{.legende}"
   )
   paste0(
     "::: {.carte .bloc .bloc-parcours}\n\n### Où j'en suis\n\n",
-    "::: {.parcours-corps}\n\n",
-    "::: {.parcours-labo}\n\n[Laboratoire]{.sous-libelle}\n\n",
     "::: {.parcours role=\"list\"}\n\n", paste(lignes, collapse = ""), ":::\n\n",
-    legende, "\n\n:::\n\n",
-    "::: {.ligne-second-projet}\n\n", phase$titre, " ", badge(phase$statut), "\n\n:::\n\n",
-    ":::\n\n:::\n\n"
+    legende, "\n\n",
+    ":::\n\n"
   )
 }
 
