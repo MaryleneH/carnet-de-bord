@@ -1,13 +1,12 @@
 ---
 title: "Carnet de bord"
-subtitle: "Laboratoire d'agent d'études statistiques : où j'en suis"
 page-layout: full
 ---
 
-Ce carnet suit l'avancement de deux projets menés en parallèle. Le **laboratoire** construit, en public, un assistant qui conduit une question jusqu'à une étude statistique publiable et sourcée, avec le serveur de modèles du SSP Cloud, l'API Albert et des données publiques. Le **projet interne** n'apparaît ici que par son avancement.
+[Le **laboratoire**, public, construit un assistant d'étude statistique sourcée, sur le SSP Cloud et l'API Albert, avec des données publiques. Le **projet interne** n'apparaît ici que par son avancement.]{.intro}
 
 ```{r}
 #| output: asis
 source("R/pages.R", encoding = "UTF-8")
-cat(page_accueil(charger()))
+cat(page_tableau_de_bord(charger()))
 ```
