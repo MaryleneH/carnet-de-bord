@@ -323,31 +323,16 @@ footer.footer { background-color: var(--c-fond); }
 .badge-etat.etat-prevu { color: var(--c-texte-gris); background-color: transparent; }
 .badge-etat.etat-en-attente { color: var(--c-texte-orange); background-color: var(--c-teinte-orange); }
 
-// ── Cartes et tableau de bord ──────────────────────────────────────────────
+// ── Cartes ─────────────────────────────────────────────────────────────────
 
-.tableau-bord, .grille-cartes, .chiffres-cles, .planning, #chiffres-cles {
+.grille-cartes {
   max-width: 76rem;
   margin-inline: auto;
-}
-
-.tableau-bord, .grille-cartes {
   display: grid;
   gap: 1.25rem;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
   margin-bottom: 2rem;
 }
-
-// « Où j'en suis » occupe toute la largeur : un projet par colonne.
-.bloc-etat { grid-column: 1 / -1; }
-.bloc-etat ul {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr));
-  gap: 0.6rem 2.5rem;
-  list-style: none;
-  padding-left: 0;
-  margin: 0;
-}
-.bloc-etat li + li { margin-top: 0; }
 
 .carte {
   min-width: 0;
@@ -359,7 +344,9 @@ footer.footer { background-color: var(--c-fond); }
 }
 .carte > :last-child { margin-bottom: 0; }
 
-main.content .bloc > h2 {
+// Titres de bloc : petites capitales bleues, comme des étiquettes de carnet.
+main.content .bloc > h2,
+main.content .bloc > h3 {
   margin: 0 0 0.8rem;
   padding: 0;
   border: 0;
@@ -402,54 +389,244 @@ main.content .carte-titre {
 .carte dd p, .incident dd p, .seance-entete dd p { margin: 0; }
 .carte dd ul { margin: 0; padding-left: 1.1rem; }
 
-#chiffres-cles {
-  margin-top: 0.5rem;
-  border-bottom: 0;
-}
+// ── Tableau de bord ────────────────────────────────────────────────────────
 
-.chiffres-cles {
-  display: grid;
-  gap: 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
-  margin-bottom: 2rem;
+.intro {
+  display: block;
+  max-width: 62rem;
+  margin-bottom: 0.4rem;
+  font-size: 0.95rem;
+  color: var(--c-texte-doux);
 }
-@media (min-width: 992px) {
-  .chiffres-cles { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-}
-.chiffre {
-  min-width: 0;
-  background-color: var(--c-fond-doux);
-  border: 1px solid var(--c-bordure);
-  border-radius: $rayon;
-  padding: 1rem 1.1rem;
-}
-.chiffre p { margin: 0 0 0.35rem; }
-.chiffre p:last-child { margin-bottom: 0; }
-.chiffre-valeur {
-  font-size: 1.9rem;
-  font-weight: 600;
-  line-height: 1.15;
-  color: var(--c-titre);
-  font-variant-numeric: tabular-nums lining-nums;
-}
-.chiffre-unite {
+.niveau-date {
+  display: block;
+  margin-top: 0.15rem;
   font-family: $police-interface;
-  font-size: 0.9rem;
+  font-size: 0.78rem;
   color: var(--c-texte-doux);
 }
 
-// ── Planning en frise ──────────────────────────────────────────────────────
+// Onglets
+.panel-tabset > .nav-tabs {
+  gap: 0.25rem;
+  font-family: $police-interface;
+  border-bottom: 2px solid var(--c-bordure);
+}
+.panel-tabset > .nav-tabs .nav-link {
+  margin-bottom: -2px;
+  padding: 0.55rem 0.95rem;
+  border: 0;
+  border-bottom: 3px solid transparent;
+  background-color: transparent;
+  color: var(--c-texte-doux);
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+.panel-tabset > .nav-tabs .nav-link:hover { color: var(--c-titre); }
+.panel-tabset > .nav-tabs .nav-link.active {
+  color: var(--c-titre);
+  background-color: transparent;
+  border-bottom-color: var(--c-bleu);
+}
+.panel-tabset > .tab-content {
+  padding: 1.25rem 0 0;
+  border: 0;
+}
 
-.planning {
+// Indicateurs d'avancement
+.indicateurs {
   display: grid;
-  gap: 1rem 3rem;
+  gap: 1rem;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-bottom: 1.25rem;
 }
+.indicateur {
+  min-width: 0;
+  padding: 0.9rem 1rem 0.8rem;
+  background-color: var(--c-fond);
+  border: 1px solid var(--c-bordure);
+  border-top: 4px solid var(--c-bleu);
+  border-radius: $rayon;
+}
+.indicateur p { margin: 0 0 0.25rem; }
+.indicateur p:last-child { margin-bottom: 0; }
+.indicateur-libelle {
+  font-family: $police-interface;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--c-texte-bleu);
+}
+.indicateur-valeur {
+  font-size: 2.3rem;
+  font-weight: 600;
+  line-height: 1.1;
+  color: var(--c-titre);
+  font-variant-numeric: tabular-nums lining-nums;
+}
+.indicateur-total {
+  font-family: $police-interface;
+  font-size: 0.95rem;
+  color: var(--c-texte-doux);
+}
+.indicateur-detail {
+  display: block;
+  font-size: 0.92rem;
+  line-height: 1.4;
+  color: var(--c-texte-doux);
+}
+
+// Barres : progression simple et niveaux de compétence empilés
+.progression, .barre-niveaux {
+  display: flex;
+  height: 0.55rem;
+  margin: 0.35rem 0 0.45rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background-color: var(--c-teinte-gris);
+}
+.progression::before {
+  content: "";
+  width: var(--part, 0%);
+  background-color: var(--c-bleu);
+  border-radius: 999px;
+}
+.segment { display: block; height: 100%; width: var(--part, 0%); }
+.segment.niveau-vu { background-color: var(--c-bleu); }
+.segment.niveau-pratique { background-color: var(--c-violet); }
+.segment.niveau-maitrise { background-color: var(--c-vert); }
+
+// Légende et pastilles
+.legende {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 1rem;
+  font-family: $police-interface;
+  font-size: 0.8rem;
+  color: var(--c-texte-doux);
+}
+.legende-item { display: inline-flex; align-items: center; gap: 0.35rem; }
+.pastille {
+  display: inline-block;
+  width: 0.75rem;
+  height: 0.75rem;
+  border: 2px solid var(--c-gris);
+  border-radius: 50%;
+  background-color: var(--c-fond);
+}
+.pastille.etat-fait { background-color: var(--c-vert); border-color: var(--c-vert); }
+.pastille.etat-a-planifier { border-color: var(--c-violet); border-width: 3px; }
+.pastille.niveau-vu { background-color: var(--c-bleu); border-color: var(--c-bleu); }
+.pastille.niveau-pratique { background-color: var(--c-violet); border-color: var(--c-violet); }
+.pastille.niveau-maitrise { background-color: var(--c-vert); border-color: var(--c-vert); }
+
+// Parcours des séances, par semaine
+.parcours { display: grid; gap: 0.6rem; margin: 0.2rem 0 0.9rem; }
+.parcours-semaine p {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0;
+}
+.parcours-libelle, .niveaux-libelle {
+  min-width: 6.2rem;
+  font-family: $police-interface;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--c-texte-doux);
+}
+.point {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border: 2px solid var(--c-gris);
+  border-radius: 50%;
+  background-color: var(--c-fond);
+  color: var(--c-texte-gris);
+  font-family: $police-interface;
+  font-size: 0.85rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.point.etat-fait { background-color: var(--c-vert); border-color: var(--c-vert); color: var(--c-fond); }
+.point.etat-a-planifier { border: 3px solid var(--c-violet); color: var(--c-texte-violet); }
+a.lien-point { text-decoration: none; border-radius: 50%; }
+.jalon {
+  display: inline-flex;
+  align-items: center;
+  height: 1.5rem;
+  padding: 0 0.45rem;
+  border: 2px solid var(--c-bleu);
+  border-radius: 4px;
+  font-family: $police-interface;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--c-texte-bleu);
+}
+.legende .jalon { height: 1.1rem; padding: 0 0.25rem; font-size: 0.65rem; }
+// « Où j'en suis » : le laboratoire à gauche, le projet interne à droite.
+.parcours-corps { display: grid; gap: 1.1rem 2.5rem; }
 @media (min-width: 992px) {
-  .planning { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); align-items: start; }
+  .parcours-corps { grid-template-columns: max-content minmax(0, 1fr); align-items: start; }
 }
-.planning h2 { margin-top: 0.5rem; }
-main.content .planning h3 {
+.sous-libelle {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-family: $police-interface;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--c-titre);
+}
+.ligne-second-projet {
+  padding: 0.85rem 1rem;
+  border-left: 4px solid var(--c-bleu);
+  border-radius: 0 $rayon $rayon 0;
+  background-color: var(--c-fond-doux);
+}
+.ligne-second-projet p { margin: 0; }
+
+// Dans le tableau de bord, le texte des cartes est plus compact.
+.tab-content .carte, .tab-content .indicateur { font-size: 1rem; }
+main.content .tab-content .carte-titre { font-size: 1.2rem; }
+
+// Colonnes de la vue d'ensemble
+.colonnes-accueil {
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+  margin: 1.25rem 0;
+}
+
+// Lignes « libellé, barre, compte » (compétences, heures)
+.niveaux-ligne p {
+  display: grid;
+  grid-template-columns: 6.2rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0 0 0.6rem;
+}
+.niveaux-ligne .barre-niveaux { margin: 0; }
+.niveaux-compte {
+  font-family: $police-interface;
+  font-size: 0.85rem;
+  color: var(--c-texte-doux);
+  white-space: nowrap;
+}
+.niveaux-total { font-size: 1.15rem; font-weight: 600; color: var(--c-titre); }
+
+// Onglets en colonne de lecture
+.onglet-etroit { max-width: 50rem; }
+main.content .onglet-etroit > h3,
+main.content .onglet-etroit > section > h3 {
   margin: 1.6rem 0 0.8rem;
+  padding: 0;
+  border: 0;
   font-family: $police-interface;
   font-size: 0.8rem;
   font-weight: 700;
@@ -457,6 +634,9 @@ main.content .planning h3 {
   text-transform: uppercase;
   color: var(--c-texte-doux);
 }
+.entree-journal { margin-bottom: 1.25rem; }
+
+// ── Frise des séances (onglet Laboratoire) ─────────────────────────────────
 
 .frise {
   margin: 0 0 0 0.55rem;
@@ -540,7 +720,9 @@ ul.task-list li input[type="checkbox"] { margin-right: 0.45rem; accent-color: va
 
 .tableau-defilant { overflow-x: auto; margin-bottom: 0.5rem; }
 
-main.content table {
+main.content table,
+main.content .tab-content table {
+  background-color: transparent;
   --bs-table-color: var(--c-texte);
   --bs-table-bg: transparent;
   --bs-table-border-color: var(--c-bordure);
@@ -636,12 +818,22 @@ main code.sourceCode > span, main code.sourceCode span:not([class]) { color: var
 
 // ── Téléphone ──────────────────────────────────────────────────────────────
 
+@media (max-width: 991.98px) {
+  .indicateurs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
 @media (max-width: 575.98px) {
   body { font-size: 1.0625rem; }
   .carte { padding: 0.95rem 1rem 1rem; }
-  .chiffres-cles { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.75rem; }
-  .chiffre { padding: 0.8rem 0.85rem; }
-  .chiffre-valeur { font-size: 1.45rem; }
+  .indicateurs { gap: 0.75rem; }
+  .indicateur { padding: 0.75rem 0.8rem 0.7rem; }
+  .indicateur-valeur { font-size: 1.85rem; }
+  .panel-tabset > .nav-tabs .nav-link { padding: 0.5rem 0.6rem; font-size: 0.9rem; }
+  .parcours-semaine p { gap: 0.3rem; }
+  .parcours-libelle, .niveaux-libelle { min-width: 5.2rem; }
+  .niveaux-ligne p { grid-template-columns: 5.2rem minmax(0, 1fr) auto; gap: 0.5rem; }
+  .point { width: 1.7rem; height: 1.7rem; font-size: 0.78rem; }
+  .jalon { height: 1.35rem; padding: 0 0.3rem; font-size: 0.7rem; }
   .carte dl, .incident dl, .seance-entete dl { grid-template-columns: minmax(0, 1fr); gap: 0.15rem; }
   .carte dt, .incident dt, .seance-entete dt { padding-top: 0.35rem; }
 }
