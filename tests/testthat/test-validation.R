@@ -1,6 +1,10 @@
 source(if (file.exists("R/lire.R")) "R/lire.R" else "../../R/lire.R")
 source(if (file.exists("R/valider.R")) "R/valider.R" else "../../R/valider.R")
 
+test_that("valider.R se source depuis tests/testthat", {
+  expect_no_error(source("../../R/valider.R", local = new.env(parent = globalenv())))
+})
+
 copier_fixture_valide <- function() {
   dir <- tempfile("fixture-")
   dir.create(dir)
