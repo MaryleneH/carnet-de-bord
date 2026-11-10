@@ -8,9 +8,9 @@ Adresse du site : `https://maryleneh.github.io/carnet-de-bord/`
 
 | Page | Fichier | Contenu |
 | --- | --- | --- |
-| Tableau de bord | `index.qmd` | quatre onglets : **Vue d'ensemble** (indicateurs d'avancement, où j'en suis, dernière séance, prochaine étape, points en attente, compétences), **Laboratoire** (frise des séances et jalons), **Compétences** (niveau de chaque concept), **Journal** (fait, appris, suite) |
+| Tableau de bord | `index.qmd` | quatre onglets : **Vue d'ensemble** (indicateurs d'avancement, où j'en suis dans les séances et dans le cours, dernière séance, prochaine étape, points en attente, compétences), **Laboratoire** (frise des séances et jalons), **Compétences** (niveau de chaque concept), **Journal** (fait, appris, suite) |
 | Séances | `seances/` | une carte par séance, une page par séance faite, avec ses résultats sourcés |
-| Cours | `cours/` | un cours détaillé par séance, avec table des matières |
+| Cours | `cours/` | le fil conducteur du carnet : le **plan du cours** (`cours/index.qmd`), qui grandit séance après séance, puis un chapitre par séance (`cours/seance-NN-cours.md`), avec barre latérale, table des matières et navigation d'un chapitre à l'autre |
 | Méthode | `methode.qmd` | les principes du laboratoire, cités du cours |
 
 - **Données** : `data/seances.yml` (séances et journal), `data/mesures.yml` (résultats et durées des séances, chacun avec sa source dans le cours) et `data/concepts.csv` (suivi des compétences : vu, pratiqué, maîtrisé).
@@ -31,7 +31,8 @@ Adresse du site : `https://maryleneh.github.io/carnet-de-bord/`
 1. Ajouter les chiffres de la séance dans `data/mesures.yml`, chacun avec sa source.
 2. Compléter la séance dans `data/seances.yml` (statut, date, durée, livrables, journal, incidents, points en attente).
 3. Mettre à jour les niveaux des concepts dans `data/concepts.csv` (dates de vu, pratiqué, maîtrisé).
-4. Ajouter le cours `cours/seance-NN-cours.md` et la page `seances/seance-NN.qmd`.
+4. Ajouter le chapitre du cours, `cours/seance-NN-cours.md`, et la page `seances/seance-NN.qmd`. Le chapitre entre seul dans la barre latérale du cours.
+5. Renseigner `cours: /cours/seance-NN-cours.md` pour la séance dans `data/seances.yml` : elle passe à « rédigé » dans le plan du cours et dans « Où j'en suis ».
 
 ## Travailler en local
 
