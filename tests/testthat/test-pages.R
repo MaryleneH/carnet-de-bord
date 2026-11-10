@@ -20,7 +20,7 @@ test_that("aucun nombre n'est tapé à la main dans le tableau de bord et les s�
 
 test_that("aucune page ne parle d'un projet interne", {
   d <- charger(dossier_data)
-  rendu <- paste(page_tableau_de_bord(d), cartes_seances(d), page_seance(d, "labo-01"), liste_cours(d))
+  rendu <- paste(page_tableau_de_bord(d), cartes_seances(d), page_seance(d, "labo-01"), plan_du_cours(d))
   expect_false(grepl("intern", rendu, ignore.case = TRUE))
   expect_false(grepl("deux projets", rendu, ignore.case = TRUE))
   pages <- c("index.qmd", "methode.qmd", "cours/index.qmd", file.path("seances", list.files(file.path(racine, "seances"), "\\.qmd$")))
@@ -75,4 +75,17 @@ test_that("les résultats de la séance citent leur source dans le cours", {
   rendu <- page_seance(d, "labo-01")
   expect_match(rendu, "(/cours/seance-01-cours.md#annexe-a)", fixed = TRUE)
   expect_match(rendu, "(/cours/seance-01-cours.md#annexe-b)", fixed = TRUE)
+})
+
+test_that("le plan et l'avancement du cours viennent des données", {
+  d <- charger(dossier_data)
+  labo <- seances_labo(d)
+  redigees <- seances_redigees(d)
+  plan <- plan_du_cours(d)
+  for (s in labo) expect_match(plan, titre_complet(s), fixed = TRUE)
+  for (s in redigees) expect_match(plan, sprintf("](%s)", s$cours), fixed = TRUE)
+  avancement <- avancement_cours(d)
+  expect_match(avancement, sprintf("[%d]{.indicateur-valeur}", length(redigees)), fixed = TRUE)
+  expect_match(avancement, sprintf(" sur %d]{.indicateur-total}", length(labo)), fixed = TRUE)
+  expect_match(vue_ensemble(d), "Plan complet du cours", fixed = TRUE)
 })
