@@ -1,10 +1,54 @@
 project:
   type: website
   output-dir: _site
+  execute-dir: project
+  render:
+    - index.qmd
+    - planning.qmd
+    - seances/*.qmd
+    - cours/*.qmd
+    - cours/*.md
+    - methode.qmd
+  pre-render: R/date_maj.R
 
 lang: fr
+
+website:
+  title: "Carnet de bord"
+  description: "Carnet de bord du laboratoire d'agent d'études statistiques : séances, planning, cours et méthode."
+  site-url: "https://maryleneh.github.io/carnet-de-bord/"
+  search: false
+  navbar:
+    left:
+      - text: Accueil
+        href: index.qmd
+      - text: Planning
+        href: planning.qmd
+      - text: Séances
+        href: seances/index.qmd
+      - text: Cours
+        href: cours/index.qmd
+      - text: Méthode
+        href: methode.qmd
+  page-footer:
+    left: "Mis à jour le {{< var maj >}}"
+    right:
+      - text: "Dépôt du carnet sur GitHub"
+        href: "https://github.com/MaryleneH/carnet-de-bord"
+
+format:
+  html:
+    theme: default
+    anchor-sections: false
+    link-external-icon: false
+    smooth-scroll: false
 
 execute:
   echo: false
   warning: false
   message: false
+
+filters:
+  # avant l'analyse de Quarto, pour que les encadrés deviennent des callouts
+  - path: filters/cours.lua
+    at: pre-ast
