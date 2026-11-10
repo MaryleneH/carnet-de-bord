@@ -1,0 +1,10 @@
+project:
+  type: website
+  output-dir: _site
+
+lang: fr
+
+execute:
+  echo: false
+  warning: false
+  message: false
