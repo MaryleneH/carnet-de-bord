@@ -18,16 +18,15 @@ test_that("aucun nombre n'est tapé à la main dans le tableau de bord et les s�
   }
 })
 
-test_that("le projet interne n'apparaît que sous ses deux libellés génériques", {
+test_that("aucune page ne parle d'un projet interne", {
   d <- charger(dossier_data)
   rendu <- paste(page_tableau_de_bord(d), cartes_seances(d), page_seance(d, "labo-01"), liste_cours(d))
-  reste <- rendu
-  reste <- gsub("**", "", reste, fixed = TRUE)
-  for (l in LIBELLES_INTERNES) reste <- gsub(l, "", reste, fixed = TRUE)
-  expect_false(grepl("intern", reste, ignore.case = TRUE))
-  affiche <- gsub("**", "", page_tableau_de_bord(d), fixed = TRUE)
-  expect_true(grepl(LIBELLES_INTERNES[[1]], affiche, fixed = TRUE))
-  expect_true(grepl(LIBELLES_INTERNES[[2]], affiche, fixed = TRUE))
+  expect_false(grepl("intern", rendu, ignore.case = TRUE))
+  expect_false(grepl("deux projets", rendu, ignore.case = TRUE))
+  pages <- c("index.qmd", "methode.qmd", "cours/index.qmd", file.path("seances", list.files(file.path(racine, "seances"), "\\.qmd$")))
+  for (p in pages) {
+    expect_false(grepl("intern", texte_redige(file.path(racine, p)), ignore.case = TRUE), info = p)
+  }
 })
 
 test_that("la vue d'ensemble montre l'avancement, pas les résultats techniques des séances", {

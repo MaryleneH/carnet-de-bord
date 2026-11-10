@@ -1,9 +1,6 @@
 # Carnet de bord
 
-Site Quarto **public** qui suit deux projets menés en parallèle :
-
-- le **laboratoire**, public : un assistant d'étude statistique sourcée, construit avec le serveur de modèles du SSP Cloud, l'API Albert et des données publiques ;
-- le **projet interne**, qui n'apparaît ici que par son avancement, sous deux libellés génériques.
+Site Quarto **public** qui suit le **laboratoire** : un assistant d'étude statistique sourcée, construit avec le serveur de modèles du SSP Cloud, l'API Albert et des données publiques. C'est un portfolio.
 
 Adresse du site : `https://maryleneh.github.io/carnet-de-bord/`
 
@@ -16,7 +13,7 @@ Adresse du site : `https://maryleneh.github.io/carnet-de-bord/`
 | Cours | `cours/` | un cours détaillé par séance, avec table des matières |
 | Méthode | `methode.qmd` | les principes du laboratoire, cités du cours |
 
-- **Données** : `data/seances.yml` (séances, journal, avancement du projet interne), `data/mesures.yml` (résultats et durées des séances, chacun avec sa source dans le cours) et `data/concepts.csv` (suivi des compétences : vu, pratiqué, maîtrisé).
+- **Données** : `data/seances.yml` (séances et journal), `data/mesures.yml` (résultats et durées des séances, chacun avec sa source dans le cours) et `data/concepts.csv` (suivi des compétences : vu, pratiqué, maîtrisé).
 - **Rendu des pages** : `R/pages.R` lit ces données, calcule les indicateurs et produit le contenu des pages.
 - **Mise en forme** : un seul fichier, `styles/carnet.scss` (variables en tête, thèmes clair et sombre). Police Source Serif 4 auto-hébergée dans `styles/polices/` (licence OFL). Aucun CDN, aucune police distante.
 - **Filtres Lua** (`filters/`) : encadrés du cours en callouts, typographie française (espaces insécables), tableaux défilants sur téléphone.
@@ -25,7 +22,7 @@ Adresse du site : `https://maryleneh.github.io/carnet-de-bord/`
 
 `R/valider.R` arrête la validation, la CI et le rendu si l'une de ces règles est enfreinte :
 
-- **Confidentialité** : le projet interne n'apparaît que sous deux libellés génériques, sans aucun autre champ, et aucun texte du laboratoire n'en parle.
+- **Confidentialité** : seules les séances du laboratoire sont admises ; toute autre entrée est refusée, ainsi que toute mention d'un autre projet dans les textes.
 - **Aucun chiffre sans source** : aucun nombre n'est tapé dans une page. Les indicateurs d'avancement sont calculés depuis `seances.yml` et `concepts.csv`, et le tableau de bord indique de quel fichier ils viennent. Les résultats des séances viennent de `data/mesures.yml`, où chacun a sa source (séance et partie du cours) ; dans `seances.yml`, un chiffre se cite par `{identifiant}`, et un chiffre écrit en dur est refusé. Les identifiants (`404`, numéro de commit, `ADR-001`, n° de publication) s'écrivent en `code` ou après « n° ».
 - **Cohérence** : statuts autorisés, dates valides, une séance faite a une date et une durée en heures.
 

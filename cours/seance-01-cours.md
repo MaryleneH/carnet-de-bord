@@ -1312,7 +1312,6 @@ Pente de la durée en fonction des tokens lus : 5,18 × 10⁻⁵ s par token, so
 
 - **Accès à Albert :** relancer `capacites.py` et `limites.py` avec ses variables et `LLM_MODELE_EMB=bge-m3`.
 - **Données de l'EcoDef n° 273 :** chercher un fichier plus précis que les chiffres arrondis de la publication.
-- **Validation du cadre des deux projets :** en attente.
 - **Carnet de bord :** le créer à partir du prompt Copilot préparé.
 
 ### Séance 2

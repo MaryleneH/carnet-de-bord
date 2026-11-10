@@ -3,18 +3,12 @@ source(if (file.exists("R/lire.R")) "R/lire.R" else "../../R/lire.R")
 # ── Règles du carnet ─────────────────────────────────────────────────────────
 
 STATUTS_LABO <- c("fait", "à planifier", "prévu")
-STATUTS_INTERNE <- c("préparé", "en attente")
 STATUTS_POINTS <- c("en attente", "fait")
 
-# Le projet interne n'apparaît que sous ces deux libellés, sans autre champ.
-LIBELLES_INTERNES <- c(
-  "Projet interne : phase 0 (reconnaissance et cadre), jour 1 préparé",
-  "Validation du cadre des deux projets : en attente"
-)
-CHAMPS_INTERNES <- c("id", "projet", "titre", "statut")
+# Le carnet ne parle que du laboratoire.
 MESSAGE_CONFIDENTIALITE <- paste(
-  "Confidentialité : le projet interne n'apparaît que sous ses deux libellés",
-  "génériques, et aucun texte du laboratoire n'en parle"
+  "Confidentialité : seul le laboratoire figure dans le carnet,",
+  "et aucun texte ne mentionne d'autre projet"
 )
 
 MOTIF_ID <- "^[a-z0-9]+(-[a-z0-9]+)*$"
@@ -120,7 +114,6 @@ valider_seances <- function(seances, mesures) {
   unites <- setNames(vapply(mesures, function(m) m$unite, character(1)), ids_mesures)
   ids <- character()
   numeros <- integer()
-  libelles_vus <- character()
 
   for (s in seances) {
     ou <- sprintf("séance '%s'", ou_sinon(s$id, "?"))
@@ -128,17 +121,7 @@ valider_seances <- function(seances, mesures) {
     if (s$id %in% ids) arreter_regle(f, ou, "identifiant en double")
     ids <- c(ids, s$id)
 
-    if (identical(s$projet, "interne")) {
-      ok <- all(names(s) %in% CHAMPS_INTERNES) &&
-        is.character(s$titre) && s$titre %in% LIBELLES_INTERNES &&
-        !(s$titre %in% libelles_vus) && identical(length(s$statut), 1L) &&
-        s$statut %in% STATUTS_INTERNE
-      if (!ok) arreter_regle(f, ou, MESSAGE_CONFIDENTIALITE)
-      libelles_vus <- c(libelles_vus, s$titre)
-      next
-    }
-
-    if (!identical(s$projet, "labo")) arreter_regle(f, ou, "'projet' doit valoir labo ou interne")
+    if (!identical(s$projet, "labo")) arreter_regle(f, ou, MESSAGE_CONFIDENTIALITE)
     if (!(identical(length(s$statut), 1L) && s$statut %in% STATUTS_LABO)) {
       arreter_regle(f, ou, "statut hors liste autorisée")
     }

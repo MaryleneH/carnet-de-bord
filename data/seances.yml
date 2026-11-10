@@ -1,13 +1,13 @@
-# Registre des séances du laboratoire et de l'avancement du projet interne.
+# Registre des séances du laboratoire.
 #
 # Règles vérifiées par R/valider.R :
-#   - statut : fait, à planifier, prévu (laboratoire) ; préparé, en attente (interne) ;
+#   - statut : fait, à planifier, prévu ;
 #   - une séance faite a une date et une durée ;
 #   - la durée est l'identifiant d'une mesure de data/mesures.yml ;
 #   - aucun chiffre dans les textes, sauf dans le `code`, les numéros (n° …)
 #     et les références {identifiant} à data/mesures.yml ;
-#   - projet interne : uniquement les deux libellés génériques autorisés,
-#     sans aucun autre champ, et aucun texte du laboratoire n'en parle.
+#   - confidentialité : seul le laboratoire figure ici, et aucun texte ne
+#     mentionne d'autre projet.
 
 seances:
   - id: labo-01
@@ -98,9 +98,6 @@ seances:
       - intitule: Données de l'EcoDef n° 273
         detail: chercher un fichier plus précis que les chiffres arrondis de la publication
         statut: en attente
-      - intitule: Validation du cadre des deux projets
-        detail: en attente
-        statut: en attente
       - intitule: Carnet de bord
         detail: créé, c'est ce site
         statut: fait
@@ -163,13 +160,3 @@ seances:
      titre: Rendre le dépôt lisible,
      livrables: [README, ADR, Rapport, Mode rejeu],
      jalon: {id: L3, critere: "Dépôt public rejouable sans modèle, rapport d'évaluation"}}
-
-  # Projet interne : uniquement ces deux libellés génériques.
-  - id: interne-phase
-    projet: interne
-    titre: "Projet interne : phase 0 (reconnaissance et cadre), jour 1 préparé"
-    statut: préparé
-  - id: interne-cadre
-    projet: interne
-    titre: "Validation du cadre des deux projets : en attente"
-    statut: en attente

@@ -27,32 +27,21 @@ test_that("le jeu de fixtures valide passe", {
   expect_invisible(valider_tout(copier_fixture_valide()))
 })
 
-test_that("le projet interne n'admet que ses deux libellés génériques", {
+test_that("seul le laboratoire figure dans le carnet", {
   dir <- modifier_yaml(copier_fixture_valide(), "seances.yml", function(x) {
-    x$seances[[derniere(x)]]$titre <- "Projet interne : autre libellé"
+    x$seances[[1]]$projet <- "interne"
     x
   })
   expect_error(valider_tout(dir), "Confidentialité")
 
-  # aucun autre champ, ni livrable, ni date, ni lien
-  for (champ in c("livrables", "date", "lien", "duree")) {
-    dir <- modifier_yaml(copier_fixture_valide(), "seances.yml", function(x) {
-      x$seances[[derniere(x)]][[champ]] <- "valeur"
-      x
-    })
-    expect_error(valider_tout(dir), "Confidentialité", info = champ)
-  }
-
-  # chaque libellé une seule fois
   dir <- modifier_yaml(copier_fixture_valide(), "seances.yml", function(x) {
-    x$seances[[derniere(x)]]$titre <- x$seances[[derniere(x) - 1]]$titre
-    x$seances[[derniere(x)]]$statut <- x$seances[[derniere(x) - 1]]$statut
+    x$seances[[length(x$seances) + 1]] <- list(id = "autre", projet = "autre", titre = "Autre", statut = "prévu")
     x
   })
   expect_error(valider_tout(dir), "Confidentialité")
 })
 
-test_that("aucun texte du laboratoire ne parle du projet interne", {
+test_that("aucun texte ne mentionne un autre projet", {
   dir <- modifier_yaml(copier_fixture_valide(), "seances.yml", function(x) {
     x$seances[[1]]$objectif <- "Comparer avec la cible interne"
     x
