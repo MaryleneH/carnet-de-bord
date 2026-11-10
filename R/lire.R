@@ -2,7 +2,8 @@ lire_csv_strict <- function(path, colonnes_attendues) {
   donnees <- readr::read_csv(
     file = path,
     show_col_types = FALSE,
-    col_types = readr::cols(.default = readr::col_character())
+    col_types = readr::cols(.default = readr::col_character()),
+    na = character()
   )
 
   colonnes <- names(donnees)

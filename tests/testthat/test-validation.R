@@ -16,6 +16,14 @@ test_that("le jeu de fixtures valide passe", {
   expect_invisible(valider_tout(dir))
 })
 
+test_that("les champs vides restent des chaînes vides", {
+  dir <- copier_fixture_valide()
+  d <- lire_tout(dir)
+  expect_identical(d$concepts$vu_le[[1]], "")
+  expect_identical(d$concepts$pratique_le[[1]], "")
+  expect_identical(d$concepts$maitrise_le[[1]], "")
+})
+
 test_that("chaque règle clé déclenche une erreur dédiée", {
   # colonnes exactes
   dir <- copier_fixture_valide()
