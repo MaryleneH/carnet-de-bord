@@ -3,12 +3,18 @@ source(if (file.exists("R/valider.R")) "R/valider.R" else "../../R/valider.R", e
 dossier_data <- if (dir.exists("data")) "data" else "../../data"
 dossier_fixtures <- if (dir.exists("tests/testthat/fixtures")) "tests/testthat/fixtures" else "fixtures"
 
+# Copie la fixture dans un mini projet : data/ pour les données, cours/ pour le
+# chapitre que la séance 1 déclare. Rend le dossier data/.
 copier_fixture_valide <- function() {
-  dir <- tempfile("fixture-")
-  dir.create(dir)
+  projet <- tempfile("fixture-")
+  dir <- file.path(projet, "data")
+  dir.create(dir, recursive = TRUE)
   file.copy(list.files(dossier_fixtures, full.names = TRUE), dir)
+  dir.create(file.path(projet, "cours"))
+  writeLines(c("---", "title: \"Séance 1\"", "---"), file.path(projet, "cours", "seance-01-cours.md"))
   dir
 }
+chapitre_fixture <- function(dir, fichier) file.path(dirname(dir), "cours", fichier)
 
 # Modifie un fichier YAML de la copie : f reçoit et rend la structure lue.
 modifier_yaml <- function(dir, fichier, f) {
@@ -117,6 +123,32 @@ test_that("statut, date et durée des séances sont cohérents", {
     x
   })
   expect_error(valider_tout(dir), "absent de mesures.yml")
+})
+
+test_that("le plan du cours et la barre latérale citent les mêmes chapitres", {
+  # un chapitre déclaré existe
+  dir <- copier_fixture_valide()
+  file.remove(chapitre_fixture(dir, "seance-01-cours.md"))
+  expect_error(valider_tout(dir), "chapitre introuvable")
+
+  # un chapitre présent dans cours/ est déclaré par sa séance
+  dir <- copier_fixture_valide()
+  file.create(chapitre_fixture(dir, "seance-02-cours.md"))
+  expect_error(valider_tout(dir), "non déclaré")
+
+  # le chapitre de la séance N s'appelle seance-NN-cours.md
+  dir <- modifier_yaml(copier_fixture_valide(), "seances.yml", function(x) {
+    x$seances[[2]]$cours <- "/cours/seance-01-cours.md"
+    x
+  })
+  expect_error(valider_tout(dir), "doit être /cours/seance-02-cours.md", fixed = TRUE)
+
+  # le plan du cours n'est pas un chapitre
+  dir <- copier_fixture_valide()
+  file.create(chapitre_fixture(dir, "index.qmd"))
+  expect_invisible(valider_tout(dir))
+
+  expect_identical(chemin_chapitre(10), "/cours/seance-10-cours.md")
 })
 
 test_that("les règles des concepts restent appliquées", {
