@@ -16,7 +16,8 @@ Adresse du site : `https://maryleneh.github.io/carnet-de-bord/`
 - **Données** : `data/seances.yml` (séances et journal), `data/mesures.yml` (résultats et durées des séances, chacun avec sa source dans le cours) et `data/concepts.csv` (suivi des compétences : vu, pratiqué, maîtrisé).
 - **Rendu des pages** : `R/pages.R` lit ces données, calcule les indicateurs et produit le contenu des pages.
 - **Mise en forme** : un seul fichier, `styles/carnet.scss` (variables en tête, thèmes clair et sombre). Police Source Serif 4 auto-hébergée dans `styles/polices/` (licence OFL). Aucun CDN, aucune police distante.
-- **Filtres Lua** (`filters/`) : encadrés du cours en callouts, typographie française (espaces insécables), tableaux défilants sur téléphone.
+- **Icône du site** : `icones/favicon.svg`, une création originale aux couleurs du cours : une page de carnet cornée, avec une estimation et son intervalle de confiance. Elle s'éclaircit en thème sombre. `scripts/icones.sh` en tire deux PNG de repli (nécessite `rsvg-convert`) : `favicon-32.png`, pour les navigateurs qui n'affichent pas une icône SVG, et `apple-touch-icon.png`, pour l'écran d'accueil d'un téléphone. À relancer après toute modification du SVG.
+- **Filtres Lua** (`filters/`) : encadrés du cours en callouts, typographie française (espaces insécables), tableaux défilants sur téléphone, icônes de repli dans l'en-tête des pages.
 
 ## Règles vérifiées à chaque rendu
 
