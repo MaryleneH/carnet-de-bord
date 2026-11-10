@@ -89,3 +89,15 @@ test_that("le plan et l'avancement du cours viennent des données", {
   expect_match(avancement, sprintf(" sur %d]{.indicateur-total}", length(labo)), fixed = TRUE)
   expect_match(vue_ensemble(d), "Plan complet du cours", fixed = TRUE)
 })
+
+test_that("les icônes du site existent, aux bonnes tailles", {
+  # largeur et hauteur d'un PNG : octets 17 à 24 de l'en-tête
+  taille_png <- function(f) {
+    o <- as.integer(readBin(f, "raw", 24))
+    c(sum(o[17:20] * 256^(3:0)), sum(o[21:24] * 256^(3:0)))
+  }
+  icones <- file.path(racine, "icones")
+  expect_true(file.exists(file.path(icones, "favicon.svg")))
+  expect_identical(taille_png(file.path(icones, "favicon-32.png")), c(32, 32))
+  expect_identical(taille_png(file.path(icones, "apple-touch-icon.png")), c(180, 180))
+})
