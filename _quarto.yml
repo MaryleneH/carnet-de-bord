@@ -38,7 +38,10 @@ website:
 
 format:
   html:
-    theme: default
+    theme: [default, styles/carnet.scss]
+    highlight-style: a11y
+    grid:
+      body-width: 680px
     anchor-sections: false
     link-external-icon: false
     smooth-scroll: false
@@ -52,3 +55,5 @@ filters:
   # avant l'analyse de Quarto, pour que les encadrés deviennent des callouts
   - path: filters/cours.lua
     at: pre-ast
+  - filters/tableaux.lua
+  - filters/typo-fr.lua
