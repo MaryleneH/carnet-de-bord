@@ -1,4 +1,4 @@
-source("R/lire.R")
+source(if (file.exists("R/lire.R")) "R/lire.R" else "../../R/lire.R")
 
 ETATS_AUTORISES <- c("À faire", "En cours", "Fait", "Coupé")
 
