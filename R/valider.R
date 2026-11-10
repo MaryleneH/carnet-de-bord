@@ -164,6 +164,38 @@ valider_seances <- function(seances, mesures) {
   }
 }
 
+# ── Chapitres du cours (dossier cours/) ──────────────────────────────────────
+
+# Chapitre de la séance n, tel que seances.yml le cite. Deux chiffres : la barre
+# latérale range les chapitres par nom de fichier, donc la séance 10 après la 9.
+chemin_chapitre <- function(numero) sprintf("/cours/seance-%02d-cours.md", as.integer(numero))
+
+# Le plan et l'avancement du cours lisent le champ `cours` de seances.yml ; la
+# barre latérale lit le dossier cours/. Les deux doivent dire la même chose.
+valider_cours <- function(seances, dossier_cours) {
+  f <- "seances.yml"
+  declares <- character()
+  for (s in seances) {
+    if (is.null(s$cours)) next
+    ou <- sprintf("séance '%s'", ou_sinon(s$id, "?"))
+    attendu <- chemin_chapitre(s$numero)
+    if (!identical(s$cours, attendu)) {
+      arreter_regle(f, ou, sprintf("le chapitre de la séance %d doit être %s", as.integer(s$numero), attendu))
+    }
+    if (!file.exists(file.path(dossier_cours, basename(attendu)))) {
+      arreter_regle(f, ou, sprintf("chapitre introuvable : %s", sub("^/", "", attendu)))
+    }
+    declares <- c(declares, basename(attendu))
+  }
+  # Tout fichier du dossier, sauf le plan, est un chapitre.
+  chapitres <- setdiff(list.files(dossier_cours, "\\.(md|qmd)$"), c("index.qmd", "index.md"))
+  oublies <- setdiff(chapitres, declares)
+  if (length(oublies) > 0) {
+    arreter_regle(f, sprintf("chapitre 'cours/%s'", oublies[[1]]),
+                  "non déclaré : renseigner le champ cours de sa séance")
+  }
+}
+
 # ── Suivi des concepts (concepts.csv) ───────────────────────────────────────
 
 est_date_valide_ou_vide <- function(x) {
@@ -210,6 +242,8 @@ valider_tout <- function(dossier = "data") {
   d <- lire_tout(dossier)
   valider_registre(d)
   valider_seances(d$seances, d$mesures)
+  # le dossier cours/ est à côté du dossier des données
+  valider_cours(d$seances, file.path(dirname(dossier), "cours"))
   valider_concepts(d$concepts)
   invisible(d)
 }
