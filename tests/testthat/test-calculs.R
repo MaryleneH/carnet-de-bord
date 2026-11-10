@@ -1,5 +1,5 @@
-source("R/calculs.R")
-source("R/lire.R")
+source(if (file.exists("R/calculs.R")) "R/calculs.R" else "../../R/calculs.R")
+source(if (file.exists("R/lire.R")) "R/lire.R" else "../../R/lire.R")
 
 arrondir_pourcent <- function(x) round(100 * x, 1)
 
