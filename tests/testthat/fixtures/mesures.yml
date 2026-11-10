@@ -1,0 +1,136 @@
+# Registre des chiffres du carnet.
+#
+# Tout chiffre affiché sur l'accueil, le planning et les pages de séance vient
+# d'ici, avec sa source précise (séance et partie du cours). Les pages citent
+# les mesures par leur identifiant : {identifiant} dans un texte de seances.yml.
+#
+# Règles vérifiées par R/valider.R :
+#   - identifiant unique, en minuscules (lettres, chiffres, tirets) ;
+#   - valeur numérique, ou intervalle [borne basse, borne haute] ;
+#   - source : numéro de séance et partie du cours (en-tête, chapitre, annexe).
+
+mesures:
+  - id: duree-seance-01
+    libelle: Durée de la séance
+    valeur: 3
+    unite: h
+    source: {seance: 1, partie: en-tête du cours}
+
+  - id: tokens-lus-max
+    libelle: Tokens lus sans refus, pour le plus grand texte testé
+    valeur: 52697
+    unite: tokens
+    source: {seance: 1, partie: annexe A}
+
+  - id: debit-ecriture
+    libelle: Vitesse d'écriture du modèle
+    valeur: 156
+    approx: true
+    unite: tokens par seconde
+    source: {seance: 1, partie: annexe A}
+
+  - id: vitesse-lecture
+    libelle: Vitesse de lecture du modèle
+    valeur: 19300
+    approx: true
+    unite: tokens par seconde
+    source: {seance: 1, partie: annexe A}
+
+  - id: ratio-ecriture-lecture
+    libelle: Écrire un token coûte ce multiple du temps de lecture
+    valeur: 120
+    approx: true
+    unite: fois
+    source: {seance: 1, partie: chapitre 15}
+
+  - id: dimension-embeddings
+    libelle: Dimension des vecteurs d'embeddings
+    valeur: 4096
+    unite: dimensions
+    source: {seance: 1, partie: annexe A}
+
+  - id: wilson-un-essai
+    libelle: Intervalle de Wilson d'une capacité réussie à son seul essai
+    valeur: [20.7, 100]
+    unite: "%"
+    source: {seance: 1, partie: chapitre 15}
+
+  - id: caracteres-par-token
+    libelle: Caractères par token, sur le texte français de la séance
+    valeur: [4.6, 4.9]
+    unite: caractères par token
+    source: {seance: 1, partie: annexe B}
+
+  - id: approximation-initiale
+    libelle: Approximation de départ, règle empirique valable pour l'anglais
+    valeur: 4
+    unite: caractères par token
+    source: {seance: 1, partie: annexe B}
+
+  - id: lignes-llm-v1
+    libelle: Longueur de la première version de llm.py
+    valeur: 68
+    unite: lignes
+    source: {seance: 1, partie: annexe B}
+
+  - id: pente-lecture
+    libelle: Pente de la durée en fonction des tokens lus
+    valeur: 5.18e-5
+    unite: s par token
+    source: {seance: 1, partie: annexe A}
+
+  - id: ordonnee-origine
+    libelle: Ordonnée à l'origine du modèle de coût
+    valeur: 0.02
+    unite: s
+    source: {seance: 1, partie: annexe A}
+
+# Formules, citées telles que le cours les donne.
+formules:
+  - id: modele-cout
+    titre: Modèle de coût
+    texte: "*durée (s) ≈ tokens lus / 19 000 + tokens écrits / 156*"
+    source: {seance: 1, partie: annexe A}
+
+# Tableaux de résultats, recopiés de l'annexe A du cours.
+# Une cellule est un nombre (mis en forme à la française) ou un texte.
+tableaux:
+  - id: capacites
+    titre: Capacités, un essai chacune
+    source: {seance: 1, partie: annexe A}
+    colonnes: [Option, Statut, Observation]
+    lignes:
+      - [JSON simple, respecté, JSON valide]
+      - [JSON avec schéma, respecté, '`{"ville": "Lyon", "habitants": 522250}`']
+      - [Appel d'outil, respecté, '`population(ville = "Lyon")`']
+      - [Graine, respecté, "Deux fois `**Luvian**` : simple indice"]
+
+  - id: contexte
+    titre: Fenêtre de contexte
+    source: {seance: 1, partie: annexe A}
+    colonnes: [Taille (caractères), Tokens lus, Aiguille retrouvée, Durée moyenne d'un appel]
+    lignes:
+      - [8000, 1723, 3 positions sur 3, non relevée]
+      - [32000, 6654, 3 positions sur 3, non relevée]
+      - [64000, 13182, 3 positions sur 3, "0,72 s (2 appels relevés)"]
+      - [128000, 26488, 3 positions sur 3, "1,37 s"]
+      - [256000, 52697, 3 positions sur 3, "2,76 s"]
+    note: "Aucun refus : la limite du serveur se situe au-delà de {tokens-lus-max} tokens."
+
+  - id: embeddings
+    titre: Embeddings
+    source: {seance: 1, partie: annexe A}
+    colonnes: [Phrase comparée à la phrase de départ, Similarité cosinus]
+    lignes:
+      - [Paraphrase, 0.838]
+      - [Phrase hors sujet, 0.235]
+    note: "Vecteurs de {dimension-embeddings} dimensions. Statut : cohérent."
+
+  - id: debit
+    titre: Débit
+    source: {seance: 1, partie: annexe A}
+    colonnes: [Appel, Durée (s), Tokens écrits, Tokens par seconde]
+    lignes:
+      - ["`debit-1`", 1.37, 216, 157.7]
+      - ["`debit-2`", 1.41, 216, 153.2]
+      - ["`debit-3`", 1.39, 220, 158.3]

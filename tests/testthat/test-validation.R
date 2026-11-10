@@ -1,115 +1,142 @@
-source(if (file.exists("R/lire.R")) "R/lire.R" else "../../R/lire.R")
-source(if (file.exists("R/valider.R")) "R/valider.R" else "../../R/valider.R")
+source(if (file.exists("R/valider.R")) "R/valider.R" else "../../R/valider.R", encoding = "UTF-8")
 
-test_that("valider.R se source depuis tests/testthat", {
-  expect_no_error(source("../../R/valider.R", local = new.env(parent = globalenv())))
-})
+dossier_data <- if (dir.exists("data")) "data" else "../../data"
+dossier_fixtures <- if (dir.exists("tests/testthat/fixtures")) "tests/testthat/fixtures" else "fixtures"
 
 copier_fixture_valide <- function() {
   dir <- tempfile("fixture-")
   dir.create(dir)
-  fixtures_dir <- if (dir.exists("tests/testthat/fixtures")) "tests/testthat/fixtures" else "fixtures"
-  fichiers <- c("journal.csv", "plan_labo.csv", "jalons.csv", "concepts.csv", "mesures.csv")
-  for (f in fichiers) {
-    file.copy(file.path(fixtures_dir, f), file.path(dir, f), overwrite = TRUE)
-  }
+  file.copy(list.files(dossier_fixtures, full.names = TRUE), dir)
   dir
 }
 
+# Modifie un fichier YAML de la copie : f reçoit et rend la structure lue.
+modifier_yaml <- function(dir, fichier, f) {
+  chemin <- file.path(dir, fichier)
+  yaml::write_yaml(f(yaml::read_yaml(chemin)), chemin)
+  dir
+}
+
+derniere <- function(x) length(x$seances)
+
+test_that("les données publiées sont valides", {
+  expect_invisible(valider_tout(dossier_data))
+})
+
 test_that("le jeu de fixtures valide passe", {
-  dir <- copier_fixture_valide()
-  expect_invisible(valider_tout(dir))
+  expect_invisible(valider_tout(copier_fixture_valide()))
 })
 
-test_that("les champs vides restent des chaînes vides", {
-  dir <- copier_fixture_valide()
-  d <- lire_tout(dir)
-  expect_identical(d$concepts$vu_le[[1]], "")
-  expect_identical(d$concepts$pratique_le[[1]], "")
-  expect_identical(d$concepts$maitrise_le[[1]], "")
+test_that("le projet interne n'admet que ses deux libellés génériques", {
+  dir <- modifier_yaml(copier_fixture_valide(), "seances.yml", function(x) {
+    x$seances[[derniere(x)]]$titre <- "Projet interne : autre libellé"
+    x
+  })
+  expect_error(valider_tout(dir), "Confidentialité")
+
+  # aucun autre champ, ni livrable, ni date, ni lien
+  for (champ in c("livrables", "date", "lien", "duree")) {
+    dir <- modifier_yaml(copier_fixture_valide(), "seances.yml", function(x) {
+      x$seances[[derniere(x)]][[champ]] <- "valeur"
+      x
+    })
+    expect_error(valider_tout(dir), "Confidentialité", info = champ)
+  }
+
+  # chaque libellé une seule fois
+  dir <- modifier_yaml(copier_fixture_valide(), "seances.yml", function(x) {
+    x$seances[[derniere(x)]]$titre <- x$seances[[derniere(x) - 1]]$titre
+    x$seances[[derniere(x)]]$statut <- x$seances[[derniere(x) - 1]]$statut
+    x
+  })
+  expect_error(valider_tout(dir), "Confidentialité")
 })
 
-test_that("chaque règle clé déclenche une erreur dédiée", {
-  # colonnes exactes
-  dir <- copier_fixture_valide()
-  writeLines("a,b\n1,2", file.path(dir, "journal.csv"))
-  expect_error(valider_tout(dir), "Colonnes invalides")
+test_that("aucun texte du laboratoire ne parle du projet interne", {
+  dir <- modifier_yaml(copier_fixture_valide(), "seances.yml", function(x) {
+    x$seances[[1]]$objectif <- "Comparer avec la cible interne"
+    x
+  })
+  expect_error(valider_tout(dir), "Confidentialité")
+})
 
-  # date valide ou vide
-  dir <- copier_fixture_valide()
-  writeLines(
-    c(
-      "date,projet,etape,duree_h,fait,appris,suite",
-      "2026-99-01,labo,J1,1,fait,appris,suite"
-    ),
-    file.path(dir, "journal.csv")
-  )
-  expect_error(valider_tout(dir), "Date invalide")
+test_that("aucun chiffre hors registre dans les textes", {
+  dir <- modifier_yaml(copier_fixture_valide(), "seances.yml", function(x) {
+    x$seances[[1]]$objectif <- "Un taux de 87 % mesuré"
+    x
+  })
+  expect_error(valider_tout(dir), "chiffre hors registre")
 
-  # états autorisés
-  dir <- copier_fixture_valide()
-  plan <- readr::read_csv(file.path(dir, "plan_labo.csv"), show_col_types = FALSE)
-  plan$etat[[1]] <- "Terminé"
-  readr::write_csv(plan, file.path(dir, "plan_labo.csv"), na = "")
-  expect_error(valider_tout(dir), "État hors liste autorisée")
+  dir <- modifier_yaml(copier_fixture_valide(), "seances.yml", function(x) {
+    x$seances[[1]]$livrables[[1]] <- "Une valeur {mesure-inconnue}"
+    x
+  })
+  expect_error(valider_tout(dir), "mesure inconnue")
 
-  # étapes complètes labo
-  dir <- copier_fixture_valide()
-  plan <- readr::read_csv(file.path(dir, "plan_labo.csv"), show_col_types = FALSE)
-  plan$etape[[15]] <- "J16"
-  readr::write_csv(plan, file.path(dir, "plan_labo.csv"), na = "")
-  expect_error(valider_tout(dir), "J1 à J15")
+  # le code, les numéros et les références au registre sont permis
+  expect_false(chiffre_hors_registre("Erreur `404`, EcoDef n° 273, {tokens-lus-max} tokens"))
+  expect_true(chiffre_hors_registre("environ 4,8 caractères par token"))
+})
 
-  # fait => date de fin
-  dir <- copier_fixture_valide()
-  plan <- readr::read_csv(file.path(dir, "plan_labo.csv"), show_col_types = FALSE)
-  plan$etat[[1]] <- "Fait"
-  plan$date_fin[[1]] <- ""
-  readr::write_csv(plan, file.path(dir, "plan_labo.csv"), na = "")
-  expect_error(valider_tout(dir), "date de fin")
+test_that("chaque mesure a une valeur et une source précise", {
+  dir <- modifier_yaml(copier_fixture_valide(), "mesures.yml", function(x) {
+    x$mesures[[1]]$source <- NULL
+    x
+  })
+  expect_error(valider_tout(dir), "source précise")
 
-  # confidentialité : aucune ligne hors laboratoire dans le journal public
-  dir <- copier_fixture_valide()
-  writeLines(
-    c(
-      "date,projet,etape,duree_h,fait,appris,suite",
-      "2026-11-01,interne,J1,2,,,"
-    ),
-    file.path(dir, "journal.csv")
-  )
-  expect_error(valider_tout(dir), "Confidentialité : seul le laboratoire")
+  dir <- modifier_yaml(copier_fixture_valide(), "mesures.yml", function(x) {
+    x$mesures[[1]]$valeur <- "trois"
+    x
+  })
+  expect_error(valider_tout(dir), "valeur numérique")
 
-  # confidentialité : aucun jalon hors laboratoire
-  dir <- copier_fixture_valide()
-  write("X1,interne,critère,,À faire,", file.path(dir, "jalons.csv"), append = TRUE)
-  expect_error(valider_tout(dir), "Confidentialité : seul le laboratoire")
+  dir <- modifier_yaml(copier_fixture_valide(), "mesures.yml", function(x) {
+    x$mesures[[2]]$id <- x$mesures[[1]]$id
+    x
+  })
+  expect_error(valider_tout(dir), "en double")
 
-  # mesures serveurs autorisés
-  dir <- copier_fixture_valide()
-  writeLines(
-    c(
-      "date,serveur,modele,indicateur,succes,n,commentaire",
-      "2026-11-01,autre,m1,qualite,1,10,"
-    ),
-    file.path(dir, "mesures.csv")
-  )
-  expect_error(valider_tout(dir), "albert ou sspcloud")
+  dir <- modifier_yaml(copier_fixture_valide(), "mesures.yml", function(x) {
+    x$tableaux[[1]]$lignes[[1]] <- x$tableaux[[1]]$lignes[[1]][-1]
+    x
+  })
+  expect_error(valider_tout(dir), "autant de cellules")
+})
 
-  # succes borné par n
-  dir <- copier_fixture_valide()
-  writeLines(
-    c(
-      "date,serveur,modele,indicateur,succes,n,commentaire",
-      "2026-11-01,albert,m1,qualite,11,10,"
-    ),
-    file.path(dir, "mesures.csv")
-  )
-  expect_error(valider_tout(dir), "entre 0 et n")
+test_that("statut, date et durée des séances sont cohérents", {
+  dir <- modifier_yaml(copier_fixture_valide(), "seances.yml", function(x) {
+    x$seances[[1]]$statut <- "terminé"
+    x
+  })
+  expect_error(valider_tout(dir), "statut hors liste")
 
-  # concepts séquence des niveaux
+  dir <- modifier_yaml(copier_fixture_valide(), "seances.yml", function(x) {
+    x$seances[[1]]$date <- "2026-13-40"
+    x
+  })
+  expect_error(valider_tout(dir), "date invalide")
+
+  dir <- modifier_yaml(copier_fixture_valide(), "seances.yml", function(x) {
+    x$seances[[1]]$date <- NULL
+    x
+  })
+  expect_error(valider_tout(dir), "date et une durée")
+
+  dir <- modifier_yaml(copier_fixture_valide(), "seances.yml", function(x) {
+    x$seances[[1]]$duree <- "duree-inconnue"
+    x
+  })
+  expect_error(valider_tout(dir), "absent de mesures.yml")
+})
+
+test_that("les règles des concepts restent appliquées", {
   dir <- copier_fixture_valide()
-  concepts <- readr::read_csv(file.path(dir, "concepts.csv"), show_col_types = FALSE)
+  concepts <- readr::read_csv(file.path(dir, "concepts.csv"), col_types = readr::cols(.default = "c"), na = character())
   concepts$pratique_le[[1]] <- "2026-11-01"
   readr::write_csv(concepts, file.path(dir, "concepts.csv"), na = "")
   expect_error(valider_tout(dir), "pratique")
+
+  d <- lire_tout(copier_fixture_valide())
+  expect_identical(d$concepts$vu_le[[1]], "")
 })
