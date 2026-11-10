@@ -1,0 +1,11 @@
+---
+title: "Cours"
+subtitle: "Un cours détaillé par séance du laboratoire"
+page-layout: full
+---
+
+```{r}
+#| output: asis
+source("R/pages.R", encoding = "UTF-8")
+cat(liste_cours(charger()))
+```

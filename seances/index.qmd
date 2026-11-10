@@ -1,0 +1,13 @@
+---
+title: "Séances"
+subtitle: "Les séances du laboratoire : celles qui sont faites et la prochaine"
+page-layout: full
+---
+
+```{r}
+#| output: asis
+source("R/pages.R", encoding = "UTF-8")
+cat(cartes_seances(charger()))
+```
+
+Les séances suivantes figurent au [planning](/planning.qmd).

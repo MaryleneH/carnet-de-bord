@@ -1,0 +1,11 @@
+---
+title: "Planning"
+subtitle: "Les séances du laboratoire et l'avancement du projet interne"
+page-layout: full
+---
+
+```{r}
+#| output: asis
+source("R/pages.R", encoding = "UTF-8")
+cat(frise(charger()))
+```
