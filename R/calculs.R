@@ -1,40 +1,14 @@
-semaine_iso <- function(date) {
-  format(as.Date(date), "%G-W%V")
-}
+# Calculs et mise en forme des nombres à la française.
 
-heures_par_semaine_projet <- function(journal) {
-  if (nrow(journal) == 0) {
-    return(dplyr::tibble(semaine = character(), projet = character(), heures = numeric()))
-  }
+ESPACE_FINE <- " "       # espace fine insécable : milliers, avant % ; ! ?
+ESPACE_INSECABLE <- " "  # espace insécable : entre un nombre et son unité
 
-  journal |>
-    dplyr::mutate(
-      date = as.Date(date),
-      semaine = format(date, "%G-W%V"),
-      duree_h = as.numeric(duree_h)
-    ) |>
-    dplyr::group_by(semaine, projet) |>
-    dplyr::summarise(heures = sum(duree_h), .groups = "drop")
-}
+MOIS <- c(
+  "janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août",
+  "septembre", "octobre", "novembre", "décembre"
+)
 
-etape_en_cours <- function(plan, colonne_etape = "etape") {
-  non_faites <- plan |>
-    dplyr::filter(.data$etat != "Fait")
-
-  if (nrow(non_faites) == 0) {
-    tail(plan[[colonne_etape]], 1)
-  } else {
-    non_faites[[colonne_etape]][[1]]
-  }
-}
-
-etapes_en_cours <- function(plan_labo) {
-  dplyr::tibble(
-    projet = "labo",
-    etape = etape_en_cours(plan_labo)
-  )
-}
-
+# Intervalle de confiance de Wilson pour une proportion (chapitre 13 du cours).
 wilson <- function(succes, n, z = 1.959964) {
   p <- succes / n
   denominateur <- 1 + (z^2 / n)
@@ -48,35 +22,44 @@ wilson <- function(succes, n, z = 1.959964) {
   )
 }
 
-ajouter_wilson <- function(mesures) {
-  if (nrow(mesures) == 0) {
-    return(
-      dplyr::tibble(
-        date = as.Date(character()),
-        serveur = character(),
-        modele = character(),
-        indicateur = character(),
-        succes = integer(),
-        n = integer(),
-        commentaire = character(),
-        taux = numeric(),
-        borne_basse = numeric(),
-        borne_haute = numeric()
-      )
-    )
-  }
+# « 10 novembre 2026 », « 1er mars 2027 », sans dépendre de la locale.
+date_longue <- function(x) {
+  d <- as.Date(as.character(x))
+  jour <- as.integer(format(d, "%d"))
+  paste(if (jour == 1) "1er" else jour, MOIS[as.integer(format(d, "%m"))], format(d, "%Y"))
+}
 
-  mesures |>
-    dplyr::mutate(
-      date = as.Date(date),
-      succes = as.integer(succes),
-      n = as.integer(n)
-    ) |>
-    dplyr::rowwise() |>
-    dplyr::mutate(
-      taux = succes / n,
-      borne_basse = wilson(succes, n)[["borne_basse"]],
-      borne_haute = wilson(succes, n)[["borne_haute"]]
-    ) |>
-    dplyr::ungroup()
+EXPOSANTS <- c(
+  "-" = "⁻", "0" = "⁰", "1" = "¹", "2" = "²", "3" = "³",
+  "4" = "⁴", "5" = "⁵", "6" = "⁶", "7" = "⁷", "8" = "⁸", "9" = "⁹"
+)
+
+# 5.18e-5 → « 5,18 × 10⁻⁵ »
+format_scientifique <- function(v) {
+  exposant <- floor(log10(abs(v)))
+  mantisse <- format(signif(v / 10^exposant, 3), decimal.mark = ",", trim = TRUE)
+  chiffres <- strsplit(as.character(exposant), "")[[1]]
+  paste0(mantisse, ESPACE_INSECABLE, "×", ESPACE_INSECABLE, "10", paste(EXPOSANTS[chiffres], collapse = ""))
+}
+
+# 52697 → « 52 697 » (espace fine insécable) ; 0.838 → « 0,838 ».
+format_nombre <- function(x) {
+  vapply(x, function(v) {
+    if (v != 0 && abs(v) < 1e-3) {
+      return(format_scientifique(v))
+    }
+    format(v, big.mark = ESPACE_FINE, decimal.mark = ",", scientific = FALSE, trim = TRUE, digits = 15)
+  }, character(1), USE.NAMES = FALSE)
+}
+
+# Valeur d'une mesure du registre : « ≈ 156 », « 4,6 à 4,9 », « 20,7 % à 100 % ».
+# Avec l'unité si demandé : « 52 697 tokens ».
+format_valeur <- function(m, avec_unite = FALSE) {
+  v <- format_nombre(m$valeur)
+  pourcent <- identical(m$unite, "%")
+  if (pourcent) v <- paste0(v, ESPACE_FINE, "%")
+  texte <- if (length(v) == 2) paste(v[[1]], "à", v[[2]]) else v
+  if (isTRUE(m$approx)) texte <- paste0("≈", ESPACE_INSECABLE, texte)
+  if (avec_unite && !pourcent && nzchar(m$unite)) texte <- paste0(texte, ESPACE_INSECABLE, m$unite)
+  texte
 }

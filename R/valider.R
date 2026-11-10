@@ -1,13 +1,181 @@
 source(if (file.exists("R/lire.R")) "R/lire.R" else "../../R/lire.R")
 
-ETATS_AUTORISES <- c("À faire", "En cours", "Fait", "Coupé")
+# ── Règles du carnet ─────────────────────────────────────────────────────────
 
-# Le projet interne n'apparaît jamais dans les données publiques.
-MESSAGE_CONFIDENTIALITE <- "Confidentialité : seul le laboratoire figure dans les données publiques"
+STATUTS_LABO <- c("fait", "à planifier", "prévu")
+STATUTS_INTERNE <- c("préparé", "en attente")
+STATUTS_POINTS <- c("en attente", "fait")
 
-arreter_regle <- function(fichier, ligne_csv, regle) {
-  stop(sprintf("%s ligne %d : %s", fichier, ligne_csv, regle), call. = FALSE)
+# Le projet interne n'apparaît que sous ces deux libellés, sans autre champ.
+LIBELLES_INTERNES <- c(
+  "Projet interne : phase 0 (reconnaissance et cadre), jour 1 préparé",
+  "Validation du cadre des deux projets : en attente"
+)
+CHAMPS_INTERNES <- c("id", "projet", "titre", "statut")
+MESSAGE_CONFIDENTIALITE <- paste(
+  "Confidentialité : le projet interne n'apparaît que sous ses deux libellés",
+  "génériques, et aucun texte du laboratoire n'en parle"
+)
+
+MOTIF_ID <- "^[a-z0-9]+(-[a-z0-9]+)*$"
+
+ou_sinon <- function(a, b) if (is.null(a)) b else a
+
+arreter_regle <- function(fichier, ou, regle) {
+  stop(sprintf("%s, %s : %s", fichier, ou, regle), call. = FALSE)
 }
+
+# ── Chiffres et références au registre ───────────────────────────────────────
+
+# Identifiants de mesures cités dans un texte sous la forme {identifiant}.
+references <- function(texte) {
+  trouves <- regmatches(texte, gregexpr("\\{[a-z0-9-]+\\}", texte))[[1]]
+  gsub("[{}]", "", trouves)
+}
+
+# Vrai si le texte contient un chiffre qui ne vient pas du registre : on retire
+# le `code`, les numéros (n° 273) et les références {identifiant}.
+chiffre_hors_registre <- function(texte) {
+  reste <- gsub("`[^`]*`", "", texte)
+  reste <- gsub("\\{[a-z0-9-]+\\}", "", reste)
+  reste <- gsub("n°\\s*[0-9]+", "", reste)
+  grepl("[0-9]", reste)
+}
+
+# Tous les textes affichés d'une séance du laboratoire.
+textes_libres <- function(s) {
+  c(
+    s$titre, s$sous_titre, s$objectif, unlist(s$livrables),
+    unlist(lapply(s$incidents, function(i) c(i$incident, i$cause, i$correction))),
+    vapply(s$commits, function(co) ou_sinon(co$message, ""), character(1)),
+    unlist(s$a_cocher),
+    unlist(lapply(s$points_en_attente, function(p) c(p$intitule, p$detail))),
+    s$jalon$critere
+  )
+}
+
+# ── Registre des mesures ─────────────────────────────────────────────────────
+
+valider_source <- function(src, fichier, ou) {
+  ok <- is.list(src) && is.numeric(src$seance) && length(src$seance) == 1 &&
+    is.character(src$partie) && length(src$partie) == 1 && nzchar(src$partie)
+  if (!ok) {
+    arreter_regle(fichier, ou, "source précise manquante (séance et partie du cours)")
+  }
+}
+
+valider_registre <- function(d) {
+  f <- "mesures.yml"
+  ids <- character()
+  for (m in d$mesures) {
+    ou <- sprintf("mesure '%s'", ou_sinon(m$id, "?"))
+    if (!is.character(m$id) || !grepl(MOTIF_ID, m$id)) arreter_regle(f, ou, "identifiant invalide")
+    if (m$id %in% ids) arreter_regle(f, ou, "identifiant en double")
+    ids <- c(ids, m$id)
+    if (!is.character(m$libelle) || !nzchar(m$libelle)) arreter_regle(f, ou, "libellé manquant")
+    if (!is.numeric(m$valeur) || !(length(m$valeur) %in% 1:2)) {
+      arreter_regle(f, ou, "valeur numérique ou intervalle [basse, haute] attendu")
+    }
+    if (length(m$valeur) == 2 && m$valeur[[1]] > m$valeur[[2]]) {
+      arreter_regle(f, ou, "intervalle inversé")
+    }
+    if (!is.character(m$unite)) arreter_regle(f, ou, "unité manquante")
+    valider_source(m$source, f, ou)
+  }
+
+  for (fo in d$formules) {
+    ou <- sprintf("formule '%s'", ou_sinon(fo$id, "?"))
+    if (!is.character(fo$texte) || !nzchar(fo$texte)) arreter_regle(f, ou, "texte manquant")
+    valider_source(fo$source, f, ou)
+  }
+
+  for (t in d$tableaux) {
+    ou <- sprintf("tableau '%s'", ou_sinon(t$id, "?"))
+    valider_source(t$source, f, ou)
+    n <- length(t$colonnes)
+    if (n == 0) arreter_regle(f, ou, "colonnes manquantes")
+    for (ligne in t$lignes) {
+      if (length(ligne) != n) arreter_regle(f, ou, "une ligne n'a pas autant de cellules que de colonnes")
+    }
+    inconnues <- setdiff(references(ou_sinon(t$note, "")), ids)
+    if (length(inconnues) > 0) arreter_regle(f, ou, sprintf("mesure inconnue : {%s}", inconnues[[1]]))
+  }
+
+  ids
+}
+
+# ── Registre des séances ─────────────────────────────────────────────────────
+
+est_date_valide <- function(x) {
+  x <- as.character(x)
+  length(x) == 1 && grepl("^\\d{4}-\\d{2}-\\d{2}$", x) && !is.na(as.Date(x, format = "%Y-%m-%d"))
+}
+
+est_entier <- function(x) is.numeric(x) && length(x) == 1 && x == round(x) && x > 0
+
+valider_seances <- function(seances, ids_mesures) {
+  f <- "seances.yml"
+  ids <- character()
+  numeros <- integer()
+  libelles_vus <- character()
+
+  for (s in seances) {
+    ou <- sprintf("séance '%s'", ou_sinon(s$id, "?"))
+    if (!is.character(s$id) || !grepl(MOTIF_ID, s$id)) arreter_regle(f, ou, "identifiant invalide")
+    if (s$id %in% ids) arreter_regle(f, ou, "identifiant en double")
+    ids <- c(ids, s$id)
+
+    if (identical(s$projet, "interne")) {
+      ok <- all(names(s) %in% CHAMPS_INTERNES) &&
+        is.character(s$titre) && s$titre %in% LIBELLES_INTERNES &&
+        !(s$titre %in% libelles_vus) && identical(length(s$statut), 1L) &&
+        s$statut %in% STATUTS_INTERNE
+      if (!ok) arreter_regle(f, ou, MESSAGE_CONFIDENTIALITE)
+      libelles_vus <- c(libelles_vus, s$titre)
+      next
+    }
+
+    if (!identical(s$projet, "labo")) arreter_regle(f, ou, "'projet' doit valoir labo ou interne")
+    if (!(identical(length(s$statut), 1L) && s$statut %in% STATUTS_LABO)) {
+      arreter_regle(f, ou, "statut hors liste autorisée")
+    }
+    if (!est_entier(s$numero) || !est_entier(s$semaine)) {
+      arreter_regle(f, ou, "numéro et semaine : entiers positifs attendus")
+    }
+    if (s$numero %in% numeros) arreter_regle(f, ou, "numéro de séance en double")
+    numeros <- c(numeros, s$numero)
+    if (!is.character(s$titre) || !nzchar(s$titre)) arreter_regle(f, ou, "titre manquant")
+    if (!is.null(s$date) && !est_date_valide(s$date)) arreter_regle(f, ou, "date invalide")
+    if (s$statut == "fait" && (is.null(s$date) || is.null(s$duree))) {
+      arreter_regle(f, ou, "une séance faite a une date et une durée")
+    }
+    if (!is.null(s$duree) && !(s$duree %in% ids_mesures)) {
+      arreter_regle(f, ou, "durée : identifiant absent de mesures.yml")
+    }
+    for (i in s$incidents) {
+      if (!est_entier(i$chapitre)) arreter_regle(f, ou, "incident sans chapitre du cours")
+    }
+    for (p in s$points_en_attente) {
+      if (!(identical(length(p$statut), 1L) && p$statut %in% STATUTS_POINTS)) {
+        arreter_regle(f, ou, "point en attente : statut hors liste autorisée")
+      }
+    }
+
+    textes <- textes_libres(s)
+    if (any(grepl("intern", textes, ignore.case = TRUE))) {
+      arreter_regle(f, ou, MESSAGE_CONFIDENTIALITE)
+    }
+    for (t in textes) {
+      if (chiffre_hors_registre(t)) {
+        arreter_regle(f, ou, sprintf("chiffre hors registre dans « %s » : citer une mesure par {identifiant}", t))
+      }
+      inconnues <- setdiff(references(t), ids_mesures)
+      if (length(inconnues) > 0) arreter_regle(f, ou, sprintf("mesure inconnue : {%s}", inconnues[[1]]))
+    }
+  }
+}
+
+# ── Suivi des concepts (concepts.csv) ───────────────────────────────────────
 
 est_date_valide_ou_vide <- function(x) {
   ifelse(
@@ -17,128 +185,42 @@ est_date_valide_ou_vide <- function(x) {
   )
 }
 
-valider_dates_ou_vides <- function(df, colonnes, fichier) {
-  for (colonne in colonnes) {
-    invalides <- which(!est_date_valide_ou_vide(df[[colonne]]))
+valider_concepts <- function(concepts) {
+  f <- "concepts.csv"
+  for (colonne in c("vu_le", "pratique_le", "maitrise_le")) {
+    invalides <- which(!est_date_valide_ou_vide(concepts[[colonne]]))
     if (length(invalides) > 0) {
-      arreter_regle(fichier, invalides[[1]] + 1L, sprintf("Date invalide dans '%s'", colonne))
+      arreter_regle(f, sprintf("ligne %d", invalides[[1]] + 1L), sprintf("Date invalide dans '%s'", colonne))
+    }
+  }
+
+  invalide_etape <- which(!(concepts$etape %in% paste0("J", 1:15)))
+  if (length(invalide_etape) > 0) {
+    arreter_regle(f, sprintf("ligne %d", invalide_etape[[1]] + 1L), "'etape' doit être entre J1 et J15")
+  }
+
+  for (i in seq_len(nrow(concepts))) {
+    ou <- sprintf("ligne %d", i + 1L)
+    vu <- concepts$vu_le[[i]]
+    pratique <- concepts$pratique_le[[i]]
+    maitrise <- concepts$maitrise_le[[i]]
+    if (pratique != "" && vu == "") arreter_regle(f, ou, "Niveau 'pratique' interdit sans 'vu'")
+    if (maitrise != "" && pratique == "") arreter_regle(f, ou, "Niveau 'maitrise' interdit sans 'pratique'")
+    if (vu != "" && pratique != "" && as.Date(pratique) < as.Date(vu)) {
+      arreter_regle(f, ou, "Dates non croissantes entre vu et pratique")
+    }
+    if (pratique != "" && maitrise != "" && as.Date(maitrise) < as.Date(pratique)) {
+      arreter_regle(f, ou, "Dates non croissantes entre pratique et maitrise")
     }
   }
 }
 
-valider_etats <- function(df, colonne = "etat", fichier) {
-  invalides <- which(!(df[[colonne]] %in% ETATS_AUTORISES))
-  if (length(invalides) > 0) {
-    arreter_regle(fichier, invalides[[1]] + 1L, "État hors liste autorisée")
-  }
-}
+# ── Point d'entrée (appelé par la CI et à chaque rendu) ─────────────────────
 
 valider_tout <- function(dossier = "data") {
   d <- lire_tout(dossier)
-
-  journal <- d$journal
-  plan_labo <- d$plan_labo
-  jalons <- d$jalons
-  concepts <- d$concepts
-  mesures <- d$mesures
-
-  valider_dates_ou_vides(journal, c("date"), "journal.csv")
-  valider_dates_ou_vides(plan_labo, c("date_fin"), "plan_labo.csv")
-  valider_dates_ou_vides(jalons, c("date_prevue", "date_atteinte"), "jalons.csv")
-  valider_dates_ou_vides(concepts, c("vu_le", "pratique_le", "maitrise_le"), "concepts.csv")
-  valider_dates_ou_vides(mesures, c("date"), "mesures.csv")
-
-  # journal.csv
-  if (nrow(journal) > 0) {
-    invalide_projet <- which(journal$projet != "labo")
-    if (length(invalide_projet) > 0) {
-      arreter_regle("journal.csv", invalide_projet[[1]] + 1L, MESSAGE_CONFIDENTIALITE)
-    }
-
-    invalide_etape <- which(!(journal$etape %in% paste0("J", 1:15)))
-    if (length(invalide_etape) > 0) {
-      arreter_regle("journal.csv", invalide_etape[[1]] + 1L, "Étape invalide pour ce projet")
-    }
-
-    duree <- suppressWarnings(as.numeric(journal$duree_h))
-    invalide_duree <- which(is.na(duree) | duree <= 0 | duree > 10)
-    if (length(invalide_duree) > 0) {
-      arreter_regle("journal.csv", invalide_duree[[1]] + 1L, "'duree_h' doit être > 0 et <= 10")
-    }
-  }
-
-  # plan_labo.csv
-  valider_etats(plan_labo, fichier = "plan_labo.csv")
-  attendu_labo <- paste0("J", 1:15)
-  if (anyDuplicated(plan_labo$etape) > 0 || !setequal(plan_labo$etape, attendu_labo)) {
-    arreter_regle("plan_labo.csv", 2L, "Étapes attendues: J1 à J15, uniques et complètes")
-  }
-
-  fait_sans_date_labo <- which(plan_labo$etat == "Fait" & plan_labo$date_fin == "")
-  if (length(fait_sans_date_labo) > 0) {
-    arreter_regle("plan_labo.csv", fait_sans_date_labo[[1]] + 1L, "Une étape 'Fait' doit avoir une date de fin")
-  }
-
-  # jalons.csv
-  valider_etats(jalons, fichier = "jalons.csv")
-  invalide_projet_jalon <- which(jalons$projet != "labo")
-  if (length(invalide_projet_jalon) > 0) {
-    arreter_regle("jalons.csv", invalide_projet_jalon[[1]] + 1L, MESSAGE_CONFIDENTIALITE)
-  }
-
-  fait_sans_date_jalon <- which(jalons$etat == "Fait" & jalons$date_atteinte == "")
-  if (length(fait_sans_date_jalon) > 0) {
-    arreter_regle("jalons.csv", fait_sans_date_jalon[[1]] + 1L, "Un jalon 'Fait' doit avoir une date atteinte")
-  }
-
-  # concepts.csv
-  invalide_etape_concept <- which(!(concepts$etape %in% paste0("J", 1:15)))
-  if (length(invalide_etape_concept) > 0) {
-    arreter_regle("concepts.csv", invalide_etape_concept[[1]] + 1L, "'etape' doit être entre J1 et J15")
-  }
-
-  if (nrow(concepts) > 0) {
-    for (i in seq_len(nrow(concepts))) {
-      vu <- concepts$vu_le[[i]]
-      pratique <- concepts$pratique_le[[i]]
-      maitrise <- concepts$maitrise_le[[i]]
-
-      if (pratique != "" && vu == "") {
-        arreter_regle("concepts.csv", i + 1L, "Niveau 'pratique' interdit sans 'vu'")
-      }
-      if (maitrise != "" && pratique == "") {
-        arreter_regle("concepts.csv", i + 1L, "Niveau 'maitrise' interdit sans 'pratique'")
-      }
-
-      if (vu != "" && pratique != "" && as.Date(pratique) < as.Date(vu)) {
-        arreter_regle("concepts.csv", i + 1L, "Dates non croissantes entre vu et pratique")
-      }
-      if (pratique != "" && maitrise != "" && as.Date(maitrise) < as.Date(pratique)) {
-        arreter_regle("concepts.csv", i + 1L, "Dates non croissantes entre pratique et maitrise")
-      }
-    }
-  }
-
-  # mesures.csv
-  if (nrow(mesures) > 0) {
-    invalide_serveur <- which(!(mesures$serveur %in% c("albert", "sspcloud")))
-    if (length(invalide_serveur) > 0) {
-      arreter_regle("mesures.csv", invalide_serveur[[1]] + 1L, "'serveur' doit valoir albert ou sspcloud")
-    }
-
-    succes <- suppressWarnings(as.numeric(mesures$succes))
-    n <- suppressWarnings(as.numeric(mesures$n))
-
-    invalide_n <- which(is.na(n) | n <= 0 | n %% 1 != 0)
-    if (length(invalide_n) > 0) {
-      arreter_regle("mesures.csv", invalide_n[[1]] + 1L, "'n' doit être un entier strictement positif")
-    }
-
-    invalide_succes <- which(is.na(succes) | succes %% 1 != 0 | succes < 0 | succes > n)
-    if (length(invalide_succes) > 0) {
-      arreter_regle("mesures.csv", invalide_succes[[1]] + 1L, "'succes' doit être un entier entre 0 et n")
-    }
-  }
-
+  ids_mesures <- valider_registre(d)
+  valider_seances(d$seances, ids_mesures)
+  valider_concepts(d$concepts)
   invisible(d)
 }
