@@ -25,6 +25,7 @@ Adresse du site : `https://maryleneh.github.io/carnet-de-bord/`
 - **Confidentialité** : seules les séances du laboratoire sont admises ; toute autre entrée est refusée, ainsi que toute mention d'un autre projet dans les textes.
 - **Aucun chiffre sans source** : aucun nombre n'est tapé dans une page. Les indicateurs d'avancement sont calculés depuis `seances.yml` et `concepts.csv`, et le tableau de bord indique de quel fichier ils viennent. Les résultats des séances viennent de `data/mesures.yml`, où chacun a sa source (séance et partie du cours) ; dans `seances.yml`, un chiffre se cite par `{identifiant}`, et un chiffre écrit en dur est refusé. Les identifiants (`404`, numéro de commit, `ADR-001`, n° de publication) s'écrivent en `code` ou après « n° ».
 - **Cohérence** : statuts autorisés, dates valides, une séance faite a une date et une durée en heures.
+- **Cours** : chaque chapitre du dossier `cours/` est déclaré par sa séance (champ `cours` de `seances.yml`) sous le nom `cours/seance-NN-cours.md`, et chaque chapitre déclaré existe. La barre latérale, qui lit le dossier, et le plan du cours, qui lit `seances.yml`, disent donc toujours la même chose.
 
 ## Ajouter une séance
 
@@ -32,7 +33,7 @@ Adresse du site : `https://maryleneh.github.io/carnet-de-bord/`
 2. Compléter la séance dans `data/seances.yml` (statut, date, durée, livrables, journal, incidents, points en attente).
 3. Mettre à jour les niveaux des concepts dans `data/concepts.csv` (dates de vu, pratiqué, maîtrisé).
 4. Ajouter le chapitre du cours, `cours/seance-NN-cours.md`, et la page `seances/seance-NN.qmd`. Le chapitre entre seul dans la barre latérale du cours.
-5. Renseigner `cours: /cours/seance-NN-cours.md` pour la séance dans `data/seances.yml` : elle passe à « rédigé » dans le plan du cours et dans « Où j'en suis ».
+5. Renseigner `cours: /cours/seance-NN-cours.md` pour la séance dans `data/seances.yml` : elle passe à « rédigé » dans le plan du cours et dans « Où j'en suis ». Si ce champ manque, la validation échoue.
 
 ## Travailler en local
 
