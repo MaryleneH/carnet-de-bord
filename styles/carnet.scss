@@ -321,6 +321,8 @@ footer.footer { background-color: var(--c-fond); }
 .badge-etat.etat-a-planifier { color: var(--c-texte-violet); background-color: var(--c-teinte-violet); }
 .badge-etat.etat-prevu { color: var(--c-texte-gris); background-color: transparent; }
 .badge-etat.etat-en-attente { color: var(--c-texte-orange); background-color: var(--c-teinte-orange); }
+.badge-etat.etat-redige { color: var(--c-texte-vert); background-color: var(--c-teinte-vert); }
+.badge-etat.etat-a-venir { color: var(--c-texte-gris); background-color: transparent; }
 
 // ── Cartes ─────────────────────────────────────────────────────────────────
 
@@ -573,6 +575,32 @@ a.lien-point { text-decoration: none; border-radius: 50%; }
 .tab-content .carte, .tab-content .indicateur { font-size: 1rem; }
 main.content .tab-content .carte-titre { font-size: 1.2rem; }
 
+// « Où j'en suis » : les séances à gauche, l'avancement du cours à droite.
+.parcours-corps { display: grid; gap: 1.1rem 2.5rem; }
+@media (min-width: 992px) {
+  .parcours-corps { grid-template-columns: max-content minmax(0, 1fr); align-items: start; }
+  // aligne « Séances » sur « Cours », qui est dans un encadré
+  .parcours-labo { padding-top: 0.85rem; }
+}
+.sous-libelle {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-family: $police-interface;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--c-titre);
+}
+.cours-avancement {
+  padding: 0.85rem 1rem;
+  border-left: 4px solid var(--c-vert);
+  border-radius: 0 $rayon $rayon 0;
+  background-color: var(--c-fond-doux);
+}
+.cours-avancement p { margin: 0 0 0.3rem; }
+.cours-avancement p:last-child { margin-bottom: 0; }
+.cours-avancement ul { margin: 0.4rem 0 0.5rem; padding-left: 1.1rem; }
+.cours-avancement .progression { max-width: 22rem; }
+
 // Colonnes de la vue d'ensemble
 .colonnes-accueil {
   display: grid;
@@ -640,6 +668,7 @@ main.content .onglet-etroit > section > h3 {
 .frise-etape.etat-fait::before { border-color: var(--c-vert); background-color: var(--c-vert); }
 .frise-etape.etat-a-planifier::before { border-color: var(--c-violet); }
 .frise-etape.etat-en-attente::before { border-color: var(--c-orange); }
+.frise-etape.etat-redige::before { border-color: var(--c-vert); background-color: var(--c-vert); }
 .frise-etape p { margin: 0 0 0.2rem; }
 .frise-quand {
   font-family: $police-interface;
@@ -792,6 +821,28 @@ body :not(pre) > code:not(.sourceCode) {
   background-color: var(--c-fond-doux);
 }
 main code.sourceCode > span, main code.sourceCode span:not([class]) { color: var(--c-texte); }
+
+// Barre latérale du cours et navigation « précédent / suivant »
+#quarto-sidebar, .quarto-secondary-nav {
+  font-family: $police-interface;
+  font-size: 0.9rem;
+  background-color: var(--c-fond);
+  border-color: var(--c-bordure);
+}
+#quarto-sidebar .sidebar-title, #quarto-sidebar .menu-text { color: var(--c-texte-doux); }
+.quarto-page-breadcrumbs, .quarto-page-breadcrumbs a,
+.breadcrumb-item, .breadcrumb-item a, .breadcrumb-item + .breadcrumb-item::before { color: var(--c-texte-doux); }
+#title-block-header .breadcrumb a, #quarto-header .breadcrumb a, .quarto-secondary-nav .breadcrumb a { color: var(--c-texte-doux); }
+// Barre secondaire du cours sur téléphone : Quarto lui impose un fond clair.
+#quarto-header nav.quarto-secondary-nav { background-color: var(--c-fond) !important; border-bottom: 1px solid var(--c-bordure); }
+#quarto-sidebar .sidebar-link,
+#quarto-sidebar .sidebar-item-text { color: var(--c-texte-doux); }
+#quarto-sidebar .sidebar-link.active,
+#quarto-sidebar .sidebar-link.active .sidebar-item-text,
+#quarto-sidebar .sidebar-link.active .menu-text { color: var(--c-lien); font-weight: 600; }
+#quarto-sidebar .sidebar-item-toggle, #quarto-sidebar .sidebar-item-toggle .bi { color: var(--c-texte-doux); }
+.nav-page a, .nav-page .nav-page-text, .nav-page .bi { color: var(--c-lien); }
+.nav-page { font-family: $police-interface; }
 
 // ── Téléphone ──────────────────────────────────────────────────────────────
 
