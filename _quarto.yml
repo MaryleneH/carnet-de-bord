@@ -17,6 +17,14 @@ website:
   description: "Carnet de bord du laboratoire d'agent d'études statistiques : séances, planning, cours et méthode."
   site-url: "https://maryleneh.github.io/carnet-de-bord/"
   search: false
+  page-navigation: true
+  # Barre latérale du cours : le plan (cours/index.qmd) en tête, puis chaque
+  # chapitre du dossier cours/, ajouté seul dès que son fichier existe.
+  sidebar:
+    - id: cours
+      title: "Cours"
+      contents:
+        - auto: "cours"
   navbar:
     left:
       - text: Tableau de bord
