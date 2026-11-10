@@ -1,3 +1,7 @@
 _site/
 .Rproj.user/
 renv/library/
+.quarto/
+_variables.yml
+
+/.quarto/
