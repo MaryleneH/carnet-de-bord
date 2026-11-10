@@ -29,6 +29,15 @@ test_that("aucune page ne parle d'un projet interne", {
   }
 })
 
+test_that("les titres du cours ne laissent deviner aucun autre projet", {
+  # Titre et sous-titre de chaque chapitre : repris dans la barre latérale, le plan et le fil d'Ariane.
+  for (f in list.files(file.path(racine, "cours"), "\\.(md|qmd)$", full.names = TRUE)) {
+    texte <- paste(readLines(f, encoding = "UTF-8", warn = FALSE), collapse = "\n")
+    entete <- regmatches(texte, regexpr("(?s)^---\n.*?\n---\n", texte, perl = TRUE))
+    expect_false(any(grepl("intern|extern|deux projets", entete, ignore.case = TRUE)), info = basename(f))
+  }
+})
+
 test_that("la vue d'ensemble montre l'avancement, pas les résultats techniques des séances", {
   d <- charger(dossier_data)
   vue <- vue_ensemble(d)
