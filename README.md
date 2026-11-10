@@ -2,16 +2,15 @@
 
 Ce dépôt publie un tableau de bord personnel Quarto pour suivre deux projets en parallèle :
 - **Laboratoire** (public)
-- **Produit** (interne, informations masquées)
+- **Projet interne** : aucun détail publié ici
 
 ## Ajouter une séance au journal
 
 Éditez `data/journal.csv` et ajoutez une ligne :
 - `date` au format `AAAA-MM-JJ`
-- `projet` = `labo` ou `produit`
-- `etape` = `J1..J15` (labo) ou `P0..P5` (produit)
+- `projet` = `labo`
+- `etape` = `J1..J15`
 - `duree_h` > 0 et <= 10
-- si `projet=produit`, laisser `fait`, `appris` et `suite` vides
 
 ## Valider et prévisualiser en local
 
@@ -37,9 +36,9 @@ Ce dépôt publie un tableau de bord personnel Quarto pour suivre deux projets e
 
 Le site est public.
 
-Pour chaque ligne où `projet=produit` dans `journal.csv`, les colonnes `fait`, `appris` et `suite` doivent être vides. Sinon la validation échoue avec :
+Le projet interne n'apparaît dans aucune donnée publique : toute ligne de `journal.csv` ou de `jalons.csv` qui ne concerne pas le laboratoire fait échouer la validation avec :
 
-> Confidentialité : pas de texte libre pour le projet interne
+> Confidentialité : seul le laboratoire figure dans les données publiques
 
 Le fichier `data/mesures.csv` accepte uniquement les serveurs `albert` et `sspcloud`.
 

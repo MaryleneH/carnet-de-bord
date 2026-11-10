@@ -9,7 +9,7 @@ copier_fixture_valide <- function() {
   dir <- tempfile("fixture-")
   dir.create(dir)
   fixtures_dir <- if (dir.exists("tests/testthat/fixtures")) "tests/testthat/fixtures" else "fixtures"
-  fichiers <- c("journal.csv", "plan_labo.csv", "plan_produit.csv", "jalons.csv", "concepts.csv", "mesures.csv")
+  fichiers <- c("journal.csv", "plan_labo.csv", "jalons.csv", "concepts.csv", "mesures.csv")
   for (f in fichiers) {
     file.copy(file.path(fixtures_dir, f), file.path(dir, f), overwrite = TRUE)
   }
@@ -62,22 +62,27 @@ test_that("chaque règle clé déclenche une erreur dédiée", {
 
   # fait => date de fin
   dir <- copier_fixture_valide()
-  plan <- readr::read_csv(file.path(dir, "plan_produit.csv"), show_col_types = FALSE)
+  plan <- readr::read_csv(file.path(dir, "plan_labo.csv"), show_col_types = FALSE)
   plan$etat[[1]] <- "Fait"
   plan$date_fin[[1]] <- ""
-  readr::write_csv(plan, file.path(dir, "plan_produit.csv"), na = "")
+  readr::write_csv(plan, file.path(dir, "plan_labo.csv"), na = "")
   expect_error(valider_tout(dir), "date de fin")
 
-  # confidentialité produit
+  # confidentialité : aucune ligne hors laboratoire dans le journal public
   dir <- copier_fixture_valide()
   writeLines(
     c(
       "date,projet,etape,duree_h,fait,appris,suite",
-      "2026-11-01,produit,P0,2,texte,,"
+      "2026-11-01,interne,J1,2,,,"
     ),
     file.path(dir, "journal.csv")
   )
-  expect_error(valider_tout(dir), "Confidentialité : pas de texte libre pour le projet interne")
+  expect_error(valider_tout(dir), "Confidentialité : seul le laboratoire")
+
+  # confidentialité : aucun jalon hors laboratoire
+  dir <- copier_fixture_valide()
+  write("X1,interne,critère,,À faire,", file.path(dir, "jalons.csv"), append = TRUE)
+  expect_error(valider_tout(dir), "Confidentialité : seul le laboratoire")
 
   # mesures serveurs autorisés
   dir <- copier_fixture_valide()

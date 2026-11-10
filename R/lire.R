@@ -31,10 +31,6 @@ lire_tout <- function(dossier = "data") {
       file.path(dossier, "plan_labo.csv"),
       c("etape", "semaine", "objectif", "livrable", "critere", "etat", "date_fin")
     ),
-    plan_produit = lire_csv_strict(
-      file.path(dossier, "plan_produit.csv"),
-      c("etape", "intitule", "duree_prevue_sem", "etat", "date_debut", "date_fin")
-    ),
     jalons = lire_csv_strict(
       file.path(dossier, "jalons.csv"),
       c("jalon", "projet", "critere", "date_prevue", "etat", "date_atteinte")

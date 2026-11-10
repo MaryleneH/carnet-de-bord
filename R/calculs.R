@@ -28,10 +28,10 @@ etape_en_cours <- function(plan, colonne_etape = "etape") {
   }
 }
 
-etapes_en_cours <- function(plan_labo, plan_produit) {
+etapes_en_cours <- function(plan_labo) {
   dplyr::tibble(
-    projet = c("labo", "produit"),
-    etape = c(etape_en_cours(plan_labo), etape_en_cours(plan_produit))
+    projet = "labo",
+    etape = etape_en_cours(plan_labo)
   )
 }
 

@@ -16,14 +16,13 @@ source("R/lire.R")
 source("R/valider.R")
 source("R/calculs.R")
 
-palette_projets <- c(labo = "#0072B2", produit = "#D55E00")
+palette_projets <- c(labo = "#0072B2")
 
 valider_tout("data")
 d <- lire_tout("data")
 
 journal <- d$journal |> mutate(date = ifelse(date == "", NA_character_, date))
 plan_labo <- d$plan_labo
-plan_produit <- d$plan_produit
 jalons <- d$jalons
 concepts <- d$concepts
 mesures <- d$mesures
@@ -41,26 +40,15 @@ heures_total <- if (nrow(journal_calc) == 0) NA_real_ else sum(journal_calc$dure
 heures_7j <- if (nrow(journal_calc) == 0) NA_real_ else sum(journal_calc$duree_h[journal_calc$date >= (Sys.Date() - 6)], na.rm = TRUE)
 seances_labo_faites <- sum(plan_labo$etat == "Fait")
 seances_labo_total <- nrow(plan_labo)
-phase_produit <- etape_en_cours(plan_produit)
 jalons_faits <- sum(jalons$etat == "Fait")
 jalons_total <- nrow(jalons)
 concepts_maitrises <- sum(concepts$maitrise_le != "")
 concepts_total <- nrow(concepts)
 
 heures_semaine <- heures_par_semaine_projet(journal)
-prochaines_etapes <- etapes_en_cours(plan_labo, plan_produit)
+prochaines_etapes <- etapes_en_cours(plan_labo)
 
-journal_affiche <- if (nrow(journal_calc) == 0) {
-  journal_calc
-} else {
-  journal_calc |>
-    mutate(
-      fait = if_else(projet == "produit", "", fait),
-      appris = if_else(projet == "produit", "", appris),
-      suite = if_else(projet == "produit", "", suite),
-      projet = if_else(projet == "produit", "", projet)
-    )
-}
+journal_affiche <- journal_calc
 
 mesures_wilson <- ajouter_wilson(mesures)
 
@@ -108,11 +96,6 @@ list(icon = "calendar-week", color = "info", value = if (is.na(heures_7j)) "Pas 
 ```{r}
 #| content: valuebox
 list(icon = "flask", color = "success", value = sprintf("%d / %d séances labo faites", seances_labo_faites, seances_labo_total))
-```
-
-```{r}
-#| content: valuebox
-list(icon = "diagram-3", color = "warning", value = sprintf("Phase produit en cours : %s", phase_produit))
 ```
 
 ```{r}
@@ -182,38 +165,6 @@ if (nrow(seances_labo) == 0) {
   print(p)
 }
 ```
-
-# Produit
-
-## Phases et jalons produit
-
-```{r}
-DT::datatable(
-  plan_produit |> select(etape, etat, date_debut, date_fin),
-  rownames = FALSE,
-  options = list(pageLength = 10),
-  caption = "Phases du produit"
-)
-```
-
-```{r}
-heures_par_phase <- journal_calc |> filter(projet == "produit") |> group_by(etape) |> summarise(heures = sum(duree_h), .groups = "drop")
-if (nrow(heures_par_phase) == 0) {
-  cat("Pas encore de données")
-} else {
-  p <- ggplot(heures_par_phase, aes(x = etape, y = heures)) +
-    geom_col(fill = palette_projets[["produit"]], show.legend = FALSE) +
-    labs(x = "Phase", y = "Heures (h)", title = "Heures par phase produit") +
-    theme_minimal(base_size = 12)
-  print(p)
-}
-```
-
-```{r}
-DT::datatable(jalons |> filter(projet == "produit"), rownames = FALSE, options = list(pageLength = 10), caption = "Jalons produit")
-```
-
-Seuls les heures et les états figurent ici.
 
 # Compétences
 

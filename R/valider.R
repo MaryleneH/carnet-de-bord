@@ -2,6 +2,9 @@ source(if (file.exists("R/lire.R")) "R/lire.R" else "../../R/lire.R")
 
 ETATS_AUTORISES <- c("À faire", "En cours", "Fait", "Coupé")
 
+# Le projet interne n'apparaît jamais dans les données publiques.
+MESSAGE_CONFIDENTIALITE <- "Confidentialité : seul le laboratoire figure dans les données publiques"
+
 arreter_regle <- function(fichier, ligne_csv, regle) {
   stop(sprintf("%s ligne %d : %s", fichier, ligne_csv, regle), call. = FALSE)
 }
@@ -35,51 +38,32 @@ valider_tout <- function(dossier = "data") {
 
   journal <- d$journal
   plan_labo <- d$plan_labo
-  plan_produit <- d$plan_produit
   jalons <- d$jalons
   concepts <- d$concepts
   mesures <- d$mesures
 
   valider_dates_ou_vides(journal, c("date"), "journal.csv")
   valider_dates_ou_vides(plan_labo, c("date_fin"), "plan_labo.csv")
-  valider_dates_ou_vides(plan_produit, c("date_debut", "date_fin"), "plan_produit.csv")
   valider_dates_ou_vides(jalons, c("date_prevue", "date_atteinte"), "jalons.csv")
   valider_dates_ou_vides(concepts, c("vu_le", "pratique_le", "maitrise_le"), "concepts.csv")
   valider_dates_ou_vides(mesures, c("date"), "mesures.csv")
 
   # journal.csv
   if (nrow(journal) > 0) {
-    invalide_projet <- which(!(journal$projet %in% c("labo", "produit")))
+    invalide_projet <- which(journal$projet != "labo")
     if (length(invalide_projet) > 0) {
-      arreter_regle("journal.csv", invalide_projet[[1]] + 1L, "'projet' doit valoir labo ou produit")
+      arreter_regle("journal.csv", invalide_projet[[1]] + 1L, MESSAGE_CONFIDENTIALITE)
     }
 
-    for (i in seq_len(nrow(journal))) {
-      etape <- journal$etape[[i]]
-      projet <- journal$projet[[i]]
-      ok <- (projet == "labo" && etape %in% paste0("J", 1:15)) ||
-        (projet == "produit" && etape %in% paste0("P", 0:5))
-      if (!ok) {
-        arreter_regle("journal.csv", i + 1L, "Étape invalide pour ce projet")
-      }
+    invalide_etape <- which(!(journal$etape %in% paste0("J", 1:15)))
+    if (length(invalide_etape) > 0) {
+      arreter_regle("journal.csv", invalide_etape[[1]] + 1L, "Étape invalide pour ce projet")
     }
 
     duree <- suppressWarnings(as.numeric(journal$duree_h))
     invalide_duree <- which(is.na(duree) | duree <= 0 | duree > 10)
     if (length(invalide_duree) > 0) {
       arreter_regle("journal.csv", invalide_duree[[1]] + 1L, "'duree_h' doit être > 0 et <= 10")
-    }
-
-    ligne_produit_texte <- which(
-      journal$projet == "produit" &
-        (journal$fait != "" | journal$appris != "" | journal$suite != "")
-    )
-    if (length(ligne_produit_texte) > 0) {
-      arreter_regle(
-        "journal.csv",
-        ligne_produit_texte[[1]] + 1L,
-        "Confidentialité : pas de texte libre pour le projet interne"
-      )
     }
   }
 
@@ -95,23 +79,11 @@ valider_tout <- function(dossier = "data") {
     arreter_regle("plan_labo.csv", fait_sans_date_labo[[1]] + 1L, "Une étape 'Fait' doit avoir une date de fin")
   }
 
-  # plan_produit.csv
-  valider_etats(plan_produit, fichier = "plan_produit.csv")
-  attendu_produit <- paste0("P", 0:5)
-  if (anyDuplicated(plan_produit$etape) > 0 || !setequal(plan_produit$etape, attendu_produit)) {
-    arreter_regle("plan_produit.csv", 2L, "Étapes attendues: P0 à P5, uniques et complètes")
-  }
-
-  fait_sans_date_produit <- which(plan_produit$etat == "Fait" & plan_produit$date_fin == "")
-  if (length(fait_sans_date_produit) > 0) {
-    arreter_regle("plan_produit.csv", fait_sans_date_produit[[1]] + 1L, "Une étape 'Fait' doit avoir une date de fin")
-  }
-
   # jalons.csv
   valider_etats(jalons, fichier = "jalons.csv")
-  invalide_projet_jalon <- which(!(jalons$projet %in% c("labo", "produit")))
+  invalide_projet_jalon <- which(jalons$projet != "labo")
   if (length(invalide_projet_jalon) > 0) {
-    arreter_regle("jalons.csv", invalide_projet_jalon[[1]] + 1L, "'projet' doit valoir labo ou produit")
+    arreter_regle("jalons.csv", invalide_projet_jalon[[1]] + 1L, MESSAGE_CONFIDENTIALITE)
   }
 
   fait_sans_date_jalon <- which(jalons$etat == "Fait" & jalons$date_atteinte == "")
