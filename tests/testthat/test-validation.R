@@ -151,6 +151,42 @@ test_that("le plan du cours et la barre latérale citent les mêmes chapitres", 
   expect_identical(chemin_chapitre(10), "/cours/seance-10-cours.md")
 })
 
+test_that("la veille n'admet que des liens publics, uniques et bien rangés", {
+  avec_lien <- function(f) {
+    modifier_yaml(copier_fixture_valide(), "veille.yml", function(x) {
+      x$liens[[1]] <- f(x$liens[[1]])
+      x
+    })
+  }
+  expect_error(valider_tout(avec_lien(function(l) { l$url <- "http://example.org/page"; l })), "https publique")
+  expect_error(valider_tout(avec_lien(function(l) { l$url <- "https://wiki.intranet/page"; l })), "https publique")
+  expect_error(valider_tout(avec_lien(function(l) { l$url <- "https://192.168.1.10/page"; l })), "https publique")
+  expect_error(valider_tout(avec_lien(function(l) { l$theme <- "inconnu"; l })), "thème inconnu")
+  expect_error(valider_tout(avec_lien(function(l) { l$ajoute_le <- "2026-02-30"; l })), "date d'ajout")
+  expect_error(valider_tout(avec_lien(function(l) { l$type <- "billet"; l })), "type hors liste")
+  expect_error(valider_tout(avec_lien(function(l) { l$langue <- "de"; l })), "langue")
+  expect_error(valider_tout(avec_lien(function(l) { l$resume <- NULL; l })), "résumé manquant")
+  expect_error(valider_tout(avec_lien(function(l) { l$pourquoi <- "Utile pour le projet interne"; l })), "Confidentialité")
+
+  # le même lien, à l'ancre ou à la barre finale près, n'entre pas deux fois
+  dir <- modifier_yaml(copier_fixture_valide(), "veille.yml", function(x) {
+    double <- x$liens[[1]]
+    double$url <- paste0(double$url, "/#suite")
+    x$liens[[length(x$liens) + 1]] <- double
+    x
+  })
+  expect_error(valider_tout(dir), "déjà présent")
+
+  dir <- modifier_yaml(copier_fixture_valide(), "veille.yml", function(x) {
+    x$themes[[1]]$couleur <- "rose"
+    x
+  })
+  expect_error(valider_tout(dir), "couleur hors palette")
+
+  expect_true(est_url_publique("https://a2ui.org/quickstart/step-by-step/"))
+  expect_false(est_url_publique("https://localhost/page"))
+})
+
 test_that("les règles des concepts restent appliquées", {
   dir <- copier_fixture_valide()
   concepts <- readr::read_csv(file.path(dir, "concepts.csv"), col_types = readr::cols(.default = "c"), na = character())

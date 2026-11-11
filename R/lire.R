@@ -1,5 +1,5 @@
 # Lecture des données du carnet : registre des séances, registre des mesures
-# (chiffres sourcés, formules, tableaux) et suivi des concepts.
+# (chiffres sourcés, formules, tableaux), suivi des concepts et veille.
 
 lire_yaml <- function(chemin) {
   if (!file.exists(chemin)) {
@@ -38,8 +38,16 @@ normaliser_mesure <- function(m) {
   m
 }
 
+# Un lien de veille : mots-clés en vecteur, date d'ajout en texte.
+normaliser_lien <- function(l) {
+  l$mots_cles <- as.character(unlist(l$mots_cles))
+  if (!is.null(l$ajoute_le)) l$ajoute_le <- as.character(l$ajoute_le)
+  l
+}
+
 lire_tout <- function(dossier = "data") {
   registre <- lire_yaml(file.path(dossier, "mesures.yml"))
+  veille <- lire_yaml(file.path(dossier, "veille.yml"))
   list(
     seances = lire_yaml(file.path(dossier, "seances.yml"))$seances,
     mesures = lapply(registre$mesures, normaliser_mesure),
@@ -48,6 +56,7 @@ lire_tout <- function(dossier = "data") {
     concepts = lire_csv_strict(
       file.path(dossier, "concepts.csv"),
       c("concept", "etape", "vu_le", "pratique_le", "maitrise_le")
-    )
+    ),
+    veille = list(themes = veille$themes, liens = lapply(veille$liens, normaliser_lien))
   )
 }

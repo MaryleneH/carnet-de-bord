@@ -1,0 +1,35 @@
+# Jeu d'essai de la veille : deux thèmes garnis, un thème vide.
+themes:
+  - id: theme-a
+    titre: Thème A
+    couleur: vert
+    description: Premier thème de l'essai.
+  - id: theme-vide
+    titre: Thème sans lien
+  - id: theme-b
+    titre: Thème B
+
+liens:
+  - url: https://example.org/ancien
+    titre: Lien ancien
+    theme: theme-a
+    type: article
+    langue: fr
+    ajoute_le: 2026-11-01
+    resume: Un lien ajouté en premier.
+  - url: https://example.org/recent
+    titre: Lien récent
+    theme: theme-a
+    type: documentation
+    langue: en
+    ajoute_le: 2026-11-05
+    resume: Un lien plus récent, en anglais.
+    pourquoi: Pour vérifier l'ordre des liens.
+    mots_cles: [essai, ordre]
+  - url: https://docs.example.com/guide
+    titre: Guide
+    theme: theme-b
+    type: tutoriel
+    langue: fr
+    ajoute_le: 2026-11-03
+    resume: Un guide pas à pas.
