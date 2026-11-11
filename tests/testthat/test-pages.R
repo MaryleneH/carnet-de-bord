@@ -12,7 +12,7 @@ texte_redige <- function(chemin) {
 }
 
 test_that("aucun nombre n'est tapé à la main dans le tableau de bord et les séances", {
-  pages <- c("index.qmd", file.path("seances", list.files(file.path(racine, "seances"), "\\.qmd$")))
+  pages <- c("index.qmd", "veille/index.qmd", file.path("seances", list.files(file.path(racine, "seances"), "\\.qmd$")))
   for (p in pages) {
     expect_false(grepl("[0-9]", texte_redige(file.path(racine, p))), info = p)
   }
@@ -23,7 +23,7 @@ test_that("aucune page ne parle d'un projet interne", {
   rendu <- paste(page_tableau_de_bord(d), cartes_seances(d), page_seance(d, "labo-01"), plan_du_cours(d))
   expect_false(grepl("intern", rendu, ignore.case = TRUE))
   expect_false(grepl("deux projets", rendu, ignore.case = TRUE))
-  pages <- c("index.qmd", "methode.qmd", "cours/index.qmd", file.path("seances", list.files(file.path(racine, "seances"), "\\.qmd$")))
+  pages <- c("index.qmd", "methode.qmd", "cours/index.qmd", "veille/index.qmd", file.path("seances", list.files(file.path(racine, "seances"), "\\.qmd$")))
   for (p in pages) {
     expect_false(grepl("intern", texte_redige(file.path(racine, p)), ignore.case = TRUE), info = p)
   }
