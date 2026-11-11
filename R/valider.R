@@ -196,6 +196,71 @@ valider_cours <- function(seances, dossier_cours) {
   }
 }
 
+# ── Veille (veille.yml) ──────────────────────────────────────────────────────
+
+TYPES_LIENS <- c(
+  "article", "article scientifique", "documentation", "tutoriel", "cours",
+  "outil", "dépôt", "vidéo", "podcast"
+)
+LANGUES_LIENS <- c("fr", "en")
+COULEURS_THEMES <- c("bleu", "orange", "vert", "violet", "gris")
+# Suffixes réservés aux réseaux privés : un lien public n'y mène jamais.
+SUFFIXES_PRIVES <- c("local", "lan", "internal", "intranet", "corp", "home", "localhost")
+
+# Hôte d'une adresse https://hôte/chemin, en minuscules.
+hote_url <- function(url) tolower(sub("^https://([^/:?#]+).*$", "\\1", url))
+
+# Vrai si l'adresse est en https et mène à un hôte public désigné par son nom :
+# ni adresse IP, ni nom de réseau privé.
+est_url_publique <- function(url) {
+  if (!is.character(url) || length(url) != 1 || !grepl("^https://\\S+$", url, perl = TRUE)) return(FALSE)
+  hote <- hote_url(url)
+  grepl("^([a-z0-9-]+\\.)+(xn--[a-z0-9-]+|[a-z]{2,})$", hote) &&
+    !(sub("^.*\\.", "", hote) %in% SUFFIXES_PRIVES)
+}
+
+# Deux adresses qui ne diffèrent que par l'ancre ou la barre finale sont le même lien.
+cle_url <- function(url) tolower(sub("/+$", "", sub("#.*$", "", url)))
+
+un_parmi <- function(x, autorises) identical(length(x), 1L) && x %in% autorises
+
+valider_veille <- function(v) {
+  f <- "veille.yml"
+  ids <- character()
+  for (t in v$themes) {
+    ou <- sprintf("thème '%s'", ou_sinon(t$id, "?"))
+    if (!is.character(t$id) || !grepl(MOTIF_ID, t$id)) arreter_regle(f, ou, "identifiant invalide")
+    if (t$id %in% ids) arreter_regle(f, ou, "identifiant en double")
+    ids <- c(ids, t$id)
+    if (!is.character(t$titre) || !nzchar(t$titre)) arreter_regle(f, ou, "titre manquant")
+    if (!is.null(t$couleur) && !un_parmi(t$couleur, COULEURS_THEMES)) {
+      arreter_regle(f, ou, sprintf("couleur hors palette (%s)", paste(COULEURS_THEMES, collapse = ", ")))
+    }
+    if (any(grepl("intern", c(t$titre, t$description), ignore.case = TRUE))) {
+      arreter_regle(f, ou, MESSAGE_CONFIDENTIALITE)
+    }
+  }
+
+  vus <- character()
+  for (l in v$liens) {
+    ou <- sprintf("lien '%s'", ou_sinon(l$url, "?"))
+    if (!est_url_publique(l$url)) arreter_regle(f, ou, "adresse https publique attendue")
+    if (cle_url(l$url) %in% vus) arreter_regle(f, ou, "lien déjà présent")
+    vus <- c(vus, cle_url(l$url))
+    if (!is.character(l$titre) || !nzchar(l$titre)) arreter_regle(f, ou, "titre manquant")
+    if (!un_parmi(l$theme, ids)) arreter_regle(f, ou, "thème inconnu")
+    if (is.null(l$ajoute_le) || !est_date_valide(l$ajoute_le)) arreter_regle(f, ou, "date d'ajout invalide")
+    if (!un_parmi(l$type, TYPES_LIENS)) {
+      arreter_regle(f, ou, sprintf("type hors liste (%s)", paste(TYPES_LIENS, collapse = ", ")))
+    }
+    if (!un_parmi(l$langue, LANGUES_LIENS)) arreter_regle(f, ou, "langue : fr ou en")
+    if (!is.character(l$resume) || !nzchar(l$resume)) arreter_regle(f, ou, "résumé manquant")
+    if (any(grepl("intern", c(l$titre, l$resume, l$pourquoi, l$mots_cles), ignore.case = TRUE))) {
+      arreter_regle(f, ou, MESSAGE_CONFIDENTIALITE)
+    }
+  }
+}
+
 # ── Suivi des concepts (concepts.csv) ───────────────────────────────────────
 
 est_date_valide_ou_vide <- function(x) {
@@ -245,5 +310,6 @@ valider_tout <- function(dossier = "data") {
   # le dossier cours/ est à côté du dossier des données
   valider_cours(d$seances, file.path(dirname(dossier), "cours"))
   valider_concepts(d$concepts)
+  valider_veille(d$veille)
   invisible(d)
 }

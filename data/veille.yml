@@ -1,0 +1,41 @@
+# Veille : les liens que je garde, rangés par thème.
+#
+# Règles vérifiées par R/valider.R :
+#   - un thème a un identifiant unique et un titre ; sa couleur, facultative,
+#     vient de la palette du cours (bleu, orange, vert, violet, gris) ;
+#   - un lien a une adresse https publique et unique, un titre, un thème
+#     connu, une date d'ajout, un type autorisé, une langue (fr ou en) et un
+#     résumé ; « pourquoi » et les mots-clés sont facultatifs ;
+#   - confidentialité : aucun texte ne mentionne d'autre projet.
+#
+# Les thèmes s'affichent dans cet ordre ; un thème sans lien n'apparaît pas.
+# Dans un thème, les liens les plus récents viennent en premier.
+
+themes:
+  - id: protocoles-agents
+    titre: Protocoles d'agents
+    couleur: bleu
+    description: >-
+      Comment un agent parle à ses outils, aux autres agents et à
+      l'utilisateur : MCP, A2A, A2UI.
+
+liens:
+  - url: https://a2ui.org/quickstart/step-by-step/
+    titre: "A2UI : démarrage pas à pas"
+    theme: protocoles-agents
+    type: tutoriel
+    langue: en
+    ajoute_le: 2026-11-11
+    resume: >-
+      Le guide pas à pas pour faire tourner la démo d'A2UI, le protocole
+      ouvert de Google qui permet à un agent de décrire une interface
+      (formulaire, carte, boutons) que l'application affiche avec ses propres
+      composants. On clone le dépôt, on fournit une clé d'API Gemini, on lance
+      l'agent d'exemple en Python et le client web, puis on demande
+      « Book a table for 2 » pour voir apparaître un formulaire de réservation.
+    pourquoi: >-
+      MCP relie un agent à ses outils, A2A relie les agents entre eux, et A2UI
+      complète le tableau du côté de l'utilisateur. L'agent n'envoie jamais de
+      code, seulement une description déclarative en JSON : c'est
+      l'application qui garde la main sur ce qu'elle affiche.
+    mots_cles: [A2UI, interfaces génératives, Gemini, agents]
