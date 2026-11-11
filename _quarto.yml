@@ -8,6 +8,7 @@ project:
     - cours/*.qmd
     - cours/*.md
     - methode.qmd
+    - veille/index.qmd
   pre-render: R/date_maj.R
   # icônes de repli, déclarées par filters/icones.lua
   resources:
@@ -41,6 +42,8 @@ website:
         href: cours/index.qmd
       - text: Méthode
         href: methode.qmd
+      - text: Veille
+        href: veille/index.qmd
   page-footer:
     left: "Mis à jour le {{< var maj >}}"
     right:

@@ -1,0 +1,21 @@
+---
+title: "Veille"
+subtitle: "Les liens que je garde, rangés par thème"
+page-layout: full
+# pas de <section> autour des titres : les fiches gardent un balisage simple
+section-divs: false
+link-external-newwindow: true
+resources:
+  - filtre.js
+---
+
+```{r}
+#| output: asis
+source("R/pages.R", encoding = "UTF-8")
+source("R/veille.R", encoding = "UTF-8")
+cat(page_veille(charger()))
+```
+
+```{=html}
+<script src="filtre.js" defer></script>
+```
