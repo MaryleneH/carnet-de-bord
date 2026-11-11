@@ -12,8 +12,9 @@ Adresse du site : `https://maryleneh.github.io/carnet-de-bord/`
 | Séances | `seances/` | une carte par séance, une page par séance faite, avec ses résultats sourcés |
 | Cours | `cours/` | le fil conducteur du carnet : le **plan du cours** (`cours/index.qmd`), qui grandit séance après séance, puis un chapitre par séance (`cours/seance-NN-cours.md`), avec barre latérale, table des matières et navigation d'un chapitre à l'autre |
 | Méthode | `methode.qmd` | les principes du laboratoire, cités du cours |
+| Veille | `veille/` | les liens de ma veille, rangés par thème, chacun avec un résumé et la raison de le garder ; recherche (sans tenir compte des accents) et filtre par thème |
 
-- **Données** : `data/seances.yml` (séances et journal), `data/mesures.yml` (résultats et durées des séances, chacun avec sa source dans le cours) et `data/concepts.csv` (suivi des compétences : vu, pratiqué, maîtrisé).
+- **Données** : `data/seances.yml` (séances et journal), `data/mesures.yml` (résultats et durées des séances, chacun avec sa source dans le cours), `data/concepts.csv` (suivi des compétences : vu, pratiqué, maîtrisé) et `data/veille.yml` (thèmes et liens de la veille).
 - **Rendu des pages** : `R/pages.R` lit ces données, calcule les indicateurs et produit le contenu des pages.
 - **Mise en forme** : un seul fichier, `styles/carnet.scss` (variables en tête, thèmes clair et sombre). Police Source Serif 4 auto-hébergée dans `styles/polices/` (licence OFL). Aucun CDN, aucune police distante.
 - **Icône du site** : `icones/favicon.svg`, une création originale aux couleurs du cours : une page de carnet cornée, avec une estimation et son intervalle de confiance. Elle s'éclaircit en thème sombre. `scripts/icones.sh` en tire deux PNG de repli (nécessite `rsvg-convert`) : `favicon-32.png`, pour les navigateurs qui n'affichent pas une icône SVG, et `apple-touch-icon.png`, pour l'écran d'accueil d'un téléphone. À relancer après toute modification du SVG.
@@ -27,6 +28,7 @@ Adresse du site : `https://maryleneh.github.io/carnet-de-bord/`
 - **Aucun chiffre sans source** : aucun nombre n'est tapé dans une page. Les indicateurs d'avancement sont calculés depuis `seances.yml` et `concepts.csv`, et le tableau de bord indique de quel fichier ils viennent. Les résultats des séances viennent de `data/mesures.yml`, où chacun a sa source (séance et partie du cours) ; dans `seances.yml`, un chiffre se cite par `{identifiant}`, et un chiffre écrit en dur est refusé. Les identifiants (`404`, numéro de commit, `ADR-001`, n° de publication) s'écrivent en `code` ou après « n° ».
 - **Cohérence** : statuts autorisés, dates valides, une séance faite a une date et une durée en heures.
 - **Cours** : chaque chapitre du dossier `cours/` est déclaré par sa séance (champ `cours` de `seances.yml`) sous le nom `cours/seance-NN-cours.md`, et chaque chapitre déclaré existe. La barre latérale, qui lit le dossier, et le plan du cours, qui lit `seances.yml`, disent donc toujours la même chose.
+- **Veille** : chaque lien a une adresse https publique (ni adresse IP, ni nom de réseau privé) et unique, un titre, un thème déclaré, une date d'ajout, un type, une langue (`fr` ou `en`) et un résumé ; aucun texte ne mentionne d'autre projet.
 
 ## Ajouter une séance
 
@@ -35,6 +37,28 @@ Adresse du site : `https://maryleneh.github.io/carnet-de-bord/`
 3. Mettre à jour les niveaux des concepts dans `data/concepts.csv` (dates de vu, pratiqué, maîtrisé).
 4. Ajouter le chapitre du cours, `cours/seance-NN-cours.md`, et la page `seances/seance-NN.qmd`. Le chapitre entre seul dans la barre latérale du cours.
 5. Renseigner `cours: /cours/seance-NN-cours.md` pour la séance dans `data/seances.yml` : elle passe à « rédigé » dans le plan du cours et dans « Où j'en suis ». Si ce champ manque, la validation échoue.
+
+## Ajouter un lien de veille
+
+Je confie le lien à Claude, qui lit la page, rédige un titre, un résumé et un « pourquoi je le garde », range le lien dans un thème (ou en crée un), puis l'ajoute à `data/veille.yml` :
+
+```yaml
+liens:
+  - url: https://exemple.org/article
+    titre: "Titre en français"
+    theme: protocoles-agents      # identifiant d'un thème de la liste themes
+    type: article                 # article, article scientifique, documentation, tutoriel,
+                                  # cours, outil, dépôt, vidéo, podcast
+    langue: en                    # langue de la page liée : fr ou en
+    ajoute_le: 2026-11-11
+    resume: >-
+      Ce que contient la page, en deux ou trois phrases.
+    pourquoi: >-                  # facultatif
+      Ce que ce lien m'apporte.
+    mots_cles: [mot, autre mot]   # facultatif, cherchés par la recherche
+```
+
+Un thème se déclare dans `themes` (identifiant, titre, description et, au choix, une couleur de la palette : bleu, orange, vert, violet, gris). Les thèmes s'affichent dans l'ordre du fichier, un thème sans lien n'apparaît pas, et les liens les plus récents viennent en premier. Quand un thème dépasse une douzaine de liens, mieux vaut le scinder.
 
 ## Travailler en local
 
