@@ -19,6 +19,7 @@ $clair-fond-doux: #F3F5F9;
 $clair-texte: #1A1E26;
 $clair-texte-doux: #4D5564;
 $clair-bordure: #D3D9E4;
+$clair-bordure-champ: #8B939F;  // contour d'un champ de saisie : 3:1 sur le fond
 $clair-titre: $bleu-nuit;
 $clair-lien: $bleu;
 $clair-focus: $orange;
@@ -34,6 +35,7 @@ $sombre-fond-doux: #1A202A;
 $sombre-texte: #E3E6EB;
 $sombre-texte-doux: #AAB2BF;
 $sombre-bordure: #333D4C;
+$sombre-bordure-champ: #687387;
 $sombre-titre: #B3C7EE;
 $sombre-bleu: #94B3EF;
 $sombre-orange: #F29D63;
@@ -113,6 +115,7 @@ $plage-latin: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+0
   --c-texte: #{$clair-texte};
   --c-texte-doux: #{$clair-texte-doux};
   --c-bordure: #{$clair-bordure};
+  --c-bordure-champ: #{$clair-bordure-champ};
   --c-titre: #{$clair-titre};
   --c-lien: #{$clair-lien};
   --c-focus: #{$clair-focus};
@@ -143,6 +146,7 @@ $plage-latin: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+0
     --c-texte: #{$sombre-texte};
     --c-texte-doux: #{$sombre-texte-doux};
     --c-bordure: #{$sombre-bordure};
+    --c-bordure-champ: #{$sombre-bordure-champ};
     --c-titre: #{$sombre-titre};
     --c-lien: #{$sombre-bleu};
     --c-focus: #{$sombre-orange};
@@ -843,6 +847,330 @@ main code.sourceCode > span, main code.sourceCode span:not([class]) { color: var
 #quarto-sidebar .sidebar-item-toggle, #quarto-sidebar .sidebar-item-toggle .bi { color: var(--c-texte-doux); }
 .nav-page a, .nav-page .nav-page-text, .nav-page .bi { color: var(--c-lien); }
 .nav-page { font-family: $police-interface; }
+
+// ── Veille ─────────────────────────────────────────────────────────────────
+// Une bibliothèque de liens : recherche et thèmes à gauche (colonne collante
+// sur ordinateur, puces défilantes sur téléphone), fiches à droite.
+// Beaucoup d'air, des filets fins, une pastille de couleur par thème.
+
+.veille-chiffres {
+  display: block;
+  margin: -0.4rem 0 2.5rem;
+  font-family: $police-interface;
+  font-size: 0.9rem;
+  letter-spacing: 0.01em;
+  color: var(--c-texte-doux);
+}
+.veille-chiffre { white-space: nowrap; }
+
+.veille {
+  display: grid;
+  // minmax(0, …) : la rangée de puces défile au lieu d'élargir la page
+  grid-template-columns: minmax(0, 1fr);
+  gap: 2rem;
+  max-width: 68rem;
+}
+
+.veille-outils { min-width: 0; font-family: $police-interface; }
+
+.veille-etiquette {
+  display: block;
+  margin: 0 0 0.6rem;
+  font-family: $police-interface;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--c-texte-doux);
+}
+
+.veille-recherche { margin-bottom: 2.25rem; }
+.veille-champ { position: relative; }
+.veille-loupe {
+  position: absolute;
+  top: 50%;
+  left: 0.95rem;
+  width: 1.05rem;
+  height: 1.05rem;
+  transform: translateY(-50%);
+  fill: none;
+  stroke: var(--c-texte-doux);
+  stroke-width: 2;
+  stroke-linecap: round;
+  pointer-events: none;
+}
+#veille-recherche {
+  width: 100%;
+  height: 2.8rem;
+  padding: 0 1rem 0 2.6rem;
+  font-family: $police-interface;
+  font-size: 0.95rem;
+  color: var(--c-texte);
+  background-color: var(--c-fond);
+  border: 1px solid var(--c-bordure-champ);
+  border-radius: 999px;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+#veille-recherche::placeholder { color: var(--c-texte-doux); opacity: 1; }
+#veille-recherche:hover { border-color: var(--c-texte-doux); }
+#veille-recherche:focus { border-color: var(--c-lien); background-color: var(--c-fond); }
+#veille-recherche:focus-visible { border-radius: 999px; }
+
+.veille-filtres { display: flex; flex-direction: column; gap: 0.2rem; }
+.veille-filtre {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  width: 100%;
+  padding: 0.55rem 0.8rem;
+  font-family: $police-interface;
+  font-size: 0.93rem;
+  line-height: 1.3;
+  text-align: left;
+  color: var(--c-texte-doux);
+  background-color: transparent;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+.veille-filtre:hover { color: var(--c-texte); background-color: var(--c-fond-doux); }
+.veille-filtre[aria-pressed="true"] {
+  font-weight: 600;
+  color: var(--c-titre);
+  background-color: var(--c-fond-doux);
+  border-color: var(--c-bordure);
+}
+.veille-pastille {
+  flex: none;
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+  background-color: var(--c-theme, var(--c-texte-doux));
+}
+.veille-filtre[data-theme="tous"] .veille-pastille {
+  background-color: transparent;
+  box-shadow: inset 0 0 0 1.5px var(--c-texte-doux);
+}
+.veille-filtre-nom { flex: 1; }
+.veille-filtre-compte {
+  font-size: 0.8rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--c-texte-doux);
+}
+
+.veille-liste { min-width: 0; max-width: 46rem; }
+.veille-statut {
+  margin: 0 0 1.25rem;
+  font-family: $police-interface;
+  font-size: 0.9rem;
+  color: var(--c-texte-doux);
+}
+.veille-statut:empty { display: none; }
+
+// Thèmes
+.veille-theme + .veille-theme { margin-top: 3.75rem; }
+main.content h2.veille-theme-titre {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0 0 0.7rem;
+  font-size: 1.6rem;
+  letter-spacing: -0.01em;
+  border-bottom: 1px solid var(--c-bordure);
+}
+main.content h2.veille-theme-titre::before {
+  content: "";
+  flex: none;
+  align-self: center;
+  width: 0.62rem;
+  height: 0.62rem;
+  border-radius: 50%;
+  background-color: var(--c-theme);
+}
+.veille-compte {
+  margin-left: auto;
+  font-family: $police-interface;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  color: var(--c-texte-doux);
+}
+.veille-theme-description {
+  display: block;
+  margin: 0.75rem 0 0.5rem;
+  font-size: 1rem;
+  font-style: italic;
+  line-height: 1.55;
+  color: var(--c-texte-doux);
+}
+
+// Fiches
+.veille-lien {
+  position: relative;
+  margin: 0 -1.25rem;
+  padding: 1.4rem 1.25rem 1.3rem;
+  border-radius: 14px;
+  transition: background-color 0.2s ease;
+}
+.veille-lien + .veille-lien::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 1.25rem;
+  left: 1.25rem;
+  border-top: 1px solid var(--c-bordure);
+  transition: opacity 0.2s ease;
+}
+.veille-lien:hover { background-color: var(--c-fond-doux); }
+.veille-lien:hover::before, .veille-lien:hover + .veille-lien::before { opacity: 0; }
+
+.veille-lien > p:first-child { margin: 0 0 0.5rem; }
+.veille-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem 0.55rem;
+  font-family: $police-interface;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--c-texte-doux);
+}
+// le point médian finit l'élément : une ligne coupée ne commence jamais par lui
+.veille-meta > span:not(:last-child)::after { content: "·"; margin-left: 0.55rem; }
+.veille-domaine { text-transform: none; letter-spacing: 0.02em; font-size: 0.8rem; }
+
+main.content h3.veille-titre {
+  margin: 0 0 0.55rem;
+  font-size: 1.32rem;
+  font-weight: 550;
+  line-height: 1.3;
+  letter-spacing: -0.005em;
+}
+h3.veille-titre a {
+  color: var(--c-titre);
+  text-decoration-line: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 0.06em;
+  text-underline-offset: 0.2em;
+  transition: text-decoration-color 0.2s ease;
+}
+h3.veille-titre a:hover { text-decoration-color: currentColor; }
+h3.veille-titre a::after {
+  content: "↗";
+  content: "↗" / "";
+  display: inline-block;
+  margin-left: 0.3em;
+  font-family: $police-interface;
+  font-size: 0.75em;
+  font-weight: 400;
+  color: var(--c-texte-doux);
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+h3.veille-titre a:hover::after { color: var(--c-theme, var(--c-lien)); transform: translate(2px, -2px); }
+
+.veille-resume p {
+  margin: 0 0 0.85rem;
+  font-size: 1.02rem;
+  line-height: 1.62;
+}
+.veille-pourquoi {
+  margin: 0 0 1rem;
+  padding: 0.1rem 0 0.1rem 1rem;
+  border-left: 2px solid var(--c-theme, var(--c-bordure));
+}
+.veille-pourquoi p {
+  margin: 0;
+  font-size: 0.97rem;
+  line-height: 1.6;
+  color: var(--c-texte-doux);
+}
+.veille-pourquoi-titre {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-family: $police-interface;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.veille-pied p {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+  margin: 0;
+}
+.veille-mots { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+.veille-mot {
+  padding: 0.12rem 0.6rem;
+  font-family: $police-interface;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: var(--c-texte-doux);
+  border: 1px solid var(--c-bordure);
+  border-radius: 999px;
+}
+.veille-date {
+  margin-left: auto;
+  font-family: $police-interface;
+  font-size: 0.78rem;
+  color: var(--c-texte-doux);
+}
+.veille-liste > p:last-child { margin-top: 3rem; }
+
+@media (min-width: 992px) {
+  .veille.veille-active { grid-template-columns: 15.5rem minmax(0, 1fr); gap: 4rem; }
+  .veille-outils { position: sticky; top: 5.5rem; align-self: start; }
+}
+
+@media (max-width: 991.98px) {
+  .veille-recherche { margin-bottom: 1.25rem; }
+  // les thèmes deviennent une rangée de puces qui défile
+  .veille-filtres {
+    flex-direction: row;
+    gap: 0.5rem;
+    margin: 0 -1rem;
+    padding: 0.1rem 1rem 0.35rem;
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    // l'aimantation s'aligne sur le texte, pas sur le bord de la rangée
+    scroll-padding-inline: 1rem;
+    scrollbar-width: none;
+  }
+  .veille-filtres::-webkit-scrollbar { display: none; }
+  .veille-filtres .veille-etiquette {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+  .veille-filtre {
+    flex: none;
+    width: auto;
+    padding: 0.45rem 0.9rem;
+    border-color: var(--c-bordure);
+    border-radius: 999px;
+    scroll-snap-align: start;
+  }
+  .veille-filtre[aria-pressed="true"] { border-color: var(--c-titre); }
+  .veille-filtre-nom { flex: none; white-space: nowrap; }
+}
+
+@media (max-width: 575.98px) {
+  .veille-chiffres { margin-bottom: 1.75rem; }
+  main.content h2.veille-theme-titre { font-size: 1.35rem; }
+  main.content h3.veille-titre { font-size: 1.18rem; }
+  .veille-lien { margin: 0 -0.75rem; padding: 1.2rem 0.75rem 1.1rem; }
+  .veille-lien + .veille-lien::before { right: 0.75rem; left: 0.75rem; }
+}
 
 // ── Téléphone ──────────────────────────────────────────────────────────────
 
