@@ -33,8 +33,8 @@ themes:
     couleur: orange
     description: >-
       Ce qui change quand un agent écrit le code : le rôle des développeurs,
-      la revue de code, et un outillage pensé pour un rythme humain (gestion
-      de versions, intégration continue).
+      la revue de code, et des outils à repenser pour les agents (gestion de
+      versions, intégration continue, composants d'interface).
 
   - id: interpretabilite
     titre: Interprétabilité
@@ -146,3 +146,27 @@ liens:
       créé par l'un des auteurs, qui sert à programmer un assistant plutôt
       qu'à écrire ses prompts à la main.
     mots_cles: [weight-space programming, têtes d'induction, édition de modèles, DSPy, Qwen]
+
+  - url: https://github.com/meta/astryx
+    titre: "Astryx : le design system de Meta, conçu pour les humains et les agents"
+    theme: agents-de-codage
+    type: dépôt
+    langue: en
+    ajoute_le: 2026-11-12
+    resume: >-
+      Le design system open source de Meta, développé chez Meta depuis huit
+      ans et utilisé par plus de 13 000 applications : plus de 150 composants
+      React accessibles, des thèmes, un mode sombre, des modèles de pages et
+      un outil en ligne de commande. Sa particularité : la documentation,
+      l'API et cet outil sont conçus ensemble pour qu'un développeur et un
+      agent de code construisent de la même façon. L'outil sert la
+      documentation des composants, y compris en JSON typé, et un plugin
+      l'apporte à Claude Code et à Codex. En bêta, sous licence MIT.
+    pourquoi: >-
+      Une idée transférable bien au-delà des interfaces : écrire la
+      documentation d'un outil pour qu'un agent s'en serve aussi bien qu'un
+      humain, puis le vérifier. Meta le mesure avec des « vibe tests » : les
+      mêmes prompts, donnés à des LLM avec différents design systems, et des
+      résultats comparés. Côté graphiques, le module fondé sur Vega-Lite
+      n'est encore qu'en préversion.
+    mots_cles: [design system, React, composants, CLI, vibe tests, Meta]
