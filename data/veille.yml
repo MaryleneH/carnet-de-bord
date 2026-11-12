@@ -43,6 +43,13 @@ themes:
       Ouvrir les modèles : lire ce que font leurs poids, et parfois les
       modifier directement.
 
+  - id: methodes-statistiques
+    titre: Méthodes statistiques
+    couleur: gris
+    description: >-
+      Les méthodes du statisticien, revisitées par les outils de
+      l'apprentissage moderne : classification, optimisation, inférence.
+
 liens:
   - url: https://a2ui.org/quickstart/step-by-step/
     titre: "A2UI : démarrage pas à pas"
@@ -170,3 +177,30 @@ liens:
       résultats comparés. Côté graphiques, le module fondé sur Vega-Lite
       n'est encore qu'en préversion.
     mots_cles: [design system, React, composants, CLI, vibe tests, Meta]
+
+  - url: https://e-means.github.io
+    titre: "e-means : un k-means dix fois plus rapide, à perte égale"
+    theme: methodes-statistiques
+    type: article
+    langue: en
+    ajoute_le: 2026-11-12
+    resume: >-
+      Des chercheurs de Meta FAIR, dont plusieurs auteurs de la bibliothèque
+      Faiss, modernisent le k-means. Au lieu de recalculer chaque centroïde
+      sur toutes les données à chaque passe, comme l'algorithme de Lloyd,
+      e-means travaille par mini-lots et met à jour la somme et l'effectif de
+      chaque classe par moyenne mobile exponentielle : Lloyd en devient un
+      cas particulier. La taille des lots et le pas sont fixés par des lois
+      d'échelle, sans réglage. Selon les auteurs, la perte que Lloyd atteint
+      en 25 passes est atteinte en 1,2 à 3 passes, soit 10 à 45 fois plus
+      vite sur GPU et 8 à 15 fois sur CPU, avec moins de blocages dans de
+      mauvais minima locaux. Le code est dans Faiss.
+    pourquoi: >-
+      Le k-means est dans la boîte à outils de tout statisticien, et il sert
+      aussi à indexer les embeddings d'un RAG : les index IVF de Faiss
+      partitionnent les vecteurs par k-means. Le billet est une belle leçon
+      d'optimisation, où les idées de l'apprentissage profond (mini-lots,
+      moyenne mobile, pas qui décroît en cosinus, lois d'échelle) rajeunissent
+      un algorithme de 1957. À tester : un carnet Colab tourne sur CPU, et
+      une démo se manipule dans le navigateur.
+    mots_cles: [k-means, classification, Faiss, moyenne mobile exponentielle, lois d'échelle, embeddings]
