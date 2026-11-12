@@ -222,6 +222,48 @@ est_url_publique <- function(url) {
 # Deux adresses qui ne diffèrent que par l'ancre ou la barre finale sont le même lien.
 cle_url <- function(url) tolower(sub("/+$", "", sub("#.*$", "", url)))
 
+# Une fiche donne l'adresse d'origine du lien. Un lien copié depuis une
+# messagerie passe souvent par une redirection (google.com/url?q=…, liens
+# « protégés » d'un webmail) qui peut contenir l'adresse du destinataire ; un
+# lien raccourci cache sa destination (et la fiche afficherait le nom du
+# raccourcisseur) ; un paramètre de suivi dit d'où vient le clic.
+RACCOURCISSEURS <- c(
+  "bit.ly", "t.co", "lnkd.in", "tinyurl.com", "goo.gl", "ow.ly", "buff.ly",
+  "is.gd", "rebrand.ly", "cutt.ly"
+)
+MOTIF_SUIVI <- "^(utm_[a-z_]+|fbclid|gclid|dclid|msclkid|mc_cid|mc_eid|igshid|_hsenc|_hsmi|mkt_tok)$"
+
+# Paramètres de la requête (« nom=valeur »), sans l'ancre.
+parametres_url <- function(url) {
+  requete <- sub("^[^?#]*\\??([^#]*).*$", "\\1", url)
+  if (nzchar(requete)) strsplit(requete, "&", fixed = TRUE)[[1]] else character()
+}
+
+# Adresse cachée dans un paramètre d'un lien de redirection, ou NULL.
+adresse_enveloppee <- function(url) {
+  valeurs <- sub("^[^=]*=?", "", parametres_url(url))
+  cible <- valeurs[grepl("^https?(://|%3a%2f%2f)", valeurs, ignore.case = TRUE)]
+  if (length(cible) == 0) return(NULL)
+  tryCatch(utils::URLdecode(cible[[1]]), error = function(e) cible[[1]])
+}
+
+# Ce qui empêche l'adresse d'être celle d'origine, ou NULL si elle l'est.
+defaut_adresse <- function(url) {
+  if (sub("^www\\.", "", hote_url(url)) %in% RACCOURCISSEURS) {
+    return("lien raccourci : donner l'adresse d'origine")
+  }
+  origine <- adresse_enveloppee(url)
+  if (!is.null(origine)) {
+    return(sprintf("lien de redirection : donner l'adresse d'origine (%s)", origine))
+  }
+  noms <- unique(tolower(sub("=.*$", "", parametres_url(url))))
+  suivi <- noms[grepl(MOTIF_SUIVI, noms)]
+  if (length(suivi) > 0) {
+    return(sprintf("paramètre de suivi à retirer (%s)", paste(suivi, collapse = ", ")))
+  }
+  NULL
+}
+
 un_parmi <- function(x, autorises) identical(length(x), 1L) && x %in% autorises
 
 valider_veille <- function(v) {
@@ -245,6 +287,8 @@ valider_veille <- function(v) {
   for (l in v$liens) {
     ou <- sprintf("lien '%s'", ou_sinon(l$url, "?"))
     if (!est_url_publique(l$url)) arreter_regle(f, ou, "adresse https publique attendue")
+    defaut <- defaut_adresse(l$url)
+    if (!is.null(defaut)) arreter_regle(f, ou, defaut)
     if (cle_url(l$url) %in% vus) arreter_regle(f, ou, "lien déjà présent")
     vus <- c(vus, cle_url(l$url))
     if (!is.character(l$titre) || !nzchar(l$titre)) arreter_regle(f, ou, "titre manquant")

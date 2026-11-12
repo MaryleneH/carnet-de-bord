@@ -28,7 +28,7 @@ Adresse du site : `https://maryleneh.github.io/carnet-de-bord/`
 - **Aucun chiffre sans source** : aucun nombre n'est tapé dans une page. Les indicateurs d'avancement sont calculés depuis `seances.yml` et `concepts.csv`, et le tableau de bord indique de quel fichier ils viennent. Les résultats des séances viennent de `data/mesures.yml`, où chacun a sa source (séance et partie du cours) ; dans `seances.yml`, un chiffre se cite par `{identifiant}`, et un chiffre écrit en dur est refusé. Les identifiants (`404`, numéro de commit, `ADR-001`, n° de publication) s'écrivent en `code` ou après « n° ».
 - **Cohérence** : statuts autorisés, dates valides, une séance faite a une date et une durée en heures.
 - **Cours** : chaque chapitre du dossier `cours/` est déclaré par sa séance (champ `cours` de `seances.yml`) sous le nom `cours/seance-NN-cours.md`, et chaque chapitre déclaré existe. La barre latérale, qui lit le dossier, et le plan du cours, qui lit `seances.yml`, disent donc toujours la même chose.
-- **Veille** : chaque lien a une adresse https publique (ni adresse IP, ni nom de réseau privé) et unique, un titre, un thème déclaré, une date d'ajout, un type, une langue (`fr` ou `en`) et un résumé ; aucun texte ne mentionne d'autre projet.
+- **Veille** : chaque lien a une adresse https publique (ni adresse IP, ni nom de réseau privé), unique et d'origine (ni redirection, ni lien raccourci, ni paramètre de suivi comme `utm_source`), un titre, un thème déclaré, une date d'ajout, un type, une langue (`fr` ou `en`) et un résumé ; aucun texte ne mentionne d'autre projet.
 
 ## Ajouter une séance
 
@@ -57,6 +57,8 @@ liens:
       Ce que ce lien m'apporte.
     mots_cles: [mot, autre mot]   # facultatif, cherchés par la recherche
 ```
+
+Un lien copié depuis une messagerie passe souvent par une redirection (`https://www.google.com/url?q=…`), qui peut contenir des informations sur le destinataire : la validation la refuse et indique l'adresse d'origine à utiliser. Elle refuse de même les liens raccourcis et les paramètres de suivi.
 
 Un thème se déclare dans `themes` (identifiant, titre, description et, au choix, une couleur de la palette : bleu, orange, vert, violet, gris). Les thèmes s'affichent dans l'ordre du fichier, un thème sans lien n'apparaît pas, et les liens les plus récents viennent en premier. Quand un thème dépasse une douzaine de liens, mieux vaut le scinder.
 

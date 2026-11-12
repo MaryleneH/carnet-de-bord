@@ -187,6 +187,37 @@ test_that("la veille n'admet que des liens publics, uniques et bien rangés", {
   expect_false(est_url_publique("https://localhost/page"))
 })
 
+test_that("une fiche de veille donne l'adresse d'origine du lien", {
+  avec_url <- function(url) {
+    modifier_yaml(copier_fixture_valide(), "veille.yml", function(x) {
+      x$liens[[1]]$url <- url
+      x
+    })
+  }
+  # redirection d'une messagerie : la validation indique l'adresse d'origine
+  expect_error(
+    valider_tout(avec_url("https://www.google.com/url?q=https://example.org/page&sa=E")),
+    "lien de redirection : donner l'adresse d'origine (https://example.org/page)",
+    fixed = TRUE
+  )
+  # adresse encodée dans le paramètre, avec des données sur le destinataire
+  expect_error(
+    valider_tout(avec_url("https://liens.example.com/?url=https%3A%2F%2Fexample.org%2Fpage&data=destinataire")),
+    "(https://example.org/page)",
+    fixed = TRUE
+  )
+  expect_error(valider_tout(avec_url("https://lnkd.in/abc123")), "lien raccourci")
+  expect_error(
+    valider_tout(avec_url("https://example.org/page?utm_source=lettre&utm_medium=email")),
+    "paramètre de suivi à retirer (utm_source, utm_medium)",
+    fixed = TRUE
+  )
+  # une requête ordinaire reste admise, l'ancre n'est pas une requête
+  expect_null(defaut_adresse("https://example.org/recherche?q=agents&page=2"))
+  expect_null(defaut_adresse("https://example.org/page#utm_source=x"))
+  expect_null(defaut_adresse("https://arxiv.org/abs/2611.06500"))
+})
+
 test_that("les règles des concepts restent appliquées", {
   dir <- copier_fixture_valide()
   concepts <- readr::read_csv(file.path(dir, "concepts.csv"), col_types = readr::cols(.default = "c"), na = character())

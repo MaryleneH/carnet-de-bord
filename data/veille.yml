@@ -6,6 +6,8 @@
 #   - un lien a une adresse https publique et unique, un titre, un thème
 #     connu, une date d'ajout, un type autorisé, une langue (fr ou en) et un
 #     résumé ; « pourquoi » et les mots-clés sont facultatifs ;
+#   - l'adresse est celle d'origine : ni redirection (lien copié depuis une
+#     messagerie), ni lien raccourci, ni paramètre de suivi (utm_…) ;
 #   - confidentialité : aucun texte ne mentionne d'autre projet.
 #
 # Les thèmes s'affichent dans cet ordre ; un thème sans lien n'apparaît pas.
