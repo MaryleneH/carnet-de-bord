@@ -36,6 +36,13 @@ themes:
       la revue de code, et un outillage pensé pour un rythme humain (gestion
       de versions, intégration continue).
 
+  - id: interpretabilite
+    titre: Interprétabilité
+    couleur: violet
+    description: >-
+      Ouvrir les modèles : lire ce que font leurs poids, et parfois les
+      modifier directement.
+
 liens:
   - url: https://a2ui.org/quickstart/step-by-step/
     titre: "A2UI : démarrage pas à pas"
@@ -110,3 +117,32 @@ liens:
       que chaque ligne, et confier à un Claude dédié la surveillance de
       chaque composant.
     mots_cles: [gestion de versions, git, monorepo, intégration continue, Claude]
+
+  - url: https://rikiyat.github.io/blog/weight-space-programming/
+    titre: "Weight-Space Programming : un LLM lit et modifie directement les poids d'un réseau"
+    theme: interpretabilite
+    type: article
+    langue: en
+    ajoute_le: 2026-11-12
+    resume: >-
+      Des chercheurs, dont Omar Khattab, le créateur de DSPy, confient à un
+      modèle de pointe les poids bruts d'un autre réseau, une session Python
+      et un objectif en langage naturel, sans entraînement ni descente de
+      gradient. En lecture, sans jamais exécuter de petits transformeurs
+      entraînés au niveau des caractères, le modèle reconnaît la langue de
+      leurs données et y repère les têtes d'induction, celles qui prolongent
+      une séquence déjà vue en la recopiant. En écriture, il modifie 0,016 %
+      des poids de Qwen3.5-0.8B, supprime ses boucles de raisonnement et
+      multiplie jusqu'à six fois son score en mathématiques, selon les
+      auteurs. La méthode réussit sur des défauts localisés, pas sur des
+      comportements diffus comme la complaisance. Billet de recherche, non
+      relu par des pairs.
+    pourquoi: >-
+      À tester, pour comprendre un transformeur de l'intérieur : l'expérience
+      de lecture se refait à petite échelle, sur un mini-modèle entraîné
+      soi-même. Pour un assistant qui rédige des études, l'apport direct est
+      faible : il faut détenir les poids du modèle, et l'essentiel se joue
+      ailleurs (sources, calculs, rédaction). Le lien utile passe par DSPy,
+      créé par l'un des auteurs, qui sert à programmer un assistant plutôt
+      qu'à écrire ses prompts à la main.
+    mots_cles: [weight-space programming, têtes d'induction, édition de modèles, DSPy, Qwen]
