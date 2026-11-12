@@ -21,6 +21,21 @@ themes:
       Comment un agent parle à ses outils, aux autres agents et à
       l'utilisateur : MCP, A2A, A2UI.
 
+  - id: contexte-agents
+    titre: Contexte et mémoire
+    couleur: vert
+    description: >-
+      Ce qu'un agent garde sous les yeux, et sous quelle forme : sorties
+      d'outils, compression du contexte, mémoire.
+
+  - id: agents-de-codage
+    titre: Agents de codage
+    couleur: orange
+    description: >-
+      Ce qui change quand un agent écrit le code : le rôle des développeurs,
+      la revue de code, et un outillage pensé pour un rythme humain (gestion
+      de versions, intégration continue).
+
 liens:
   - url: https://a2ui.org/quickstart/step-by-step/
     titre: "A2UI : démarrage pas à pas"
@@ -41,3 +56,57 @@ liens:
       code, seulement une description déclarative en JSON : c'est
       l'application qui garde la main sur ce qu'elle affiche.
     mots_cles: [A2UI, interfaces génératives, Gemini, agents]
+
+  - url: https://arxiv.org/abs/2611.06500
+    titre: "Les outils n'ont pas à parler en texte : compression latente du contexte des agents"
+    theme: contexte-agents
+    type: article scientifique
+    langue: en
+    ajoute_le: 2026-11-12
+    resume: >-
+      Les sorties d'outils, longues et bruitées, encombrent le contexte d'un
+      agent et dispersent son attention. Une équipe de l'université Tsinghua
+      propose Coca-Cola, un modèle qui compresse chaque sortie d'outil en
+      tokens latents : des vecteurs continus, placés directement dans
+      l'espace des plongements (embeddings) d'entrée de l'agent, qui reste
+      figé. L'entraînement aligne la prochaine action de l'agent, qu'il lise
+      la sortie complète ou sa version compressée. Avec des agents de
+      recherche web, sur quatre jeux de questions-réponses et deux familles
+      de modèles, les auteurs annoncent 70 à 89 % de tokens en moins, un
+      temps d'exécution réduit de 24 à 56 % et de meilleures réponses.
+    pourquoi: >-
+      L'idée bouscule une évidence : un agent n'est pas obligé de lire ses
+      outils en texte. On retrouve le principe des modèles multimodaux, où
+      une image entre dans le modèle sous forme de vecteurs produits par un
+      encodeur, et non sous forme de mots. Le critère d'entraînement est à
+      retenir : une bonne compression est celle qui ne change pas la décision
+      de l'agent. Limite : il faut pouvoir injecter des vecteurs à l'entrée
+      du modèle, donc avoir la main sur un modèle ouvert ; une API qui
+      n'accepte que du texte ne le permet pas.
+    mots_cles: [compression du contexte, tokens latents, embeddings, sorties d'outils, Coca-Cola]
+
+  - url: https://www.anthropic.com/research/redesigning-source-control
+    titre: "Repenser la gestion de versions quand les agents écrivent le code"
+    theme: agents-de-codage
+    type: article
+    langue: en
+    ajoute_le: 2026-11-12
+    resume: >-
+      Le code écrit par Claude a fait de la gestion de versions le principal
+      goulot d'étranglement d'Anthropic : environ 2 500 changements fusionnés
+      par jour en mai 2026, plus de 30 000 en septembre. En cinq mois, une
+      équipe de sept personnes a construit Scion, un système pensé pour des
+      clients toujours en ligne (agents, tâches automatisées), et y a migré
+      son monorepo, le dépôt unique de tout son code, depuis git. Le serveur
+      calcule l'historique, les diffs et les fusions ; le client ne récupère
+      que les fichiers qu'il lit. Scion reste propre à Anthropic : l'article
+      en partage les principes, pour que les serveurs git s'en inspirent.
+    pourquoi: >-
+      Un retour d'expérience rare sur ce qui casse quand des agents écrivent
+      l'essentiel du code : l'écriture n'est plus le facteur limitant,
+      l'outillage pensé pour des humains le devient. Je retiens surtout le
+      rôle des ingénieurs : dire souvent « non » à Claude quand il enfreint
+      une contrainte du système, relire l'intention d'un changement plutôt
+      que chaque ligne, et confier à un Claude dédié la surveillance de
+      chaque composant.
+    mots_cles: [gestion de versions, git, monorepo, intégration continue, Claude]
