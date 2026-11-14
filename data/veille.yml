@@ -25,8 +25,8 @@ themes:
     titre: Contexte et mémoire
     couleur: vert
     description: >-
-      Ce qu'un agent garde sous les yeux, et sous quelle forme : sorties
-      d'outils, compression du contexte, mémoire.
+      Ce qu'un modèle garde sous les yeux, et comment il s'en sert : contexte
+      long, sorties d'outils, compression, mémoire.
 
   - id: agents-de-codage
     titre: Agents de codage
@@ -204,3 +204,31 @@ liens:
       un algorithme de 1957. À tester : un carnet Colab tourne sur CPU, et
       une démo se manipule dans le navigateur.
     mots_cles: [k-means, classification, Faiss, moyenne mobile exponentielle, lois d'échelle, embeddings]
+
+  - url: https://arxiv.org/abs/2611.10463
+    titre: "LongCapHarness : mieux raisonner sur un long contexte sans réentraîner le modèle"
+    theme: contexte-agents
+    type: article scientifique
+    langue: en
+    ajoute_le: 2026-11-14
+    resume: >-
+      Pour qu'un modèle raisonne mieux sur de longs contextes, l'usage est de
+      synthétiser des données et de le réentraîner. Les auteurs construisent
+      à la place un « harness », le code qui l'entoure : des primitives de
+      capacité (par exemple reclasser les passages pertinents), un état et une
+      logique de contrôle, encadrés par des contrats explicites sur ce que
+      chaque brique doit fournir. Ce harness se construit et se révise
+      automatiquement, par auto-amélioration sur un jeu de développement,
+      sans synthèse de données ni réentraînement. Appliqué à Llama3-8B puis
+      transféré à Qwen2.5-3B, il dépasse nettement, selon les auteurs, les
+      méthodes par données synthétiques sur les bancs d'essai HELMET et
+      RULER, pour moins de la moitié de leur coût estimé.
+    pourquoi: >-
+      Le harness, c'est tout ce qui entoure le modèle : découpage du document,
+      appels successifs, état intermédiaire, logique de contrôle. L'article
+      montre qu'un harness bien construit fait mieux raisonner un petit modèle
+      figé que les méthodes qui le réentraînent. C'est la situation de tout
+      assistant bâti sur une API, où l'on ne touche pas aux poids : tout le
+      levier est là. Bon contrepoint au Weight-Space Programming, qui agit
+      au contraire sur les poids.
+    mots_cles: [harness, contexte long, auto-amélioration, Llama, HELMET, RULER]
