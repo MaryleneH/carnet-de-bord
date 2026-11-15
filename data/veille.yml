@@ -40,8 +40,8 @@ themes:
     titre: Interprétabilité
     couleur: violet
     description: >-
-      Ouvrir les modèles : lire ce que font leurs poids, et parfois les
-      modifier directement.
+      Ouvrir les modèles : lire ce que font leurs poids, les modifier
+      directement, et repérer quand on les a piégés.
 
   - id: methodes-statistiques
     titre: Méthodes statistiques
@@ -232,3 +232,31 @@ liens:
       levier est là. Bon contrepoint au Weight-Space Programming, qui agit
       au contraire sur les poids.
     mots_cles: [harness, contexte long, auto-amélioration, Llama, HELMET, RULER]
+
+  - url: https://www.numerama.com/cyberguerre/2372563-et-si-on-codait-en-dur-un-declencheur-il-demande-a-claude-code-de-transformer-son-agent-ia-en-bombe-a-retardement-et-ca-marche.html
+    titre: "Lazarus : piéger un agent IA en réécrivant sept neurones"
+    theme: interpretabilite
+    type: article
+    langue: fr
+    ajoute_le: 2026-11-15
+    resume: >-
+      Cinq chercheurs de Microsoft montrent qu'on peut cacher une porte
+      dérobée dans un agent IA sans le réentraîner. En réécrivant 7 neurones
+      presque inutilisés, sur plus de 12 000, l'agent se comporte normalement,
+      sauf quand un déclencheur apparaît dans son contexte (une date, un
+      message d'erreur) : il produit alors une commande malveillante et
+      l'exécute. Testée sur des modèles ouverts (Nemotron, Qwen, Gemma), la
+      méthode, baptisée Lazarus, échappe aux tests habituels ; l'idée est
+      venue de Claude Code, à qui l'un des auteurs avait posé la question.
+      Parade : les neurones réécrits laissent des anomalies dans les poids.
+      Des agents chargés de les inspecter ont repéré 91,4 % des modèles
+      piégés, mais ont signalé à tort près d'un modèle sain sur dix.
+    pourquoi: >-
+      Le revers du Weight-Space Programming, et l'article fait d'ailleurs le
+      lien : si un modèle sait réécrire des poids pour réparer, on peut les
+      réécrire pour piéger. La leçon vaut pour tout agent qui agit : un
+      chatbot piégé ne peut que mal parler, un agent piégé exécute des
+      commandes avec tous ses accès. D'où deux réflexes : donner à un agent
+      le moins de droits possible, et vérifier la provenance d'un modèle
+      ouvert (signature, empreinte) avant de le déployer.
+    mots_cles: [sécurité, porte dérobée, agents, poids, Claude Code, Microsoft]
