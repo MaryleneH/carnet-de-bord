@@ -260,3 +260,30 @@ liens:
       le moins de droits possible, et vérifier la provenance d'un modèle
       ouvert (signature, empreinte) avant de le déployer.
     mots_cles: [sécurité, porte dérobée, agents, poids, Claude Code, Microsoft]
+
+  - url: https://www.slopmanifesto.com
+    titre: "No AI Slop : un manifeste contre le travail bâclé avec l'IA"
+    theme: agents-de-codage
+    type: article
+    langue: en
+    ajoute_le: 2026-11-20
+    resume: >-
+      Rédigé par les orateurs et participants de l'AIE Code Summit 2026, sur
+      le modèle du Manifeste agile de 2001, ce texte définit le « slop » :
+      un travail auquel on a consacré moins d'effort qu'on n'en demande à
+      celui qui doit le comprendre. Le problème est asymétrique : produire
+      une PR de mille lignes ou un document de dix pages ne coûte presque
+      plus rien, alors que les relire coûte toujours autant. Et le slop
+      s'accumule, puisque le prochain agent le lit et le recopie. Cinq
+      valeurs en découlent, dont « les résultats plutôt que la production »
+      et « notre propre réflexion plutôt que le premier jet du modèle ». Plus
+      de 900 signataires.
+    pourquoi: >-
+      La définition vaut bien au-delà du code : une étude rédigée avec un
+      modèle devient du slop dès que son auteur y a mis moins de soin que le
+      lecteur n'en mettra à la lire. Je retiens trois engagements : signaler
+      ce qu'un agent a écrit et vérifier ce qui compte avant d'envoyer ;
+      relire au moins une partie des sorties, selon les enjeux ; et quand une
+      erreur revient deux fois, corriger le système (contrôles automatiques,
+      garde-fous) plutôt que la sortie.
+    mots_cles: [slop, revue, manifeste, qualité, agents, AI Engineer]
