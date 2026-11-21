@@ -50,6 +50,13 @@ themes:
       Les méthodes du statisticien, revisitées par les outils de
       l'apprentissage moderne : classification, optimisation, inférence.
 
+  - id: evaluation
+    titre: Évaluation des modèles
+    couleur: bleu
+    description: >-
+      Mesurer ce que savent faire les modèles et les agents : bancs d'essai,
+      méthodes de mesure, et leurs limites.
+
 liens:
   - url: https://a2ui.org/quickstart/step-by-step/
     titre: "A2UI : démarrage pas à pas"
@@ -287,3 +294,33 @@ liens:
       erreur revient deux fois, corriger le système (contrôles automatiques,
       garde-fous) plutôt que la sortie.
     mots_cles: [slop, revue, manifeste, qualité, agents, AI Engineer]
+
+  - url: https://metr.org/blog/2026-11-20-q4-2026-capability-update/
+    titre: "METR : les capacités utiles à la recherche en IA progressent vite, et se mesurent de plus en plus mal"
+    theme: evaluation
+    type: article
+    langue: en
+    ajoute_le: 2026-11-21
+    resume: >-
+      La mise à jour du quatrième trimestre 2026 de METR, qui évalue les
+      modèles publics (jusqu'à Opus 5.5 et GPT-6 Astra) sur des tâches
+      utiles à la recherche en IA. Sur le code et l'optimisation, ils égalent
+      ou dépassent le plus souvent des humains qualifiés, et leur horizon
+      temporel (la durée, pour un humain, des tâches qu'ils réussissent une
+      fois sur deux) double environ tous les 3,6 mois. Leur jugement reste
+      moins bon que celui d'experts quand le retour empirique manque. Et la
+      mesure se brouille : les évaluations faciles à lancer ressemblent aux
+      environnements d'entraînement et risquent de surestimer les capacités.
+      Conclusion : les données publiques ne permettent pas d'exclure une
+      accélération drastique de la recherche en IA dans les deux prochaines
+      années.
+    pourquoi: >-
+      Une lecture de statisticienne autant que d'IA : il y est question de
+      mesure, de modèles de réponse à l'item (IRT) pour construire un indice
+      de capacité, de seuils de score et de robustesse. Deux leçons pour
+      évaluer un assistant : un modèle juge n'est pas toujours un arbitre
+      fiable quand il note un modèle aussi fort que lui, d'où l'intérêt d'une
+      grille notée par un humain ; et un test trop proche de ce sur quoi un
+      système a été réglé surestime ce qu'il sait faire, d'où des cas de
+      test gardés à part.
+    mots_cles: [évaluation, horizon temporel, IRT, LLM juge, contamination, METR]
