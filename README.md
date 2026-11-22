@@ -8,7 +8,7 @@ Adresse du site : `https://maryleneh.github.io/carnet-de-bord/`
 
 | Page | Fichier | Contenu |
 | --- | --- | --- |
-| Tableau de bord | `index.qmd` | quatre onglets : **Vue d'ensemble** (indicateurs d'avancement, où j'en suis dans les séances et dans le cours, dernière séance, prochaine étape, points en attente, compétences), **Laboratoire** (frise des séances et jalons), **Compétences** (niveau de chaque concept), **Journal** (fait, appris, suite) |
+| Tableau de bord | `index.qmd` | en tête, l'**escalier** du laboratoire : une marche par séance, colorée selon son état, et un drapeau par jalon ; la marche d'une séance faite mène à sa page. Puis quatre onglets : **Vue d'ensemble** (jalons, indicateurs d'avancement, dernière séance, prochaine étape, avancement du cours, points en attente, compétences par semaine du plan, heures par semaine dès que deux semaines sont entamées, derniers liens de la veille), **Laboratoire** (frise des séances et jalons), **Compétences** (niveau de chaque concept), **Journal** (fait, appris, suite) |
 | Séances | `seances/` | une carte par séance, une page par séance faite, avec ses résultats sourcés |
 | Cours | `cours/` | le fil conducteur du carnet : le **plan du cours** (`cours/index.qmd`), qui grandit séance après séance, puis un chapitre par séance (`cours/seance-NN-cours.md`), avec barre latérale, table des matières et navigation d'un chapitre à l'autre |
 | Méthode | `methode.qmd` | les principes du laboratoire, cités du cours |
@@ -16,8 +16,8 @@ Adresse du site : `https://maryleneh.github.io/carnet-de-bord/`
 
 - **Données** : `data/seances.yml` (séances et journal), `data/mesures.yml` (résultats et durées des séances, chacun avec sa source dans le cours), `data/concepts.csv` (suivi des compétences : vu, pratiqué, maîtrisé) et `data/veille.yml` (thèmes et liens de la veille).
 - **Rendu des pages** : `R/pages.R` lit ces données, calcule les indicateurs et produit le contenu des pages.
-- **Mise en forme** : un seul fichier, `styles/carnet.scss` (variables en tête, thèmes clair et sombre). Police Source Serif 4 auto-hébergée dans `styles/polices/` (licence OFL). Aucun CDN, aucune police distante.
-- **Icône du site** : `icones/favicon.svg`, une création originale aux couleurs du cours : une page de carnet cornée, avec une estimation et son intervalle de confiance. Elle s'éclaircit en thème sombre. `scripts/icones.sh` en tire deux PNG de repli (nécessite `rsvg-convert`) : `favicon-32.png`, pour les navigateurs qui n'affichent pas une icône SVG, et `apple-touch-icon.png`, pour l'écran d'accueil d'un téléphone. À relancer après toute modification du SVG.
+- **Mise en forme** : un seul fichier, `styles/carnet.scss` (variables en tête, thèmes clair et sombre). Le thème, « Ascension », tient en trois couleurs : un indigo pour les titres, un corail pour ce qui est fait, des lilas pour les fonds et les marches. Polices Bricolage Grotesque (titres) et DM Sans (texte), auto-hébergées dans `styles/polices/` avec le texte de leur licence (OFL). Aucun CDN, aucune police distante.
+- **Icône du site** : `icones/favicon.svg`, une création originale aux couleurs du thème : un escalier qui monte vers un jalon, comme celui du tableau de bord. Son fond s'éclaircit en thème sombre. La même icône sert de marque devant le titre, dans la barre de navigation. `scripts/icones.sh` en tire deux PNG de repli (nécessite `rsvg-convert`) : `favicon-32.png`, pour les navigateurs qui n'affichent pas une icône SVG, et `apple-touch-icon.png`, pour l'écran d'accueil d'un téléphone. À relancer après toute modification du SVG.
 - **Filtres Lua** (`filters/`) : encadrés du cours en callouts, typographie française (espaces insécables), tableaux défilants sur téléphone, icônes de repli dans l'en-tête des pages.
 
 ## Règles vérifiées à chaque rendu
