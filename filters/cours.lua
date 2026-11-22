@@ -36,17 +36,29 @@ function BlockQuote(citation)
   return pandoc.Div(contenu, pandoc.Attr("", { "callout-" .. TYPES[nom] }, { title = nom }))
 end
 
+-- Ancre du chapitre ou de l'annexe en cours de lecture.
+local ancre_courante = nil
+
 function Header(titre)
-  if titre.level ~= 2 then return nil end
-  local texte = pandoc.utils.stringify(titre)
-  local chapitre = texte:match("^Chapitre (%d+)")
-  if chapitre then
-    titre.identifier = "chapitre-" .. chapitre
-    return titre
+  if titre.level == 2 then
+    local texte = pandoc.utils.stringify(titre)
+    local chapitre = texte:match("^Chapitre (%d+)")
+    local annexe = texte:match("^Annexe (%u)")
+    if chapitre then
+      titre.identifier = "chapitre-" .. chapitre
+    elseif annexe then
+      titre.identifier = "annexe-" .. annexe:lower()
+    end
+    ancre_courante = titre.identifier
+    if chapitre or annexe then return titre end
+    return nil
   end
-  local annexe = texte:match("^Annexe (%u)")
-  if annexe then
-    titre.identifier = "annexe-" .. annexe:lower()
+  -- Un intertitre « Chapitre 1 » (dans le corrigé, par exemple) recevrait de Pandoc
+  -- l'identifiant chapitre-1, déjà pris par l'ancre stable : on le préfixe par
+  -- l'ancre de sa partie (annexe-e-chapitre-1), pour que chaque identifiant reste unique.
+  local id = titre.identifier
+  if titre.level > 2 and ancre_courante and (id:match("^chapitre%-%d+$") or id:match("^annexe%-%l$")) then
+    titre.identifier = ancre_courante .. "-" .. id
     return titre
   end
   return nil
