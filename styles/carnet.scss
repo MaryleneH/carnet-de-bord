@@ -1,79 +1,108 @@
 /*-- scss:defaults --*/
 
 // ═════════════════════════════════════════════════════════════════════════
-//  Carnet de bord : toute la mise en forme du site.
-//  Variables en tête : palette des cours, thèmes clair et sombre, typographie.
+//  Carnet de bord : toute la mise en forme du site, thème « Ascension ».
+//  Variables en tête : palette, thèmes clair et sombre, typographie.
 // ═════════════════════════════════════════════════════════════════════════
 
-// Palette des cours (Word)
-$bleu-nuit: #1F3864;
-$bleu: #2F5496;
-$orange: #C55A11;   // Attention
-$vert: #548235;     // Définition
-$gris: #7F7F7F;     // Formule
-$violet: #7030A0;   // Exemple
+// Palette : un indigo pour l'encre des titres, un corail pour ce qui est fait,
+// des lilas pour les fonds et pour les marches de l'escalier.
+$indigo: #232A7C;
+$corail: #FF6B4A;
 
 // Thème clair
-$clair-fond: #FFFFFF;
-$clair-fond-doux: #F3F5F9;
-$clair-texte: #1A1E26;
-$clair-texte-doux: #4D5564;
-$clair-bordure: #D3D9E4;
-$clair-bordure-champ: #8B939F;  // contour d'un champ de saisie : 3:1 sur le fond
-$clair-titre: $bleu-nuit;
-$clair-lien: $bleu;
-$clair-focus: $orange;
-// Variantes pour du petit texte : l'orange et le gris des cours n'atteignent
-// pas 4,5:1 sur fond clair, on les assombrit.
-$clair-texte-orange: #9E450B;
-$clair-texte-vert: #3E6925;
-$clair-texte-gris: #565656;
+$clair-fond: #FBFBFE;
+$clair-surface: #FFFFFF;         // cartes posées sur le fond
+$clair-fond-doux: #ECEDFB;
+$clair-texte: #171A3A;
+$clair-texte-doux: #555A85;
+$clair-bordure: #D3D6F5;
+$clair-bordure-champ: #7F86C9;   // contour d'un champ de saisie : 3:1 sur le fond
+$clair-titre: $indigo;
+$clair-plein: $indigo;           // fond des boutons et de l'onglet actif
+$clair-sur-plein: #FFFFFF;       // texte posé sur ce fond
+$clair-accent: $corail;
+$clair-sur-accent: #171A3A;
+$clair-phare: $indigo;           // carte d'indicateur mise en avant
+$clair-phare-doux: #D3D6F5;      // son texte secondaire
+$clair-phare-vide: #5D64AE;      // ses pastilles vides
+$clair-marche: #DFE2FA;
+$clair-palier: #C5C9F1;
+$clair-focus: #C2371A;
+// Couleurs de sens : encadrés du cours, thèmes de la veille, niveaux de compétence.
+$clair-bleu: #4650D8;
+$clair-sur-bleu: #FFFFFF;
+$clair-orange: $corail;
+$clair-vert: #2E9E6B;
+$clair-violet: #8A4FD8;
+$clair-gris: #7B80A6;
+// Variantes pour du petit texte : 4,5:1 au moins sur fond clair.
+$clair-texte-bleu: #2F38B0;
+$clair-texte-orange: #C2371A;
+$clair-texte-vert: #1E7A50;
+$clair-texte-violet: #6A2FB8;
+$clair-texte-gris: #555A85;
 
-// Thème sombre : mêmes teintes, éclaircies pour garder un contraste AA
-$sombre-fond: #11151C;
-$sombre-fond-doux: #1A202A;
-$sombre-texte: #E3E6EB;
-$sombre-texte-doux: #AAB2BF;
-$sombre-bordure: #333D4C;
-$sombre-bordure-champ: #687387;
-$sombre-titre: #B3C7EE;
-$sombre-bleu: #94B3EF;
-$sombre-orange: #F29D63;
-$sombre-vert: #9FCC80;
-$sombre-gris: #B8B8B8;
-$sombre-violet: #CBA6EE;
+// Thème sombre : une nuit indigo, les mêmes teintes éclaircies (contraste AA)
+$sombre-fond: #0F1128;
+$sombre-surface: #171A3D;
+$sombre-fond-doux: #1F2352;
+$sombre-texte: #ECEDFB;
+$sombre-texte-doux: #AEB3E0;
+$sombre-bordure: #30367A;
+$sombre-bordure-champ: #6A72C4;
+$sombre-titre: #C9CEFF;
+$sombre-plein: #C9CEFF;
+$sombre-sur-plein: #14173A;
+$sombre-accent: #FF7A5C;
+$sombre-sur-accent: #171A3A;
+$sombre-phare: #3A419E;
+$sombre-phare-doux: #D9DCFF;
+$sombre-phare-vide: #7078C6;
+$sombre-marche: #2A2F68;
+$sombre-palier: #3D4390;
+$sombre-focus: #FF9A82;
+$sombre-bleu: #8E97FF;
+$sombre-sur-bleu: #14173A;
+$sombre-orange: #FF8A6E;
+$sombre-vert: #5FD39C;
+$sombre-violet: #C39BFF;
+$sombre-gris: #A4A9D0;
 
 // Typographie
-$police-texte: "Source Serif 4", Georgia, "Times New Roman", serif;
-$police-interface: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+$police-titre: "Bricolage Grotesque", "Arial Black", "Helvetica Neue", Arial, sans-serif;
+$police-texte: "DM Sans", "Helvetica Neue", Arial, sans-serif;
 $police-code: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
-$taille-texte: 1.125rem;  // 18 px
-$interligne: 1.65;
-$rayon: 6px;
+$taille-texte: 1rem;       // 17 px : Quarto fixe la taille racine à 17 px
+$interligne: 1.6;
+$largeur-page: 70rem;      // colonne des pages en pleine largeur
+$rayon: 1.5rem;            // cartes
+$rayon-moyen: 1.1rem;      // encarts, lignes, encadrés
+$pilule: 999px;
 
 // Bootstrap et Quarto
-$font-family-sans-serif: $police-interface;
+$font-family-sans-serif: $police-texte;
 $font-family-base: $police-texte;
 $font-family-monospace: $police-code;
 $font-size-base: $taille-texte;
 $line-height-base: $interligne;
-$headings-font-family: $police-texte;
-$headings-font-weight: 600;
+$headings-font-family: $police-titre;
+$headings-font-weight: 800;
 $headings-color: $clair-titre;
 $body-bg: $clair-fond;
 $body-color: $clair-texte;
-$link-color: $clair-lien;
-$navbar-bg: $bleu-nuit;
-$navbar-fg: #FFFFFF;
-$navbar-hl: #FFFFFF;
+$link-color: $clair-titre;
+$navbar-bg: $clair-fond;
+$navbar-fg: $clair-texte;
+$navbar-hl: $clair-titre;
 $footer-bg: $clair-fond;
 $footer-fg: $clair-texte-doux;
-$callout-color-note: $bleu;
-$callout-color-warning: $orange;
-$callout-color-tip: $vert;
-$callout-color-caution: $gris;
-$callout-color-important: $violet;
-$code-color: $bleu-nuit;
+$callout-color-note: $clair-bleu;
+$callout-color-warning: $clair-orange;
+$callout-color-tip: $clair-vert;
+$callout-color-caution: $clair-gris;
+$callout-color-important: $clair-violet;
+$code-color: $clair-titre;
 $code-bg: $clair-fond-doux;
 $code-block-bg: $clair-fond-doux;
 $border-color: $clair-bordure;
@@ -82,27 +111,36 @@ $enable-smooth-scroll: false;
 
 /*-- scss:rules --*/
 
-// ── Police auto-hébergée (Source Serif 4, licence OFL) ─────────────────────
+// ── Polices auto-hébergées (Bricolage Grotesque et DM Sans, licence OFL) ───
 // Chemins relatifs à la racine du projet : Quarto copie les polices avec le CSS.
 
 $plage-latin: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
   U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 
 @font-face {
-  font-family: "Source Serif 4";
+  font-family: "Bricolage Grotesque";
   font-style: normal;
-  font-weight: 200 900;
+  font-weight: 200 800;
   font-display: swap;
-  src: url("styles/polices/source-serif-4-latin-opsz-normal.woff2") format("woff2");
+  src: url("styles/polices/bricolage-grotesque-latin-opsz-normal.woff2") format("woff2");
   unicode-range: $plage-latin;
 }
 
 @font-face {
-  font-family: "Source Serif 4";
-  font-style: italic;
-  font-weight: 200 900;
+  font-family: "DM Sans";
+  font-style: normal;
+  font-weight: 100 1000;
   font-display: swap;
-  src: url("styles/polices/source-serif-4-latin-opsz-italic.woff2") format("woff2");
+  src: url("styles/polices/dm-sans-latin-opsz-normal.woff2") format("woff2");
+  unicode-range: $plage-latin;
+}
+
+@font-face {
+  font-family: "DM Sans";
+  font-style: italic;
+  font-weight: 100 1000;
+  font-display: swap;
+  src: url("styles/polices/dm-sans-latin-opsz-italic.woff2") format("woff2");
   unicode-range: $plage-latin;
 }
 
@@ -111,29 +149,41 @@ $plage-latin: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+0
 :root {
   color-scheme: light dark;
   --c-fond: #{$clair-fond};
+  --c-surface: #{$clair-surface};
   --c-fond-doux: #{$clair-fond-doux};
   --c-texte: #{$clair-texte};
   --c-texte-doux: #{$clair-texte-doux};
   --c-bordure: #{$clair-bordure};
   --c-bordure-champ: #{$clair-bordure-champ};
   --c-titre: #{$clair-titre};
-  --c-lien: #{$clair-lien};
+  --c-lien: #{$clair-titre};
+  --c-plein: #{$clair-plein};
+  --c-sur-plein: #{$clair-sur-plein};
+  --c-accent: #{$clair-accent};
+  --c-sur-accent: #{$clair-sur-accent};
+  --c-phare: #{$clair-phare};
+  --c-sur-phare: #FFFFFF;
+  --c-phare-doux: #{$clair-phare-doux};
+  --c-phare-vide: #{$clair-phare-vide};
+  --c-marche: #{$clair-marche};
+  --c-palier: #{$clair-palier};
   --c-focus: #{$clair-focus};
-  --c-bleu: #{$bleu};
-  --c-orange: #{$orange};
-  --c-vert: #{$vert};
-  --c-gris: #{$gris};
-  --c-violet: #{$violet};
-  --c-texte-bleu: #{$bleu};
+  --c-bleu: #{$clair-bleu};
+  --c-sur-bleu: #{$clair-sur-bleu};
+  --c-orange: #{$clair-orange};
+  --c-vert: #{$clair-vert};
+  --c-gris: #{$clair-gris};
+  --c-violet: #{$clair-violet};
+  --c-texte-bleu: #{$clair-texte-bleu};
   --c-texte-orange: #{$clair-texte-orange};
   --c-texte-vert: #{$clair-texte-vert};
   --c-texte-gris: #{$clair-texte-gris};
-  --c-texte-violet: #{$violet};
-  --c-teinte-bleu: #{rgba($bleu, 0.09)};
-  --c-teinte-orange: #{rgba($orange, 0.10)};
-  --c-teinte-vert: #{rgba($vert, 0.11)};
-  --c-teinte-gris: #{rgba($gris, 0.11)};
-  --c-teinte-violet: #{rgba($violet, 0.08)};
+  --c-texte-violet: #{$clair-texte-violet};
+  --c-teinte-bleu: #{rgba($clair-bleu, 0.10)};
+  --c-teinte-orange: #{rgba($clair-orange, 0.13)};
+  --c-teinte-vert: #{rgba($clair-vert, 0.12)};
+  --c-teinte-gris: #{rgba($clair-gris, 0.14)};
+  --c-teinte-violet: #{rgba($clair-violet, 0.10)};
   --bs-body-bg: var(--c-fond);
   --bs-body-color: var(--c-texte);
   --bs-border-color: var(--c-bordure);
@@ -142,15 +192,26 @@ $plage-latin: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+0
 @media (prefers-color-scheme: dark) {
   :root {
     --c-fond: #{$sombre-fond};
+    --c-surface: #{$sombre-surface};
     --c-fond-doux: #{$sombre-fond-doux};
     --c-texte: #{$sombre-texte};
     --c-texte-doux: #{$sombre-texte-doux};
     --c-bordure: #{$sombre-bordure};
     --c-bordure-champ: #{$sombre-bordure-champ};
     --c-titre: #{$sombre-titre};
-    --c-lien: #{$sombre-bleu};
-    --c-focus: #{$sombre-orange};
+    --c-lien: #{$sombre-titre};
+    --c-plein: #{$sombre-plein};
+    --c-sur-plein: #{$sombre-sur-plein};
+    --c-accent: #{$sombre-accent};
+    --c-sur-accent: #{$sombre-sur-accent};
+    --c-phare: #{$sombre-phare};
+    --c-phare-doux: #{$sombre-phare-doux};
+    --c-phare-vide: #{$sombre-phare-vide};
+    --c-marche: #{$sombre-marche};
+    --c-palier: #{$sombre-palier};
+    --c-focus: #{$sombre-focus};
     --c-bleu: #{$sombre-bleu};
+    --c-sur-bleu: #{$sombre-sur-bleu};
     --c-orange: #{$sombre-orange};
     --c-vert: #{$sombre-vert};
     --c-gris: #{$sombre-gris};
@@ -160,11 +221,11 @@ $plage-latin: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+0
     --c-texte-vert: #{$sombre-vert};
     --c-texte-gris: #{$sombre-gris};
     --c-texte-violet: #{$sombre-violet};
-    --c-teinte-bleu: #{rgba($sombre-bleu, 0.13)};
-    --c-teinte-orange: #{rgba($sombre-orange, 0.13)};
+    --c-teinte-bleu: #{rgba($sombre-bleu, 0.14)};
+    --c-teinte-orange: #{rgba($sombre-orange, 0.14)};
     --c-teinte-vert: #{rgba($sombre-vert, 0.13)};
-    --c-teinte-gris: #{rgba($sombre-gris, 0.12)};
-    --c-teinte-violet: #{rgba($sombre-violet, 0.12)};
+    --c-teinte-gris: #{rgba($sombre-gris, 0.13)};
+    --c-teinte-violet: #{rgba($sombre-violet, 0.13)};
   }
 }
 
@@ -176,31 +237,39 @@ body {
   font-optical-sizing: auto;
   font-variant-numeric: lining-nums;
   text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
 }
 
 a {
   color: var(--c-lien);
-  text-decoration-thickness: 0.07em;
-  text-underline-offset: 0.18em;
+  text-decoration-color: var(--c-accent);
+  text-decoration-thickness: 0.09em;
+  text-underline-offset: 0.2em;
 }
-a:hover { text-decoration-thickness: 0.13em; }
+a:hover { color: var(--c-lien); text-decoration-thickness: 0.15em; }
 
-h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4 { color: var(--c-titre); }
+// Quarto éclaircit les titres par transparence : ici, la couleur choisie s'affiche telle quelle.
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4 { color: var(--c-titre); letter-spacing: -0.02em; opacity: 1; }
+// un lien dans un titre garde la graisse du titre
+h1 a, h2 a, h3 a, h4 a { font-weight: inherit; }
 
 main.content h2 {
-  margin-top: 2.4rem;
-  padding-bottom: 0.3rem;
-  border-bottom: 1px solid var(--c-bordure);
+  margin-top: 2.75rem;
+  padding: 0;
+  border: 0;
+  font-size: 1.9rem;
+  line-height: 1.1;
 }
-main.content h3 { margin-top: 1.8rem; font-size: 1.3rem; }
+main.content h3 { margin-top: 1.9rem; font-size: 1.35rem; font-weight: 700; line-height: 1.2; }
+main.content h4 { font-size: 1.1rem; font-weight: 700; }
 
-strong { font-weight: 650; }
+strong { font-weight: 700; }
 hr { border-color: var(--c-bordure); opacity: 1; }
 
 :focus-visible {
   outline: 3px solid var(--c-focus);
   outline-offset: 2px;
-  border-radius: 2px;
+  border-radius: 6px;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -212,500 +281,644 @@ hr { border-color: var(--c-bordure); opacity: 1; }
   }
 }
 
+// Pages en pleine largeur sans barre latérale (tableau de bord, séances, veille) :
+// une colonne large et centrée, sur laquelle s'alignent l'en-tête et le pied.
+body:not(.nav-sidebar) .page-layout-full main.content {
+  grid-column: screen-start-inset / screen-end-inset;
+  width: 100%;
+  max-width: $largeur-page;
+  margin-inline: auto;
+}
+
 // ── Barre de navigation et pied de page ────────────────────────────────────
 
-#quarto-header .navbar {
-  font-family: $police-interface;
-  font-size: 1rem;
+#quarto-header, #quarto-header .navbar { background-color: var(--c-fond) !important; }
+#quarto-header .navbar { padding-top: 0.85rem; padding-bottom: 0.85rem; }
+#quarto-header .navbar-container {
+  flex-wrap: wrap;
+  gap: 0.35rem 1.5rem;
+  // même colonne que la page, marges intérieures comprises
+  max-width: calc(#{$largeur-page} + 1.5rem);
+  margin-inline: auto;
+}
+#quarto-header .navbar-brand-container { display: flex; align-items: center; gap: 0.75rem; margin: 0 !important; }
+#quarto-header .navbar-brand { display: inline-flex; align-items: center; gap: 0.7rem; min-height: 44px; margin: 0; padding: 0; }
+// la marque du carnet : l'icône du site, décorative, devant le titre
+#quarto-header .navbar-brand::before {
+  content: "";
+  flex: none;
+  width: 34px;
+  height: 34px;
+  background: url("icones/favicon.svg") center / contain no-repeat;
 }
 #quarto-header .navbar-title {
-  font-family: $police-texte;
-  font-weight: 600;
-  font-size: 1.2rem;
+  font-family: $police-titre;
+  font-weight: 700;
+  font-size: 1.35rem;
+  letter-spacing: -0.01em;
+  color: var(--c-titre);
 }
-#quarto-header .nav-link { color: rgba(255, 255, 255, 0.9); }
-#quarto-header .nav-link:hover,
-#quarto-header .nav-link.active { color: #FFFFFF; }
-#quarto-header .nav-link.active { box-shadow: inset 0 -3px 0 #FFFFFF; }
+#quarto-header .navbar-collapse { flex-grow: 0; }
+#quarto-header .navbar-nav { flex-direction: row; flex-wrap: wrap; gap: 0.25rem; max-height: none; overflow: visible; }
+#quarto-header .navbar-nav .nav-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 1.1rem;
+  border-radius: $pilule;
+  color: var(--c-texte);
+  font-size: 0.97rem;
+  font-weight: 500;
+}
+#quarto-header .navbar-nav .nav-link:hover { background-color: var(--c-fond-doux); color: var(--c-texte); }
+#quarto-header .navbar-nav .nav-link.active { background-color: var(--c-plein); color: var(--c-sur-plein); }
 // Bootstrap remplace le contour des liens de navigation par une ombre peu
-// visible sur le bleu nuit : on rétablit un contour net, partout.
+// visible : on rétablit un contour net, partout.
 #quarto-header a:focus-visible,
 #quarto-header button:focus-visible,
-#quarto-header .nav-link:focus-visible {
-  outline: 3px solid #FFFFFF;
-  outline-offset: 2px;
-  box-shadow: none;
-}
-main a:focus-visible, footer a:focus-visible, .nav-link:focus-visible {
+#quarto-header .nav-link:focus-visible,
+main a:focus-visible, main button:focus-visible, footer a:focus-visible, .nav-link:focus-visible {
   outline: 3px solid var(--c-focus);
   outline-offset: 2px;
   box-shadow: none;
 }
 
 .nav-footer {
-  font-family: $police-interface;
+  max-width: calc(#{$largeur-page} + 1.5rem);
+  margin-inline: auto;
   font-size: 0.875rem;
   color: var(--c-texte-doux);
-  border-top: 1px solid var(--c-bordure);
+  border-top: 1.5px solid var(--c-bordure);
 }
 .nav-footer a { color: var(--c-lien); }
-footer.footer { background-color: var(--c-fond); }
+// le lien du pied de page reste facile à toucher : 44 px de haut
+.nav-footer .nav-link { display: inline-flex; align-items: center; min-height: 44px; }
+.nav-footer .nav-link p { margin: 0; }
+footer.footer, footer.footer .nav-footer { background-color: var(--c-fond); }
 
 // ── En-tête des pages ──────────────────────────────────────────────────────
 
-#title-block-header { margin-bottom: 1.6rem; }
+#title-block-header { margin-bottom: 2rem; }
 .quarto-title .title {
-  font-size: clamp(1.9rem, 1.3rem + 2vw, 2.6rem);
-  letter-spacing: -0.01em;
-  line-height: 1.15;
+  font-weight: 800;
+  font-size: clamp(2.4rem, 1.7rem + 2.6vw, 3.25rem);
+  letter-spacing: -0.035em;
+  line-height: 1.02;
   color: var(--c-titre);
+  text-wrap: balance;
 }
 .quarto-title .subtitle {
-  font-style: italic;
-  font-size: 1.15rem;
+  margin-top: 0.85rem;
+  font-family: $police-texte;
+  font-size: 1.2rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1.45;
   color: var(--c-texte-doux);
-  margin-top: 0.4rem;
 }
-.quarto-title-meta, .quarto-title-meta-heading {
-  font-family: $police-interface;
-  color: var(--c-texte-doux);
-}
+.quarto-title-meta, .quarto-title-meta-heading { color: var(--c-texte-doux); }
+// sans la transparence de Quarto, qui ferait passer ce petit texte sous le seuil de contraste
+#title-block-header.quarto-title-block.default .quarto-title-meta-heading { opacity: 1; }
 
 // ── Table des matières ─────────────────────────────────────────────────────
 
-#TOC, nav[role="doc-toc"] {
-  font-family: $police-interface;
-  font-size: 0.875rem;
-}
+#TOC, nav[role="doc-toc"] { font-size: 0.875rem; }
 #toc-title {
+  font-family: $police-texte;
   font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--c-texte-doux);
 }
-#TOC a, nav[role="doc-toc"] a { color: var(--c-texte-doux); }
-#TOC a.active, nav[role="doc-toc"] a.active {
-  color: var(--c-lien);
-  border-left-color: var(--c-lien);
+#TOC a, nav[role="doc-toc"] a, #TOC a.nav-link, nav[role="doc-toc"] a.nav-link { color: var(--c-texte-doux); }
+// Quarto impose la couleur du lien actif avec !important : on doit faire de même.
+.sidebar nav[role="doc-toc"] ul > li > a.active,
+.sidebar nav[role="doc-toc"] ul > li > ul > li > a.active,
+#TOC a.nav-link.active {
+  color: var(--c-titre) !important;
+  border-left-color: var(--c-accent);
+  font-weight: 600;
 }
 
-// ── Petits éléments : surtitres, sources, badges d'état ────────────────────
+// ── Petits éléments : surtitres, sources, badges, étiquettes, boutons ──────
 
 .carte-surtitre, .seance-surtitre {
   display: block;
-  font-family: $police-interface;
-  font-size: 0.82rem;
-  letter-spacing: 0.02em;
+  font-size: 0.9rem;
   color: var(--c-texte-doux);
 }
 
 .source, .lien-cours, .incident-chapitre {
-  font-family: $police-interface;
-  font-size: 0.82rem;
+  font-size: 0.84rem;
   color: var(--c-texte-doux);
 }
+.source a { color: inherit; }
 
 .badge-etat {
   display: inline-block;
-  font-family: $police-interface;
-  font-size: 0.78rem;
-  font-weight: 650;
-  line-height: 1.45;
-  padding: 0 0.55rem;
-  border: 1px solid currentColor;
-  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.5;
+  padding: 0.05rem 0.7rem;
+  border-radius: $pilule;
   white-space: nowrap;
-  vertical-align: 0.1em;
-  color: var(--c-texte-gris);
-  background-color: var(--c-teinte-gris);
+  vertical-align: 0.08em;
+  color: var(--c-texte-doux);
+  background-color: var(--c-fond-doux);
 }
-.badge-etat.etat-fait { color: var(--c-texte-vert); background-color: var(--c-teinte-vert); }
-.badge-etat.etat-en-cours { color: var(--c-texte-bleu); background-color: var(--c-teinte-bleu); }
-.badge-etat.etat-a-planifier { color: var(--c-texte-violet); background-color: var(--c-teinte-violet); }
-.badge-etat.etat-prevu { color: var(--c-texte-gris); background-color: transparent; }
-.badge-etat.etat-en-attente { color: var(--c-texte-orange); background-color: var(--c-teinte-orange); }
-.badge-etat.etat-redige { color: var(--c-texte-vert); background-color: var(--c-teinte-vert); }
-.badge-etat.etat-a-venir { color: var(--c-texte-gris); background-color: transparent; }
+.badge-etat.etat-fait, .badge-etat.etat-redige, .badge-etat.niveau-vu { color: var(--c-sur-accent); background-color: var(--c-accent); }
+.badge-etat.etat-en-cours, .badge-etat.niveau-maitrise { color: var(--c-sur-plein); background-color: var(--c-plein); }
+.badge-etat.niveau-pratique { color: var(--c-sur-bleu); background-color: var(--c-bleu); }
+.badge-etat.etat-a-planifier { color: var(--c-titre); background-color: var(--c-surface); box-shadow: inset 0 0 0 1.5px var(--c-plein); }
+.badge-etat.etat-en-attente { color: var(--c-texte-doux); background-color: transparent; box-shadow: inset 0 0 0 1.5px var(--c-bordure-champ); }
+
+// Étiquette en tête de carte
+.etiquette {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3rem 0.9rem;
+  border-radius: $pilule;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--c-titre);
+  background-color: var(--c-fond-doux);
+}
+.etiquette.etat-fait { color: var(--c-sur-accent); background-color: var(--c-accent); }
+.etiquette.etat-en-cours { color: var(--c-sur-plein); background-color: var(--c-plein); }
+.etiquette.etat-a-planifier, .etiquette.etat-prevu { background-color: var(--c-surface); box-shadow: inset 0 0 0 1.5px var(--c-plein); }
+
+.boutons p { display: flex; flex-wrap: wrap; gap: 0.6rem; margin: 0; }
+a.bouton {
+  display: inline-flex;
+  align-items: center;
+  min-height: 46px;
+  padding: 0 1.4rem;
+  border: 2px solid var(--c-plein);
+  border-radius: $pilule;
+  background-color: var(--c-plein);
+  color: var(--c-sur-plein);
+  font-size: 0.97rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: opacity 0.15s ease, background-color 0.15s ease;
+}
+a.bouton:hover { color: var(--c-sur-plein); opacity: 0.88; }
+a.bouton.bouton-second { background-color: transparent; color: var(--c-titre); }
+a.bouton.bouton-second:hover { background-color: var(--c-fond-doux); color: var(--c-titre); opacity: 1; }
 
 // ── Cartes ─────────────────────────────────────────────────────────────────
 
 .grille-cartes {
-  max-width: 76rem;
-  margin-inline: auto;
   display: grid;
-  gap: 1.25rem;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
   margin-bottom: 2rem;
 }
 
 .carte {
   min-width: 0;
-  background-color: var(--c-fond);
-  border: 1px solid var(--c-bordure);
-  border-top: 4px solid var(--c-bleu);
+  padding: 1.6rem 1.75rem 1.5rem;
+  background-color: var(--c-surface);
+  border: 1.5px solid var(--c-bordure);
   border-radius: $rayon;
-  padding: 1.1rem 1.25rem 1.2rem;
 }
 .carte > :last-child { margin-bottom: 0; }
+.carte > p:first-child { margin-bottom: 0.9rem; }
+.carte-derniere { border: 2px solid var(--c-plein); }
+.carte-prochaine { background-color: var(--c-fond-doux); border-color: var(--c-fond-doux); }
+.carte-prochaine code, .carte-prochaine :not(pre) > code:not(.sourceCode) { background-color: var(--c-surface); }
 
-// Titres de bloc : petites capitales bleues, comme des étiquettes de carnet.
-main.content .bloc > h2,
-main.content .bloc > h3 {
-  margin: 0 0 0.8rem;
+// Titre d'une carte : le seul titre qu'elle contient. Il n'a pas de classe, car
+// Pandoc reporte les classes d'un titre sur le bloc qu'il ouvre.
+main.content .carte :is(h2, h3) {
+  margin: 0 0 0.55rem;
   padding: 0;
   border: 0;
-  font-family: $police-interface;
-  font-size: 0.8rem;
+  font-size: 1.75rem;
   font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--c-texte-bleu);
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
 }
+.carte :is(h2, h3) a { color: inherit; text-decoration: none; }
+.carte :is(h2, h3) a:hover { text-decoration: underline; text-decoration-color: var(--c-accent); }
+.carte .carte-surtitre { margin-bottom: 0.9rem; }
 
-main.content .carte-titre {
-  margin: 0.25rem 0 0.9rem;
-  padding: 0;
-  border: 0;
-  font-size: 1.3rem;
-  line-height: 1.3;
-}
-.carte-titre a { text-decoration: none; }
-.carte-titre a:hover { text-decoration: underline; }
-
-.carte ul, .bloc ul { padding-left: 1.15rem; }
-.carte li + li, .bloc li + li { margin-top: 0.35rem; }
+.carte ul { padding-left: 1.15rem; }
+.carte li + li { margin-top: 0.35rem; }
 
 // Fiches « terme : définition » (statut, durée, livrables, cause, correction)
 .carte dl, .incident dl, .seance-entete dl {
   display: grid;
   grid-template-columns: max-content minmax(0, 1fr);
-  gap: 0.4rem 1rem;
+  gap: 0.45rem 1.1rem;
   margin: 0 0 0.6rem;
 }
 .carte dt, .incident dt, .seance-entete dt {
-  font-family: $police-interface;
-  font-size: 0.8rem;
-  font-weight: 650;
+  padding-top: 0.15rem;
+  font-size: 0.86rem;
+  font-weight: 600;
   color: var(--c-texte-doux);
-  padding-top: 0.2rem;
 }
 .carte dd, .incident dd, .seance-entete dd { margin: 0; }
 .carte dd p, .incident dd p, .seance-entete dd p { margin: 0; }
 .carte dd ul { margin: 0; padding-left: 1.1rem; }
 
-// ── Tableau de bord ────────────────────────────────────────────────────────
+// ── Tableau de bord : en-tête, onglets, escalier ───────────────────────────
 
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 10fr) minmax(0, 11fr);
+  gap: 2rem 3.5rem;
+  align-items: center;
+  margin: 0.25rem 0 3rem;
+}
+.hero-texte > p { margin: 0; }
+.hero-pastille {
+  display: inline-flex;
+  margin-bottom: 1.25rem;
+  padding: 0.38rem 0.9rem;
+  border-radius: $pilule;
+  background-color: var(--c-fond-doux);
+  color: var(--c-titre);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+main.content h1.hero-titre {
+  margin: 0 0 1.35rem;
+  font-size: clamp(3.3rem, 1.5rem + 5.6vw, 6rem);
+  line-height: 0.94;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
 .intro {
   display: block;
-  max-width: 62rem;
-  margin-bottom: 0.4rem;
-  font-size: 0.95rem;
-  color: var(--c-texte-doux);
-}
-.niveau-date {
-  display: block;
-  margin-top: 0.15rem;
-  font-family: $police-interface;
-  font-size: 0.78rem;
-  color: var(--c-texte-doux);
+  max-width: 31rem;
+  margin-bottom: 1.6rem;
+  font-size: 1.22rem;
+  line-height: 1.5;
 }
 
-// Onglets
-.panel-tabset > .nav-tabs {
-  gap: 0.25rem;
-  font-family: $police-interface;
-  border-bottom: 2px solid var(--c-bordure);
+// Onglets : des boutons en pilule ; le volet affiché suit le bouton choisi.
+.onglets { gap: 0.4rem; margin: 0; padding: 0; border: 0; }
+.onglets .nav-link {
+  min-height: 44px;
+  padding: 0 0.85rem;
+  border: 1.5px solid var(--c-bordure);
+  border-radius: $pilule;
+  background-color: var(--c-surface);
+  color: var(--c-texte);
+  font-size: 0.94rem;
+  font-weight: 500;
 }
-.panel-tabset > .nav-tabs .nav-link {
-  margin-bottom: -2px;
-  padding: 0.55rem 0.95rem;
-  border: 0;
-  border-bottom: 3px solid transparent;
-  background-color: transparent;
-  color: var(--c-texte-doux);
-  font-size: 0.95rem;
-  font-weight: 600;
-}
-.panel-tabset > .nav-tabs .nav-link:hover { color: var(--c-titre); }
-.panel-tabset > .nav-tabs .nav-link.active {
+.onglets .nav-link:hover { border-color: var(--c-plein); color: var(--c-texte); }
+.onglets .nav-link.active {
+  border: 2px solid var(--c-plein);
+  background-color: var(--c-surface);
   color: var(--c-titre);
-  background-color: transparent;
-  border-bottom-color: var(--c-bleu);
-}
-.panel-tabset > .tab-content {
-  padding: 1.25rem 0 0;
-  border: 0;
-}
-
-// Indicateurs d'avancement
-.indicateurs {
-  display: grid;
-  gap: 1rem;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  margin-bottom: 1.25rem;
-}
-.indicateur {
-  min-width: 0;
-  padding: 0.9rem 1rem 0.8rem;
-  background-color: var(--c-fond);
-  border: 1px solid var(--c-bordure);
-  border-top: 4px solid var(--c-bleu);
-  border-radius: $rayon;
-}
-.indicateur p { margin: 0 0 0.25rem; }
-.indicateur p:last-child { margin-bottom: 0; }
-.indicateur-libelle {
-  font-family: $police-interface;
-  font-size: 0.75rem;
   font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--c-texte-bleu);
 }
-.indicateur-valeur {
-  font-size: 2.3rem;
-  font-weight: 600;
-  line-height: 1.1;
-  color: var(--c-titre);
-  font-variant-numeric: tabular-nums lining-nums;
+// Quarto encadre les volets d'un jeu d'onglets : ici, ils se fondent dans la page.
+main.content .tab-content { margin: 0; padding: 0; border: 0; }
+.tab-content > .tab-pane:focus-visible { outline-offset: 6px; }
+
+// Escalier : une marche par séance, un palier et son drapeau par jalon.
+.escalier { min-width: 0; padding-top: 4.75rem; }
+.escalier-marches {
+  display: grid;
+  grid-template-columns: repeat(var(--colonnes, 18), minmax(0, 1fr));
+  column-gap: 3px;
+  align-items: end;
+  height: 20.5rem;
+  border-bottom: 2px solid var(--c-titre);
 }
-.indicateur-total {
-  font-family: $police-interface;
-  font-size: 0.95rem;
-  color: var(--c-texte-doux);
+.marche {
+  position: relative;
+  height: var(--part, 0%);
+  border-radius: 7px 7px 0 0;
+  background-color: var(--c-marche);
 }
-.indicateur-detail {
-  display: block;
-  font-size: 0.92rem;
+.marche > p { margin: 0; }
+.marche.etat-fait { background-color: var(--c-accent); }
+.marche.etat-en-cours { background-color: var(--c-plein); }
+.marche.etat-a-planifier { background-color: var(--c-surface); box-shadow: inset 0 0 0 2px var(--c-plein); }
+.marche.palier { background-color: var(--c-palier); }
+.marche-no {
+  position: absolute;
+  top: -1.5rem;
+  right: -4px;
+  left: -4px;
+  font-size: 0.8rem;
   line-height: 1.4;
+  text-align: center;
   color: var(--c-texte-doux);
+  font-variant-numeric: tabular-nums;
+}
+.marche.etat-fait .marche-no, .marche.etat-en-cours .marche-no, .marche.etat-a-planifier .marche-no { color: var(--c-texte); font-weight: 700; }
+// une séance faite mène à sa page : le lien couvre la marche et son numéro
+a.marche-lien { position: absolute; inset: -1.6rem 0 0; border-radius: 7px 7px 0 0; color: inherit; text-decoration: none; }
+a.marche-lien .marche-no { top: 0.1rem; }
+a.marche-lien:hover .marche-no { text-decoration: underline; }
+
+.drapeau { position: absolute; bottom: 100%; left: 50%; width: 24px; height: 40px; margin-left: -19px; }
+.drapeau-icone { display: block; width: 24px; height: 40px; overflow: visible; }
+.drapeau-mat { fill: none; stroke: var(--c-titre); stroke-width: 2; stroke-linecap: round; }
+.drapeau-fanion { fill: var(--c-surface); stroke: var(--c-titre); stroke-width: 2; stroke-linejoin: round; }
+.jalon-atteint .drapeau-fanion { fill: var(--c-accent); }
+.palier-nom {
+  position: absolute;
+  bottom: 100%;
+  left: 3px;
+  padding-bottom: 2px;
+  font-family: $police-titre;
+  font-size: 0.94rem;
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+  color: var(--c-titre);
 }
 
-// Barres : progression simple et niveaux de compétence empilés
-.progression, .barre-niveaux {
+.escalier-semaines {
+  display: grid;
+  column-gap: 3px;
+  padding-top: 0.5rem;
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--c-texte-doux);
+}
+.escalier-semaines p { display: contents; }
+.escalier-pied p, .section-pied p {
   display: flex;
-  height: 0.55rem;
-  margin: 0.35rem 0 0.45rem;
-  overflow: hidden;
-  border-radius: 999px;
-  background-color: var(--c-teinte-gris);
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1.5rem;
+  margin: 0.9rem 0 0;
 }
-.progression::before {
-  content: "";
-  width: var(--part, 0%);
-  background-color: var(--c-bleu);
-  border-radius: 999px;
-}
-.segment { display: block; height: 100%; width: var(--part, 0%); }
-.segment.niveau-vu { background-color: var(--c-bleu); }
-.segment.niveau-pratique { background-color: var(--c-violet); }
-.segment.niveau-maitrise { background-color: var(--c-vert); }
 
 // Légende et pastilles
 .legende {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.3rem 1rem;
-  font-family: $police-interface;
-  font-size: 0.8rem;
+  gap: 0.35rem 1.25rem;
+  font-size: 0.875rem;
   color: var(--c-texte-doux);
 }
-.legende-item { display: inline-flex; align-items: center; gap: 0.35rem; }
+.legende-item { display: inline-flex; align-items: center; gap: 0.5rem; }
 .pastille {
   display: inline-block;
-  width: 0.75rem;
-  height: 0.75rem;
-  border: 2px solid var(--c-gris);
-  border-radius: 50%;
-  background-color: var(--c-fond);
-}
-.pastille.etat-fait { background-color: var(--c-vert); border-color: var(--c-vert); }
-.pastille.etat-a-planifier { border-color: var(--c-violet); border-width: 3px; }
-.pastille.niveau-vu { background-color: var(--c-bleu); border-color: var(--c-bleu); }
-.pastille.niveau-pratique { background-color: var(--c-violet); border-color: var(--c-violet); }
-.pastille.niveau-maitrise { background-color: var(--c-vert); border-color: var(--c-vert); }
-
-// Parcours des séances, par semaine
-.parcours { display: grid; gap: 0.6rem; margin: 0.2rem 0 0.9rem; }
-.parcours-semaine p {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.4rem;
-  margin: 0;
-}
-.parcours-libelle, .niveaux-libelle {
-  min-width: 6.2rem;
-  font-family: $police-interface;
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--c-texte-doux);
-}
-.point {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 2rem;
-  height: 2rem;
-  border: 2px solid var(--c-gris);
-  border-radius: 50%;
-  background-color: var(--c-fond);
-  color: var(--c-texte-gris);
-  font-family: $police-interface;
-  font-size: 0.85rem;
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-}
-.point.etat-fait { background-color: var(--c-vert); border-color: var(--c-vert); color: var(--c-fond); }
-.point.etat-a-planifier { border: 3px solid var(--c-violet); color: var(--c-texte-violet); }
-a.lien-point { text-decoration: none; border-radius: 50%; }
-.jalon {
-  display: inline-flex;
-  align-items: center;
-  height: 1.5rem;
-  padding: 0 0.45rem;
-  border: 2px solid var(--c-bleu);
+  flex: none;
+  width: 0.875rem;
+  height: 0.875rem;
   border-radius: 4px;
-  font-family: $police-interface;
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: var(--c-texte-bleu);
+  background-color: var(--c-marche);
 }
-.legende .jalon { height: 1.1rem; padding: 0 0.25rem; font-size: 0.65rem; }
-// Dans le tableau de bord, le texte des cartes est plus compact.
-.tab-content .carte, .tab-content .indicateur { font-size: 1rem; }
-main.content .tab-content .carte-titre { font-size: 1.2rem; }
+.pastille.etat-fait, .pastille.niveau-vu { background-color: var(--c-accent); }
+.pastille.etat-a-planifier { background-color: var(--c-surface); box-shadow: inset 0 0 0 2px var(--c-plein); }
+.pastille.palier { background-color: var(--c-palier); }
+.pastille.niveau-pratique { background-color: var(--c-bleu); }
+.pastille.niveau-maitrise { background-color: var(--c-plein); }
 
-// « Où j'en suis » : les séances à gauche, l'avancement du cours à droite.
-.parcours-corps { display: grid; gap: 1.1rem 2.5rem; }
-@media (min-width: 992px) {
-  .parcours-corps { grid-template-columns: max-content minmax(0, 1fr); align-items: start; }
-  // aligne « Séances » sur « Cours », qui est dans un encadré
-  .parcours-labo { padding-top: 0.85rem; }
+// ── Tableau de bord : vue d'ensemble ───────────────────────────────────────
+
+// Jalons
+.jalons {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  gap: 0.75rem 1rem;
+  margin-bottom: 1rem;
 }
-.sous-libelle {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-family: $police-interface;
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: var(--c-titre);
+.jalon-carte {
+  padding: 0.9rem 1.15rem;
+  background-color: var(--c-surface);
+  border: 1.5px solid var(--c-bordure);
+  border-radius: $rayon-moyen;
 }
-.cours-avancement {
-  padding: 0.85rem 1rem;
-  border-left: 4px solid var(--c-vert);
-  border-radius: 0 $rayon $rayon 0;
+.jalon-carte.jalon-atteint { border-color: var(--c-accent); }
+.jalon-carte p {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: baseline;
+  gap: 0.25rem 0.75rem;
+  margin: 0;
+  font-size: 0.94rem;
+  line-height: 1.45;
+}
+.jalon-nom { font-family: $police-titre; font-size: 1.2rem; font-weight: 800; color: var(--c-titre); }
+.jalon-carte .badge-etat { grid-column: 2; justify-self: start; }
+
+// Indicateurs d'avancement
+.indicateurs {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+.indicateur {
+  min-width: 0;
+  padding: 1.4rem 1.5rem 1.25rem;
+  border-radius: $rayon;
   background-color: var(--c-fond-doux);
 }
-.cours-avancement p { margin: 0 0 0.3rem; }
-.cours-avancement p:last-child { margin-bottom: 0; }
-.cours-avancement ul { margin: 0.4rem 0 0.5rem; padding-left: 1.1rem; }
-.cours-avancement .progression { max-width: 22rem; }
-
-// Colonnes de la vue d'ensemble
-.colonnes-accueil {
-  display: grid;
-  gap: 1.25rem;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
-  margin: 1.25rem 0;
+.indicateur p { margin: 0 0 0.25rem; }
+.indicateur p:last-child { margin-bottom: 0; }
+.indicateur-libelle { display: block; margin-bottom: 0.35rem; font-size: 0.94rem; font-weight: 600; }
+.indicateur-valeur {
+  font-family: $police-titre;
+  font-size: 4.25rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums lining-nums;
 }
+.indicateur-total { margin-left: 0.3rem; font-size: 1.12rem; font-weight: 500; }
+.indicateur-detail { display: block; font-size: 0.94rem; line-height: 1.4; }
+.indicateur .source { display: block; }
+.indicateur.phare { background-color: var(--c-phare); color: var(--c-sur-phare); }
+.indicateur.phare .source { color: var(--c-phare-doux); }
 
-// Lignes « libellé, barre, compte » (compétences, heures)
-.niveaux-ligne p {
+// Pastilles : une par séance, par jalon, par concept
+.pips { display: flex; flex-wrap: wrap; gap: 4px; margin: 0.6rem 0 0.75rem; }
+.pip { flex: none; width: 11px; height: 11px; border-radius: 50%; background-color: var(--c-palier); }
+.pip.plein, .pip.niveau-vu { background-color: var(--c-accent); }
+.pip.niveau-pratique { background-color: var(--c-bleu); }
+.pip.niveau-maitrise { background-color: var(--c-plein); }
+.phare .pip { background-color: var(--c-phare-vide); }
+.phare .pip.plein { background-color: var(--c-accent); }
+
+// Sections
+.section-tete {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.4rem 1.5rem;
+  margin: 4.5rem 0 1.4rem;
+}
+.section-tete p { margin: 0; }
+main.content .section-tete > h2 {
+  margin: 0;
+  font-size: clamp(2rem, 1.35rem + 2vw, 2.75rem);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+}
+.section-apart { font-size: 0.94rem; color: var(--c-texte-doux); }
+
+.duo {
   display: grid;
-  grid-template-columns: 6.2rem minmax(0, 1fr) auto;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+.carte-cours .indicateur-valeur { font-size: 3.25rem; color: var(--c-titre); }
+.carte-cours .indicateur-detail { margin-bottom: 1rem; color: var(--c-texte-doux); }
+.carte-cours ul { margin: 0.25rem 0 0.75rem; }
+
+// Lignes « libellé, pastilles ou barre, compte » (compétences, heures)
+.rangs { display: grid; gap: 0.75rem; }
+.rang {
+  padding: 1rem 1.4rem;
+  background-color: var(--c-surface);
+  border: 1.5px solid var(--c-bordure);
+  border-radius: $rayon-moyen;
+}
+.rang p {
+  display: grid;
+  grid-template-columns: 7rem minmax(0, 1fr) auto;
   align-items: center;
+  gap: 0.6rem 1.25rem;
+  margin: 0;
+}
+.rang-nom { font-size: 0.97rem; font-weight: 600; }
+.rang .pips { margin: 0; gap: 6px; }
+.rang .pip { width: 1.5rem; height: 1.5rem; border-radius: 0.5rem; background-color: var(--c-marche); }
+.rang .pip.niveau-vu { background-color: var(--c-accent); }
+.rang .pip.niveau-pratique { background-color: var(--c-bleu); }
+.rang .pip.niveau-maitrise { background-color: var(--c-plein); }
+.rang-val { font-size: 0.94rem; white-space: nowrap; color: var(--c-texte-doux); }
+.rang-nombre { font-family: $police-titre; font-size: 1.3rem; font-weight: 800; color: var(--c-titre); }
+.barre { display: block; height: 0.75rem; overflow: hidden; border-radius: $pilule; background-color: var(--c-marche); }
+.barre-pleine { display: block; width: var(--part, 0%); height: 100%; border-radius: $pilule; background-color: var(--c-accent); }
+
+// Derniers liens de la veille
+.apercu-veille {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 18.5rem), 1fr));
+  gap: 1rem;
+  margin-bottom: 1.1rem;
+}
+.apercu-lien {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  min-height: 13rem;
+  padding: 1.4rem 1.5rem 1.25rem;
+  background-color: var(--c-surface);
+  border: 1.5px solid var(--c-bordure);
+  border-radius: $rayon;
+  transition: border-color 0.15s ease;
+}
+.apercu-lien:hover { border-color: var(--c-plein); }
+.apercu-lien p { margin: 0; }
+.apercu-theme {
+  display: inline-flex;
+  padding: 0.25rem 0.75rem;
+  border-radius: $pilule;
+  background-color: var(--c-fond-doux);
+  color: var(--c-titre);
+  font-size: 0.84rem;
+  font-weight: 600;
+}
+a.apercu-ancre { color: var(--c-texte); text-decoration: none; }
+// toute la carte est cliquable
+a.apercu-ancre::after { content: ""; position: absolute; inset: 0; border-radius: inherit; }
+a.apercu-ancre:hover .apercu-titre { text-decoration: underline; text-decoration-color: var(--c-accent); text-decoration-thickness: 0.08em; }
+.apercu-titre { font-family: $police-titre; font-size: 1.3rem; font-weight: 600; line-height: 1.22; letter-spacing: -0.01em; }
+.apercu-lien > p:last-child {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   gap: 0.75rem;
-  margin: 0 0 0.6rem;
-}
-.niveaux-ligne .barre-niveaux { margin: 0; }
-.niveaux-compte {
-  font-family: $police-interface;
-  font-size: 0.85rem;
+  margin-top: auto;
+  font-size: 0.875rem;
   color: var(--c-texte-doux);
-  white-space: nowrap;
 }
-.niveaux-total { font-size: 1.15rem; font-weight: 600; color: var(--c-titre); }
+.apercu-fleche {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 2.1rem;
+  height: 2.1rem;
+  border-radius: 50%;
+  background-color: var(--c-plein);
+  color: var(--c-sur-plein);
+}
+.fleche-icone { width: 1rem; height: 1rem; }
+.fleche-icone path { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 
-// Onglets en colonne de lecture
+// ── Tableau de bord : autres onglets ───────────────────────────────────────
+
 .onglet-etroit { max-width: 50rem; }
-main.content .onglet-etroit > h3,
-main.content .onglet-etroit > section > h3 {
-  margin: 1.6rem 0 0.8rem;
-  padding: 0;
-  border: 0;
-  font-family: $police-interface;
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--c-texte-doux);
-}
-.entree-journal { margin-bottom: 1.25rem; }
+// titres d'un volet ou du plan du cours : des h2, sous le h1 de la page, à la taille d'un intertitre
+main.content .onglet-etroit > h2,
+main.content .onglet-etroit > section > h2 { margin: 2.25rem 0 1rem; font-size: 1.5rem; font-weight: 800; }
+.niveaux-total { font-family: $police-titre; font-size: 1.3rem; font-weight: 700; color: var(--c-titre); }
+.onglet-etroit > p > .pips { margin: 0.2rem 0 0.4rem; gap: 6px; }
+.onglet-etroit > p > .pips .pip { width: 1.25rem; height: 1.25rem; border-radius: 0.45rem; background-color: var(--c-marche); }
+.onglet-etroit > p > .pips .pip.plein, .onglet-etroit > p > .pips .pip.niveau-vu { background-color: var(--c-accent); }
+.onglet-etroit > p > .pips .pip.niveau-pratique { background-color: var(--c-bleu); }
+.onglet-etroit > p > .pips .pip.niveau-maitrise { background-color: var(--c-plein); }
+.niveau-date { display: block; margin-top: 0.15rem; font-size: 0.8rem; color: var(--c-texte-doux); }
+.entree-journal { margin-bottom: 1rem; }
 
-// ── Frise des séances (onglet Laboratoire) ─────────────────────────────────
-
+// Frise des séances (onglet Laboratoire, plan du cours)
 .frise {
-  margin: 0 0 0 0.55rem;
+  margin: 0 0 0 0.6rem;
   padding: 0;
   border-left: 2px solid var(--c-bordure);
 }
-.frise-etape {
-  position: relative;
-  padding: 0 0 1.15rem 1.5rem;
-}
+.frise-etape { position: relative; padding: 0 0 1.25rem 1.6rem; }
 .frise-etape:last-child { padding-bottom: 0.2rem; }
 .frise-etape::before {
   content: "";
   position: absolute;
-  left: calc(-0.5rem - 1px);
-  top: 0.35rem;
-  width: 1rem;
-  height: 1rem;
+  top: 0.3rem;
+  left: calc(-0.55rem - 1px);
+  width: 1.1rem;
+  height: 1.1rem;
   border-radius: 50%;
-  border: 3px solid var(--c-gris);
-  background-color: var(--c-fond);
+  background-color: var(--c-palier);
+  box-shadow: 0 0 0 4px var(--c-fond);
 }
-.frise-etape.etat-fait::before { border-color: var(--c-vert); background-color: var(--c-vert); }
-.frise-etape.etat-a-planifier::before { border-color: var(--c-violet); }
-.frise-etape.etat-en-attente::before { border-color: var(--c-orange); }
-.frise-etape.etat-redige::before { border-color: var(--c-vert); background-color: var(--c-vert); }
-.frise-etape p { margin: 0 0 0.2rem; }
-.frise-quand {
-  font-family: $police-interface;
-  font-size: 0.82rem;
-  color: var(--c-texte-doux);
-  margin-right: 0.35rem;
-}
+.frise-etape.etat-fait::before, .frise-etape.etat-redige::before { background-color: var(--c-accent); }
+.frise-etape.etat-en-cours::before { background-color: var(--c-plein); }
+.frise-etape.etat-a-planifier::before { background-color: var(--c-surface); box-shadow: inset 0 0 0 2.5px var(--c-plein), 0 0 0 4px var(--c-fond); }
+.frise-etape p { margin: 0 0 0.25rem; }
+.frise-quand { margin-right: 0.4rem; font-size: 0.875rem; color: var(--c-texte-doux); }
 .frise-titre { font-weight: 600; }
-.frise-livrables {
-  display: block;
-  font-size: 0.95rem;
-  color: var(--c-texte-doux);
-}
+.frise-livrables { display: block; font-size: 0.94rem; color: var(--c-texte-doux); }
 .frise-jalon {
   display: inline-block;
-  margin-top: 0.3rem;
-  padding-left: 0.5rem;
-  border-left: 3px solid var(--c-bleu);
-  font-family: $police-interface;
-  font-size: 0.82rem;
-  font-weight: 650;
-  color: var(--c-texte-bleu);
+  margin-top: 0.35rem;
+  padding: 0.25rem 0.8rem;
+  border-radius: $rayon-moyen;
+  background-color: var(--c-fond-doux);
+  color: var(--c-titre);
+  font-size: 0.84rem;
+  font-weight: 600;
 }
 
 // ── Page de séance ─────────────────────────────────────────────────────────
 
 .seance-entete {
-  padding: 0.9rem 1.1rem;
-  margin-bottom: 1.5rem;
-  border-left: 4px solid var(--c-bleu);
+  padding: 1.1rem 1.4rem;
+  margin-bottom: 1.75rem;
+  border-radius: $rayon-moyen;
   background-color: var(--c-fond-doux);
-  border-radius: 0 $rayon $rayon 0;
 }
+.seance-entete > :last-child { margin-bottom: 0; }
 
 .incidents {
   display: grid;
@@ -715,16 +928,16 @@ main.content .onglet-etroit > section > h3 {
 }
 .incident {
   min-width: 0;
-  padding: 0.9rem 1rem;
-  border: 1px solid var(--c-bordure);
-  border-left: 4px solid var(--c-orange);
-  border-radius: $rayon;
+  padding: 1.1rem 1.25rem;
+  background-color: var(--c-surface);
+  border: 1.5px solid var(--c-bordure);
+  border-radius: $rayon-moyen;
 }
 .incident > p:first-child { margin-bottom: 0.6rem; }
 .incident > :last-child { margin-bottom: 0; }
 
 ul.task-list { padding-left: 0.3rem; }
-ul.task-list li input[type="checkbox"] { margin-right: 0.45rem; accent-color: var(--c-bleu); }
+ul.task-list li input[type="checkbox"] { margin-right: 0.45rem; accent-color: var(--c-plein); }
 
 // ── Tableaux ───────────────────────────────────────────────────────────────
 
@@ -741,23 +954,22 @@ main.content .tab-content table {
   font-variant-numeric: tabular-nums lining-nums;
 }
 main.content table thead th {
-  font-family: $police-interface;
-  font-size: 0.8rem;
+  font-size: 0.82rem;
   font-weight: 700;
   color: var(--c-texte-doux);
-  background-color: var(--c-fond-doux);
+  background-color: transparent;
   border-bottom: 2px solid var(--c-titre);
   vertical-align: bottom;
 }
-main.content table td, main.content table th { padding: 0.45rem 0.65rem; }
+main.content table td, main.content table th { padding: 0.55rem 0.75rem; }
 
 // ── Code ───────────────────────────────────────────────────────────────────
 
 code {
   color: var(--c-titre);
   background-color: var(--c-fond-doux);
-  padding: 0.08em 0.3em;
-  border-radius: 3px;
+  padding: 0.1em 0.38em;
+  border-radius: 6px;
   font-size: 0.86em;
 }
 // Ni une adresse longue ni du code en ligne ne doivent élargir la page.
@@ -769,8 +981,8 @@ main.content { overflow-wrap: break-word; }
 pre code, div.sourceCode code { background-color: transparent; padding: 0; color: var(--c-texte); }
 div.sourceCode, pre.sourceCode {
   background-color: var(--c-fond-doux) !important;
-  border: 1px solid var(--c-bordure);
-  border-radius: $rayon;
+  border: 0;
+  border-radius: $rayon-moyen;
 }
 main code span.kw, main code span.cf, main code span.im { color: var(--c-texte-violet); font-weight: 400; }
 main code span.st, main code span.ss, main code span.vs, main code span.ch, main code span.sc { color: var(--c-texte-vert); }
@@ -784,52 +996,49 @@ main code span.op, main code span.ot, main code span.va, main code span.at, main
 main code span.pp, main code span.ex, main code span.al, main code span.er, main code span.wa {
   color: var(--c-texte);
 }
-
-// ── Encadrés du cours (callouts) ───────────────────────────────────────────
-
-.callout {
-  border-color: var(--c-bordure) !important;
-  background-color: transparent;
-}
-.callout .callout-title-container {
-  font-family: $police-interface;
-  font-weight: 700;
-  color: var(--c-texte);
-}
-.callout.callout-note { border-left-color: var(--c-bleu) !important; }
-.callout.callout-warning { border-left-color: var(--c-orange) !important; }
-.callout.callout-tip { border-left-color: var(--c-vert) !important; }
-.callout.callout-caution { border-left-color: var(--c-gris) !important; }
-.callout.callout-important { border-left-color: var(--c-violet) !important; }
-.callout-note > .callout-header { background-color: var(--c-teinte-bleu) !important; }
-.callout-warning > .callout-header { background-color: var(--c-teinte-orange) !important; }
-.callout-tip > .callout-header { background-color: var(--c-teinte-vert) !important; }
-.callout-caution > .callout-header { background-color: var(--c-teinte-gris) !important; }
-.callout-important > .callout-header { background-color: var(--c-teinte-violet) !important; }
-
-// ── Couleurs que Quarto compile en dur : on les rattache aux variables, pour
-//    que le thème sombre s'applique partout (pied de page, table des matières,
-//    code en ligne, lignes des blocs de code).
-
-footer.footer .nav-footer { background-color: var(--c-fond); }
-#TOC a.nav-link, nav[role="doc-toc"] a.nav-link { color: var(--c-texte-doux); }
-// Quarto impose cette couleur avec !important : on doit faire de même.
-.sidebar nav[role="doc-toc"] ul > li > a.active,
-.sidebar nav[role="doc-toc"] ul > li > ul > li > a.active,
-#TOC a.nav-link.active {
-  color: var(--c-lien) !important;
-  border-left-color: var(--c-lien);
-}
+// Couleurs que Quarto compile en dur : on les rattache aux variables, pour
+// que le thème sombre s'applique aussi au code.
 body :not(pre) > code:not(.sourceCode) {
   color: var(--c-titre);
   background-color: var(--c-fond-doux);
 }
 main code.sourceCode > span, main code.sourceCode span:not([class]) { color: var(--c-texte); }
 
-// Barre latérale du cours et navigation « précédent / suivant »
+// ── Encadrés du cours (callouts) ───────────────────────────────────────────
+
+.callout.callout-style-default, .callout {
+  overflow: hidden;
+  border: 1.5px solid var(--c-bordure) !important;
+  border-radius: $rayon-moyen !important;
+  background-color: var(--c-surface);
+}
+// l'en-tête d'un encadré s'affiche sans la transparence de Quarto : son titre garde un contraste suffisant
+.callout.callout-style-default > div.callout-header, .callout.callout-style-simple > div.callout-header { opacity: 1; }
+.callout .callout-title-container { font-weight: 700; color: var(--c-texte); }
+.callout-note > .callout-header { background-color: var(--c-teinte-bleu) !important; }
+.callout-warning > .callout-header { background-color: var(--c-teinte-orange) !important; }
+.callout-tip > .callout-header { background-color: var(--c-teinte-vert) !important; }
+.callout-caution > .callout-header { background-color: var(--c-teinte-gris) !important; }
+.callout-important > .callout-header { background-color: var(--c-teinte-violet) !important; }
+.callout-note .callout-title-container { color: var(--c-texte-bleu); }
+.callout-warning .callout-title-container { color: var(--c-texte-orange); }
+.callout-tip .callout-title-container { color: var(--c-texte-vert); }
+.callout-caution .callout-title-container { color: var(--c-texte-gris); }
+.callout-important .callout-title-container { color: var(--c-texte-violet); }
+// Quarto dessine les icônes des encadrés dans la couleur du thème clair :
+// en thème sombre, on les éclaircit jusqu'à la teinte de leur titre.
+@media (prefers-color-scheme: dark) {
+  .callout-note .callout-icon::before { filter: brightness(2.1); }
+  .callout-warning .callout-icon::before { filter: brightness(1.45); }
+  .callout-tip .callout-icon::before { filter: brightness(1.5); }
+  .callout-caution .callout-icon::before { filter: brightness(1.45); }
+  .callout-important .callout-icon::before { filter: brightness(1.6); }
+}
+
+// ── Barre latérale du cours et navigation « précédent / suivant » ──────────
+
 #quarto-sidebar, .quarto-secondary-nav {
-  font-family: $police-interface;
-  font-size: 0.9rem;
+  font-size: 0.92rem;
   background-color: var(--c-fond);
   border-color: var(--c-bordure);
 }
@@ -838,58 +1047,52 @@ main code.sourceCode > span, main code.sourceCode span:not([class]) { color: var
 .breadcrumb-item, .breadcrumb-item a, .breadcrumb-item + .breadcrumb-item::before { color: var(--c-texte-doux); }
 #title-block-header .breadcrumb a, #quarto-header .breadcrumb a, .quarto-secondary-nav .breadcrumb a { color: var(--c-texte-doux); }
 // Barre secondaire du cours sur téléphone : Quarto lui impose un fond clair.
-#quarto-header nav.quarto-secondary-nav { background-color: var(--c-fond) !important; border-bottom: 1px solid var(--c-bordure); }
+#quarto-header nav.quarto-secondary-nav { background-color: var(--c-fond) !important; border-bottom: 1.5px solid var(--c-bordure); }
 #quarto-sidebar .sidebar-link,
 #quarto-sidebar .sidebar-item-text { color: var(--c-texte-doux); }
+// chaque lien du plan offre une cible d'au moins 24 px de haut
+#quarto-sidebar a.sidebar-link { padding-block: 0.3rem; }
 #quarto-sidebar .sidebar-link.active,
 #quarto-sidebar .sidebar-link.active .sidebar-item-text,
-#quarto-sidebar .sidebar-link.active .menu-text { color: var(--c-lien); font-weight: 600; }
+#quarto-sidebar .sidebar-link.active .menu-text { color: var(--c-titre); font-weight: 700; }
 #quarto-sidebar .sidebar-item-toggle, #quarto-sidebar .sidebar-item-toggle .bi { color: var(--c-texte-doux); }
 .nav-page a, .nav-page .nav-page-text, .nav-page .bi { color: var(--c-lien); }
-.nav-page { font-family: $police-interface; }
 
 // ── Veille ─────────────────────────────────────────────────────────────────
 // Une bibliothèque de liens : recherche et thèmes à gauche (colonne collante
-// sur ordinateur, puces défilantes sur téléphone), fiches à droite.
-// Beaucoup d'air, des filets fins, une pastille de couleur par thème.
+// sur ordinateur, pilules défilantes sur téléphone), fiches à droite.
 
 .veille-chiffres {
   display: block;
   margin: -0.4rem 0 2.5rem;
-  font-family: $police-interface;
-  font-size: 0.9rem;
-  letter-spacing: 0.01em;
+  font-size: 0.94rem;
   color: var(--c-texte-doux);
 }
 .veille-chiffre { white-space: nowrap; }
 
 .veille {
   display: grid;
-  // minmax(0, …) : la rangée de puces défile au lieu d'élargir la page
+  // minmax(0, …) : la rangée de pilules défile au lieu d'élargir la page
   grid-template-columns: minmax(0, 1fr);
   gap: 2rem;
-  max-width: 68rem;
 }
 
-.veille-outils { min-width: 0; font-family: $police-interface; }
+.veille-outils { min-width: 0; }
 
 .veille-etiquette {
   display: block;
   margin: 0 0 0.6rem;
-  font-family: $police-interface;
-  font-size: 0.72rem;
+  font-size: 0.875rem;
   font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
   color: var(--c-texte-doux);
 }
 
-.veille-recherche { margin-bottom: 2.25rem; }
+.veille-recherche { margin-bottom: 2rem; }
 .veille-champ { position: relative; }
 .veille-loupe {
   position: absolute;
   top: 50%;
-  left: 0.95rem;
+  left: 1.05rem;
   width: 1.05rem;
   height: 1.05rem;
   transform: translateY(-50%);
@@ -901,50 +1104,50 @@ main code.sourceCode > span, main code.sourceCode span:not([class]) { color: var
 }
 #veille-recherche {
   width: 100%;
-  height: 2.8rem;
-  padding: 0 1rem 0 2.6rem;
-  font-family: $police-interface;
-  font-size: 0.95rem;
+  height: 3rem;
+  padding: 0 1rem 0 2.75rem;
+  font-family: $police-texte;
+  font-size: 0.97rem;
   color: var(--c-texte);
-  background-color: var(--c-fond);
-  border: 1px solid var(--c-bordure-champ);
-  border-radius: 999px;
-  transition: border-color 0.15s ease, background-color 0.15s ease;
+  background-color: var(--c-surface);
+  border: 1.5px solid var(--c-bordure-champ);
+  border-radius: $pilule;
+  transition: border-color 0.15s ease;
 }
 #veille-recherche::placeholder { color: var(--c-texte-doux); opacity: 1; }
-#veille-recherche:hover { border-color: var(--c-texte-doux); }
-#veille-recherche:focus { border-color: var(--c-lien); background-color: var(--c-fond); }
-#veille-recherche:focus-visible { border-radius: 999px; }
+#veille-recherche:hover, #veille-recherche:focus { border-color: var(--c-plein); }
+#veille-recherche:focus-visible { border-radius: $pilule; }
 
-.veille-filtres { display: flex; flex-direction: column; gap: 0.2rem; }
+.veille-filtres { display: flex; flex-direction: column; gap: 0.25rem; }
 .veille-filtre {
   display: flex;
   align-items: center;
   gap: 0.7rem;
   width: 100%;
-  padding: 0.55rem 0.8rem;
-  font-family: $police-interface;
-  font-size: 0.93rem;
+  min-height: 44px;
+  padding: 0.5rem 0.95rem;
+  font-family: $police-texte;
+  font-size: 0.95rem;
   line-height: 1.3;
   text-align: left;
-  color: var(--c-texte-doux);
+  color: var(--c-texte);
   background-color: transparent;
-  border: 1px solid transparent;
-  border-radius: 10px;
+  border: 1.5px solid transparent;
+  border-radius: $pilule;
   cursor: pointer;
-  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
 }
-.veille-filtre:hover { color: var(--c-texte); background-color: var(--c-fond-doux); }
+.veille-filtre:hover { background-color: var(--c-fond-doux); }
 .veille-filtre[aria-pressed="true"] {
-  font-weight: 600;
+  font-weight: 700;
   color: var(--c-titre);
-  background-color: var(--c-fond-doux);
-  border-color: var(--c-bordure);
+  background-color: var(--c-surface);
+  border-color: var(--c-plein);
 }
 .veille-pastille {
   flex: none;
-  width: 0.6rem;
-  height: 0.6rem;
+  width: 0.7rem;
+  height: 0.7rem;
   border-radius: 50%;
   background-color: var(--c-theme, var(--c-texte-doux));
 }
@@ -954,150 +1157,132 @@ main code.sourceCode > span, main code.sourceCode span:not([class]) { color: var
 }
 .veille-filtre-nom { flex: 1; }
 .veille-filtre-compte {
-  font-size: 0.8rem;
+  font-size: 0.84rem;
   font-weight: 500;
   font-variant-numeric: tabular-nums;
   color: var(--c-texte-doux);
 }
 
-.veille-liste { min-width: 0; max-width: 46rem; }
+.veille-liste { min-width: 0; max-width: 48rem; }
 .veille-statut {
   margin: 0 0 1.25rem;
-  font-family: $police-interface;
-  font-size: 0.9rem;
+  font-size: 0.94rem;
   color: var(--c-texte-doux);
 }
 .veille-statut:empty { display: none; }
 
 // Thèmes
-.veille-theme + .veille-theme { margin-top: 3.75rem; }
+.veille-theme + .veille-theme { margin-top: 3.5rem; }
 main.content h2.veille-theme-titre {
   display: flex;
   align-items: baseline;
   gap: 0.75rem;
-  margin: 0;
-  padding: 0 0 0.7rem;
-  font-size: 1.6rem;
-  letter-spacing: -0.01em;
-  border-bottom: 1px solid var(--c-bordure);
+  margin: 0 0 0.35rem;
+  font-size: 1.9rem;
+  letter-spacing: -0.025em;
 }
 main.content h2.veille-theme-titre::before {
   content: "";
   flex: none;
   align-self: center;
-  width: 0.62rem;
-  height: 0.62rem;
+  width: 0.8rem;
+  height: 0.8rem;
   border-radius: 50%;
   background-color: var(--c-theme);
 }
 .veille-compte {
   margin-left: auto;
-  font-family: $police-interface;
-  font-size: 0.8rem;
+  font-family: $police-texte;
+  font-size: 0.875rem;
   font-weight: 500;
-  letter-spacing: 0.02em;
+  letter-spacing: 0;
   white-space: nowrap;
   color: var(--c-texte-doux);
 }
 .veille-theme-description {
   display: block;
-  margin: 0.75rem 0 0.5rem;
-  font-size: 1rem;
-  font-style: italic;
-  line-height: 1.55;
+  margin: 0.25rem 0 1.25rem;
+  font-size: 1.02rem;
+  line-height: 1.5;
   color: var(--c-texte-doux);
 }
 
 // Fiches
 .veille-lien {
-  position: relative;
-  margin: 0 -1.25rem;
-  padding: 1.4rem 1.25rem 1.3rem;
-  border-radius: 14px;
-  transition: background-color 0.2s ease;
+  margin: 0 0 1rem;
+  padding: 1.5rem 1.6rem 1.35rem;
+  background-color: var(--c-surface);
+  border: 1.5px solid var(--c-bordure);
+  border-radius: $rayon;
+  transition: border-color 0.15s ease;
 }
-.veille-lien + .veille-lien::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  right: 1.25rem;
-  left: 1.25rem;
-  border-top: 1px solid var(--c-bordure);
-  transition: opacity 0.2s ease;
-}
-.veille-lien:hover { background-color: var(--c-fond-doux); }
-.veille-lien:hover::before, .veille-lien:hover + .veille-lien::before { opacity: 0; }
+.veille-lien:hover { border-color: var(--c-plein); }
 
-.veille-lien > p:first-child { margin: 0 0 0.5rem; }
+.veille-lien > p:first-child { margin: 0 0 0.6rem; }
 .veille-meta {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 0.25rem 0.55rem;
-  font-family: $police-interface;
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
+  font-size: 0.84rem;
+  font-weight: 500;
   color: var(--c-texte-doux);
 }
 // le point médian finit l'élément : une ligne coupée ne commence jamais par lui
 .veille-meta > span:not(:last-child)::after { content: "·"; margin-left: 0.55rem; }
-.veille-domaine { text-transform: none; letter-spacing: 0.02em; font-size: 0.8rem; }
+.veille-domaine { font-weight: 700; color: var(--c-titre); }
 
 main.content h3.veille-titre {
-  margin: 0 0 0.55rem;
-  font-size: 1.32rem;
-  font-weight: 550;
-  line-height: 1.3;
-  letter-spacing: -0.005em;
+  margin: 0 0 0.6rem;
+  font-size: 1.45rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
 }
 h3.veille-titre a {
   color: var(--c-titre);
   text-decoration-line: underline;
   text-decoration-color: transparent;
-  text-decoration-thickness: 0.06em;
+  text-decoration-thickness: 0.07em;
   text-underline-offset: 0.2em;
   transition: text-decoration-color 0.2s ease;
 }
-h3.veille-titre a:hover { text-decoration-color: currentColor; }
+h3.veille-titre a:hover { text-decoration-color: var(--c-accent); }
 h3.veille-titre a::after {
   content: "↗";
   content: "↗" / "";
   display: inline-block;
   margin-left: 0.3em;
-  font-family: $police-interface;
+  font-family: $police-texte;
   font-size: 0.75em;
   font-weight: 400;
   color: var(--c-texte-doux);
   transition: transform 0.2s ease, color 0.2s ease;
 }
-h3.veille-titre a:hover::after { color: var(--c-theme, var(--c-lien)); transform: translate(2px, -2px); }
+h3.veille-titre a:hover::after { color: var(--c-titre); transform: translate(2px, -2px); }
 
 .veille-resume p {
-  margin: 0 0 0.85rem;
+  margin: 0 0 0.9rem;
   font-size: 1.02rem;
-  line-height: 1.62;
+  line-height: 1.6;
 }
 .veille-pourquoi {
   margin: 0 0 1rem;
-  padding: 0.1rem 0 0.1rem 1rem;
-  border-left: 2px solid var(--c-theme, var(--c-bordure));
+  padding: 0.9rem 1.1rem;
+  border-radius: $rayon-moyen;
+  background-color: var(--c-fond-doux);
 }
 .veille-pourquoi p {
   margin: 0;
   font-size: 0.97rem;
-  line-height: 1.6;
-  color: var(--c-texte-doux);
+  line-height: 1.58;
 }
 .veille-pourquoi-titre {
   display: block;
   margin-bottom: 0.25rem;
-  font-family: $police-interface;
-  font-size: 0.7rem;
+  font-size: 0.84rem;
   font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  color: var(--c-titre);
 }
 .veille-pied p {
   display: flex;
@@ -1108,35 +1293,33 @@ h3.veille-titre a:hover::after { color: var(--c-theme, var(--c-lien)); transform
 }
 .veille-mots { display: flex; flex-wrap: wrap; gap: 0.35rem; }
 .veille-mot {
-  padding: 0.12rem 0.6rem;
-  font-family: $police-interface;
-  font-size: 0.75rem;
+  padding: 0.12rem 0.65rem;
+  font-size: 0.8rem;
   line-height: 1.5;
   color: var(--c-texte-doux);
-  border: 1px solid var(--c-bordure);
-  border-radius: 999px;
+  border: 1.5px solid var(--c-bordure);
+  border-radius: $pilule;
 }
 .veille-date {
   margin-left: auto;
-  font-family: $police-interface;
-  font-size: 0.78rem;
+  font-size: 0.82rem;
   color: var(--c-texte-doux);
 }
-.veille-liste > p:last-child { margin-top: 3rem; }
+.veille-liste > p:last-child { margin-top: 2.5rem; }
 
 @media (min-width: 992px) {
-  .veille.veille-active { grid-template-columns: 15.5rem minmax(0, 1fr); gap: 4rem; }
-  .veille-outils { position: sticky; top: 5.5rem; align-self: start; }
+  .veille.veille-active { grid-template-columns: 16.5rem minmax(0, 1fr); gap: 3.5rem; }
+  .veille-outils { position: sticky; top: 6.5rem; align-self: start; }
 }
 
 @media (max-width: 991.98px) {
   .veille-recherche { margin-bottom: 1.25rem; }
-  // les thèmes deviennent une rangée de puces qui défile
+  // les thèmes deviennent une rangée de pilules qui défile
   .veille-filtres {
     flex-direction: row;
     gap: 0.5rem;
     margin: 0 -1rem;
-    padding: 0.1rem 1rem 0.35rem;
+    padding: 0.2rem 1rem 0.4rem;
     overflow-x: auto;
     scroll-snap-type: x proximity;
     // l'aimantation s'aligne sur le texte, pas sur le bord de la rangée
@@ -1155,41 +1338,42 @@ h3.veille-titre a:hover::after { color: var(--c-theme, var(--c-lien)); transform
   .veille-filtre {
     flex: none;
     width: auto;
-    padding: 0.45rem 0.9rem;
     border-color: var(--c-bordure);
-    border-radius: 999px;
+    background-color: var(--c-surface);
     scroll-snap-align: start;
   }
-  .veille-filtre[aria-pressed="true"] { border-color: var(--c-titre); }
   .veille-filtre-nom { flex: none; white-space: nowrap; }
 }
 
-@media (max-width: 575.98px) {
-  .veille-chiffres { margin-bottom: 1.75rem; }
-  main.content h2.veille-theme-titre { font-size: 1.35rem; }
-  main.content h3.veille-titre { font-size: 1.18rem; }
-  .veille-lien { margin: 0 -0.75rem; padding: 1.2rem 0.75rem 1.1rem; }
-  .veille-lien + .veille-lien::before { right: 0.75rem; left: 0.75rem; }
-}
-
-// ── Téléphone ──────────────────────────────────────────────────────────────
+// ── Écrans moyens et téléphone ─────────────────────────────────────────────
 
 @media (max-width: 991.98px) {
+  .hero { grid-template-columns: minmax(0, 1fr); gap: 1.5rem; margin-bottom: 2.25rem; }
   .indicateurs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .section-tete { margin-top: 3.5rem; }
 }
 
 @media (max-width: 575.98px) {
-  body { font-size: 1.0625rem; }
-  .carte { padding: 0.95rem 1rem 1rem; }
-  .indicateurs { gap: 0.75rem; }
-  .indicateur { padding: 0.75rem 0.8rem 0.7rem; }
-  .indicateur-valeur { font-size: 1.85rem; }
-  .panel-tabset > .nav-tabs .nav-link { padding: 0.5rem 0.6rem; font-size: 0.9rem; }
-  .parcours-semaine p { gap: 0.3rem; }
-  .parcours-libelle, .niveaux-libelle { min-width: 5.2rem; }
-  .niveaux-ligne p { grid-template-columns: 5.2rem minmax(0, 1fr) auto; gap: 0.5rem; }
-  .point { width: 1.7rem; height: 1.7rem; font-size: 0.78rem; }
-  .jalon { height: 1.35rem; padding: 0 0.3rem; font-size: 0.7rem; }
+  #quarto-header .navbar { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+  #quarto-header .navbar-nav .nav-link { padding: 0 0.85rem; font-size: 0.94rem; }
+  .quarto-title .subtitle { font-size: 1.08rem; }
+  .intro { font-size: 1.12rem; }
+  .carte { padding: 1.3rem 1.25rem 1.2rem; border-radius: 1.35rem; }
+  main.content .carte :is(h2, h3) { font-size: 1.5rem; }
+  .escalier { padding-top: 4.25rem; }
+  .escalier-marches { height: 14.5rem; column-gap: 2px; }
+  .marche, a.marche-lien { border-radius: 4px 4px 0 0; }
+  .marche-no { top: -1.15rem; font-size: 0.66rem; }
+  a.marche-lien { inset: -1.25rem 0 0; }
+  .indicateurs { grid-template-columns: minmax(0, 1fr); }
+  .indicateur-valeur { font-size: 3.6rem; }
+  .rang { padding: 0.9rem 1rem; }
+  .rang p { grid-template-columns: minmax(0, 1fr) auto; }
+  .rang .pips, .rang .barre { grid-column: 1 / -1; order: 3; }
+  .rang .pip { width: 1.3rem; height: 1.3rem; border-radius: 0.45rem; }
   .carte dl, .incident dl, .seance-entete dl { grid-template-columns: minmax(0, 1fr); gap: 0.15rem; }
   .carte dt, .incident dt, .seance-entete dt { padding-top: 0.35rem; }
+  main.content h2.veille-theme-titre { font-size: 1.55rem; }
+  main.content h3.veille-titre { font-size: 1.25rem; }
+  .veille-lien { padding: 1.2rem 1.15rem 1.1rem; border-radius: 1.35rem; }
 }
