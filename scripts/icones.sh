@@ -8,6 +8,6 @@ cd "$(dirname "$0")/.."
 rsvg-convert -w 32 -h 32 icones/favicon.svg -o icones/favicon-32.png
 
 # Écran d'accueil d'un téléphone : un carré plein, que le système arrondit lui-même.
-rsvg-convert -w 180 -h 180 -b "#1F3864" icones/favicon.svg -o icones/apple-touch-icon.png
+rsvg-convert -w 180 -h 180 -b "#232A7C" icones/favicon.svg -o icones/apple-touch-icon.png
 
 echo "Icônes régénérées : icones/favicon-32.png, icones/apple-touch-icon.png"
