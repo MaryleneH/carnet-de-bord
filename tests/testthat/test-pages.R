@@ -60,6 +60,62 @@ test_that("les indicateurs sont calculés depuis les données", {
   expect_equal(heures_faites(d), sum(vapply(seances_faites(d), function(s) mesure(d, s$duree)$valeur, numeric(1))))
 })
 
+test_that("l'escalier a une marche par séance et un palier par jalon", {
+  d <- charger(dossier_data)
+  labo <- seances_labo(d)
+  jalons <- Filter(function(s) !is.null(s$jalon), labo)
+  e <- escalier(d)
+  compter <- function(motif) lengths(regmatches(e, gregexpr(motif, e, fixed = TRUE)))
+  expect_equal(compter("::: {.marche "), length(labo) + length(jalons))
+  expect_equal(compter("::: {.marche .palier"), length(jalons))
+  expect_match(e, sprintf("--colonnes: %d", length(labo) + length(jalons)), fixed = TRUE)
+  for (s in labo) expect_match(e, sprintf("[%d]{.marche-no}", as.integer(s$numero)), fixed = TRUE)
+  for (s in jalons) expect_match(e, sprintf("[%s]{.palier-nom}", s$jalon$id), fixed = TRUE)
+  # chaque marche est plus haute que la précédente ; la dernière atteint le sommet
+  parts <- as.numeric(regmatches(e, gregexpr("(?<=--part: )[0-9.]+", e, perl = TRUE))[[1]])
+  expect_false(is.unsorted(parts))
+  expect_equal(max(parts), 100)
+  # l'état de chaque séance colore sa marche ; une séance faite mène à sa page
+  for (s in labo) {
+    expect_match(e, sprintf("::: {.marche .%s role=\"listitem\" style=\"--part: %s%%\"", CLASSES_ETAT[[s$statut]], part_escalier(as.integer(s$numero), length(labo))), fixed = TRUE)
+  }
+  for (s in seances_faites(d)) expect_match(e, sprintf("](%s){.marche-lien}", s$lien), fixed = TRUE)
+})
+
+test_that("les jalons et les pastilles viennent des données", {
+  d <- charger(dossier_data)
+  labo <- seances_labo(d)
+  jalons <- Filter(function(s) !is.null(s$jalon), labo)
+  cartes <- cartes_jalons(d)
+  for (s in jalons) {
+    expect_match(cartes, sprintf("[%s]{.jalon-nom}", s$jalon$id), fixed = TRUE)
+    expect_match(cartes, s$jalon$critere, fixed = TRUE)
+  }
+  # une pastille par unité : les pleines d'abord, puis les vides
+  p <- pastilles(rep("plein", 2), 5)
+  expect_identical(lengths(regmatches(p, gregexpr("[]{.pip", p, fixed = TRUE))), 5L)
+  expect_identical(lengths(regmatches(p, gregexpr("[]{.pip .plein}", p, fixed = TRUE))), 2L)
+  expect_match(p, "aria-hidden=\"true\"", fixed = TRUE)
+  # les niveaux de compétence sont décrits pour les lecteurs d'écran
+  niveaux <- c("vu", "non vu", "maîtrisé", "pratiqué", "non vu")
+  pn <- pastilles_niveaux(niveaux)
+  expect_match(pn, "role=\"img\" aria-label=\"3 vus sur 5, dont 2 pratiqués et 1 maîtrisé\"", fixed = TRUE)
+  expect_match(pn, "[]{.pip .niveau-maitrise}[]{.pip .niveau-pratique}[]{.pip .niveau-vu}[]{.pip}[]{.pip}", fixed = TRUE)
+  # l'en-tête de l'accueil compte les séances et les jalons
+  entete <- entete_accueil(d, "Titre", NULL)
+  expect_match(
+    entete,
+    sprintf("%d %s · %d %s", length(labo), pluriel(length(labo), "séance"), length(jalons), pluriel(length(jalons), "jalon")),
+    fixed = TRUE
+  )
+  # un volet par onglet
+  page <- page_tableau_de_bord(d)
+  for (id in names(ONGLETS)) {
+    expect_match(page, sprintf("data-bs-target=\"#%s\"", id), fixed = TRUE)
+    expect_match(page, sprintf("::: {#%s .tab-pane", id), fixed = TRUE)
+  }
+})
+
 test_that("une carte de séance montre date, projet, statut, durée et livrables", {
   d <- charger(dossier_data)
   carte <- carte_seance(seance(d, "labo-01"), d)

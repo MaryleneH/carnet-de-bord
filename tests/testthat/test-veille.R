@@ -45,6 +45,26 @@ test_that("une page anglaise est annoncée et la recherche est accessible", {
   expect_match(page, "<label class=\"veille-etiquette\" for=\"veille-recherche\">", fixed = TRUE)
 })
 
+test_that("le tableau de bord montre les derniers liens ajoutés", {
+  d <- lire_tout(dossier_fixtures)
+  # les deux plus récents, du plus récent au plus ancien
+  apercu <- apercu_veille(d, n = 2)
+  expect_match(apercu, "Lien récent", fixed = TRUE)
+  expect_match(apercu, "Guide", fixed = TRUE)
+  expect_false(grepl("Lien ancien", apercu, fixed = TRUE))
+  expect_lt(regexpr("Lien récent", apercu, fixed = TRUE), regexpr("Guide", apercu, fixed = TRUE))
+  # chaque carte nomme son thème et mène à ce thème sur la page Veille
+  expect_match(apercu, "[Thème B]{.apercu-theme}", fixed = TRUE)
+  expect_match(apercu, "](/veille/index.qmd#theme-theme-b){.apercu-ancre}", fixed = TRUE)
+  expect_match(apercu, "Ajouté le 5 novembre 2026", fixed = TRUE)
+  # les comptes sont ceux de la page Veille
+  expect_match(apercu, "3 liens · 2 thèmes", fixed = TRUE)
+  # sans lien, pas de section
+  vide <- d
+  vide$veille$liens <- list()
+  expect_identical(apercu_veille(vide), "")
+})
+
 test_that("la vraie veille est valide et sa page se construit", {
   d <- charger(file.path(racine, "data"))
   page <- page_veille(d)

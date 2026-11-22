@@ -133,6 +133,45 @@ outils_veille <- function(themes, total) {
   )
 }
 
+# ── Aperçu sur le tableau de bord ────────────────────────────────────────────
+
+# Les derniers liens ajoutés : thème, titre et date. Chaque carte mène au thème
+# du lien sur la page Veille, où un lien récent figure en tête.
+ICONE_FLECHE <- paste0(
+  '<svg class="fleche-icone" viewBox="0 0 16 16" aria-hidden="true" focusable="false">',
+  '<path d="M3 8h9.5M8.5 4l4 4-4 4"/></svg>'
+)
+
+derniers_liens <- function(v, n = 3) {
+  dates <- vapply(v$liens, function(l) l$ajoute_le, character(1))
+  titres <- vapply(v$liens, function(l) l$titre, character(1))
+  utils::head(v$liens[order(dates, titres, decreasing = c(TRUE, FALSE), method = "radix")], n)
+}
+
+apercu_veille <- function(d, n = 3) {
+  v <- d$veille
+  if (length(v$liens) == 0) return("")
+  themes <- themes_garnis(v)
+  titre_theme <- function(id) Filter(function(t) identical(t$id, id), themes)[[1]]$titre
+  cartes <- vapply(derniers_liens(v, n), function(l) {
+    paste0(
+      "::: {.apercu-lien}\n\n",
+      "[", titre_theme(l$theme), "]{.apercu-theme}\n\n",
+      "[[", echapper_md(l$titre), "]{.apercu-titre}](/veille/index.qmd#theme-", l$theme, "){.apercu-ancre}\n\n",
+      "[Ajouté le ", date_longue(l$ajoute_le), "]{.apercu-date} [", ICONE_FLECHE, "]{.apercu-fleche}\n\n",
+      ":::\n\n"
+    )
+  }, character(1))
+  paste0(
+    titre_section(
+      "Dans la veille",
+      paste0(nombre_liens(length(v$liens)), " · ", length(themes), " ", pluriel(length(themes), "thème"))
+    ),
+    "::: {.apercu-veille}\n\n", paste(cartes, collapse = ""), ":::\n\n",
+    "::: {.boutons}\n\n[Toute la veille](/veille/index.qmd){.bouton .bouton-second}\n\n:::\n\n"
+  )
+}
+
 # ── Page ─────────────────────────────────────────────────────────────────────
 
 page_veille <- function(d) {
