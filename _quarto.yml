@@ -22,7 +22,7 @@ website:
   description: "Carnet de bord du laboratoire d'agent d'études statistiques : séances, planning, cours et méthode."
   site-url: "https://maryleneh.github.io/carnet-de-bord/"
   search: false
-  # une page de carnet cornée, avec une estimation et son intervalle de confiance
+  # un escalier qui monte vers un jalon, comme celui du tableau de bord
   favicon: icones/favicon.svg
   page-navigation: true
   # Barre latérale du cours : le plan (cours/index.qmd) en tête, puis chaque
