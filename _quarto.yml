@@ -33,7 +33,9 @@ website:
       contents:
         - auto: "cours"
   navbar:
-    left:
+    # toujours dépliée : sur téléphone, les rubriques passent à la ligne
+    collapse: false
+    right:
       - text: Tableau de bord
         href: index.qmd
       - text: Séances
