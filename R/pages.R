@@ -5,6 +5,8 @@
 
 source(if (file.exists("R/valider.R")) "R/valider.R" else "../../R/valider.R", encoding = "UTF-8")
 source(if (file.exists("R/calculs.R")) "R/calculs.R" else "../../R/calculs.R", encoding = "UTF-8")
+# la veille : sa page, et ses derniers liens sur le tableau de bord
+source(if (file.exists("R/veille.R")) "R/veille.R" else "../../R/veille.R", encoding = "UTF-8")
 
 URL_DEPOT <- "https://github.com/MaryleneH/carnet-de-bord/blob/main/"
 
@@ -123,30 +125,31 @@ source_fichier <- function(fichier) sprintf("[Source : [%s](%s%s)]{.source}", fi
 
 # ── Composants du tableau de bord ────────────────────────────────────────────
 
-barre_progression <- function(libelle, valeur, total) {
-  part <- if (total > 0) 100 * valeur / total else 0
-  sprintf(
-    '[]{.progression role="progressbar" aria-label="%s" aria-valuemin="0" aria-valuemax="%d" aria-valuenow="%d" style="--part: %s%%"}',
-    libelle, as.integer(total), as.integer(valeur), format(round(part, 1), nsmall = 1)
-  )
+# Pastilles : une par unité comptée (séance, jalon, concept). `pleines` donne
+# la classe de chaque pastille pleine ; les suivantes, jusqu'à `total`, sont vides.
+# Le nombre est écrit à côté : sans `etiquette`, les pastilles sont décoratives.
+pastilles <- function(pleines, total, etiquette = NULL) {
+  pips <- c(sprintf("[]{.pip .%s}", pleines), rep("[]{.pip}", max(0, total - length(pleines))))
+  acces <- if (is.null(etiquette)) 'aria-hidden="true"' else sprintf('role="img" aria-label="%s"', etiquette)
+  sprintf("[%s]{.pips %s}", paste(pips, collapse = ""), acces)
 }
 
-# Barre empilée des niveaux de compétence : maîtrisé, pratiqué, vu, non vu.
-barre_niveaux <- function(niveaux) {
-  total <- length(niveaux)
-  segments <- c("maîtrisé" = "niveau-maitrise", "pratiqué" = "niveau-pratique", "vu" = "niveau-vu")
-  morceaux <- vapply(names(segments), function(n) {
-    k <- sum(niveaux == n)
-    if (k == 0) return("")
-    sprintf('[]{.segment .%s style="--part: %s%%"}', segments[[n]], format(round(100 * k / total, 1), nsmall = 1))
-  }, character(1))
+# Pastilles des niveaux de compétence : maîtrisé, puis pratiqué, puis vu.
+pastilles_niveaux <- function(niveaux) {
+  pleines <- unlist(lapply(c("maîtrisé", "pratiqué", "vu"), function(n) rep(CLASSES_ETAT[[n]], sum(niveaux == n))))
   vus <- sum(niveaux != "non vu")
+  pratiques <- sum(niveaux %in% c("pratiqué", "maîtrisé"))
+  maitrises <- sum(niveaux == "maîtrisé")
   etiquette <- sprintf(
-    "%d %s sur %d, dont %d %s et %d %s", vus, pluriel(vus, "vu"), total,
-    sum(niveaux %in% c("pratiqué", "maîtrisé")), pluriel(sum(niveaux %in% c("pratiqué", "maîtrisé")), "pratiqué"),
-    sum(niveaux == "maîtrisé"), pluriel(sum(niveaux == "maîtrisé"), "maîtrisé")
+    "%d %s sur %d, dont %d %s et %d %s", vus, pluriel(vus, "vu"), length(niveaux),
+    pratiques, pluriel(pratiques, "pratiqué"), maitrises, pluriel(maitrises, "maîtrisé")
   )
-  sprintf('[%s]{.barre-niveaux role="img" aria-label="%s"}', paste(morceaux, collapse = ""), etiquette)
+  pastilles(as.character(pleines), length(niveaux), etiquette)
+}
+
+# Barre d'une grandeur continue (des heures), en part du maximum.
+barre <- function(part) {
+  sprintf('[[]{.barre-pleine style="--part: %s%%"}]{.barre aria-hidden="true"}', format(round(part, 1), nsmall = 1))
 }
 
 legende_niveaux <- function() {
@@ -156,13 +159,15 @@ legende_niveaux <- function() {
   paste0("[", paste(items, collapse = " "), "]{.legende}")
 }
 
-tuile <- function(libelle, valeur, total = NULL, detail = NULL, barre = NULL, source) {
+# Carte d'indicateur : un grand nombre, sa suite (« sur 15 », « h »), des
+# pastilles, un détail et la source. `phare` met la carte en avant.
+tuile <- function(libelle, valeur, suite = NULL, detail = NULL, pips = NULL, source, phare = FALSE) {
   paste0(
-    "::: {.indicateur}\n\n",
+    "::: {.indicateur", if (phare) " .phare" else "", "}\n\n",
     "[", libelle, "]{.indicateur-libelle}\n\n",
     "[", valeur, "]{.indicateur-valeur}",
-    if (!is.null(total)) paste0(" [sur ", total, "]{.indicateur-total}") else "", "\n\n",
-    if (!is.null(barre)) paste0(barre, "\n\n") else "",
+    if (!is.null(suite)) paste0(" [", suite, "]{.indicateur-total}") else "", "\n\n",
+    if (!is.null(pips)) paste0(pips, "\n\n") else "",
     if (!is.null(detail)) paste0("[", detail, "]{.indicateur-detail}\n\n") else "",
     source, "\n\n",
     ":::\n\n"
@@ -183,68 +188,125 @@ indicateurs <- function(d) {
   paste0(
     "::: {.indicateurs}\n\n",
     tuile(
-      "Séances faites", faites, length(labo),
+      "Séances faites", faites, paste("sur", length(labo)),
       sprintf("prochaine : séance %d, %s", as.integer(prochaine$numero), prochaine$statut),
-      barre_progression("Séances faites", faites, length(labo)), source_fichier("data/seances.yml")
+      pastilles(rep("plein", faites), length(labo)), source_fichier("data/seances.yml"),
+      phare = TRUE
     ),
     tuile(
-      "Jalons atteints", atteints, length(jalons),
+      "Jalons atteints", atteints, paste("sur", length(jalons)),
       if (length(restants) > 0) {
         sprintf("prochain : %s, à la séance %d", restants[[1]]$jalon$id, as.integer(restants[[1]]$numero))
       },
-      barre_progression("Jalons atteints", atteints, length(jalons)), source_fichier("data/seances.yml")
+      pastilles(rep("plein", atteints), length(jalons)), source_fichier("data/seances.yml")
     ),
     tuile(
-      "Concepts vus", vus, nrow(d$concepts),
+      "Concepts vus", vus, paste("sur", nrow(d$concepts)),
       sprintf("dont %d %s et %d %s", pratiques, pluriel(pratiques, "pratiqué"), maitrises, pluriel(maitrises, "maîtrisé")),
-      barre_niveaux(niveaux), source_fichier("data/concepts.csv")
+      pastilles_niveaux(niveaux), source_fichier("data/concepts.csv")
     ),
     tuile(
-      "Temps de travail", paste0(format_nombre(heures_faites(d)), ESPACE_INSECABLE, "h"), NULL,
+      "Temps de travail", format_nombre(heures_faites(d)), "h",
       sprintf("en %d %s", faites, pluriel(faites, "séance")), NULL, source_fichier("data/mesures.yml")
     ),
     ":::\n\n"
   )
 }
 
-# Parcours : les séances du plan, par semaine, avec les jalons.
-point_parcours <- function(s) {
+# Escalier des séances : une marche par séance, de plus en plus haute, et un
+# palier avec son drapeau à chaque jalon. Tout vient de data/seances.yml.
+ICONE_DRAPEAU <- paste0(
+  '<svg class="drapeau-icone" viewBox="0 0 24 40" aria-hidden="true" focusable="false">',
+  '<path class="drapeau-mat" d="M19 39V3"/><path class="drapeau-fanion" d="M19 4H5l4 5.5L5 15h14z"/></svg>'
+)
+
+# Hauteur d'une marche, en part de la plus haute.
+part_escalier <- function(rang, total) format(round(100 * rang / total, 2), nsmall = 2)
+
+marche <- function(s, rang, total) {
   etat <- s$statut
   aide <- sans_guillemets(sprintf("Séance %d : %s (%s)", as.integer(s$numero), titre_complet(s), etat))
-  point <- sprintf(
-    '[%d[ : %s]{.visually-hidden}]{.point .%s title="%s"}',
-    as.integer(s$numero), etat, CLASSES_ETAT[[etat]], aide
+  contenu <- sprintf("[%d]{.marche-no}[ : %s, %s]{.visually-hidden}", as.integer(s$numero), titre_complet(s), etat)
+  if (!is.null(s$lien)) contenu <- sprintf("[%s](%s){.marche-lien}", contenu, s$lien)
+  sprintf(
+    '::: {.marche .%s role="listitem" style="--part: %s%%" title="%s"}\n\n%s\n\n:::\n\n',
+    CLASSES_ETAT[[etat]], part_escalier(rang, total), aide, contenu
   )
-  if (!is.null(s$lien)) point <- sprintf("[%s](%s){.lien-point}", point, s$lien)
-  jalon <- if (!is.null(s$jalon)) {
-    sprintf(' [%s]{.jalon title="%s"}', s$jalon$id, sans_guillemets(paste0("Jalon ", s$jalon$id, " : ", s$jalon$critere)))
-  } else ""
-  paste0(point, jalon)
 }
 
-parcours <- function(d) {
+palier <- function(s, rang, total) {
+  atteint <- s$statut == "fait"
+  aide <- sans_guillemets(paste0("Jalon ", s$jalon$id, " : ", s$jalon$critere))
+  sprintf(
+    '::: {.marche .palier%s role="listitem" style="--part: %s%%" title="%s"}\n\n[%s[%s]{.palier-nom}[ : jalon%s, %s]{.visually-hidden}]{.drapeau}\n\n:::\n\n',
+    if (atteint) " .jalon-atteint" else "", part_escalier(rang, total), aide,
+    ICONE_DRAPEAU, s$jalon$id, if (atteint) " atteint" else "", s$jalon$critere
+  )
+}
+
+escalier <- function(d) {
   labo <- seances_labo(d)
-  semaines <- sort(unique(vapply(labo, function(s) as.integer(s$semaine), integer(1))))
-  lignes <- vapply(semaines, function(w) {
-    ss <- Filter(function(s) s$semaine == w, labo)
-    paste0(
-      "::: {.parcours-semaine role=\"listitem\"}\n\n",
-      "[Semaine ", w, "]{.parcours-libelle} ",
-      paste(vapply(ss, point_parcours, character(1)), collapse = " "), "\n\n:::\n\n"
-    )
-  }, character(1))
+  total <- length(labo)
+  marches <- unlist(lapply(seq_along(labo), function(i) {
+    s <- labo[[i]]
+    c(marche(s, i, total), if (!is.null(s$jalon)) palier(s, i, total))
+  }))
+  semaines <- vapply(labo, function(s) as.integer(s$semaine), integer(1))
+  # largeur d'une semaine sous l'escalier : ses marches et ses paliers
+  colonnes <- vapply(sort(unique(semaines)), function(w) {
+    ss <- labo[semaines == w]
+    length(ss) + sum(vapply(ss, function(s) !is.null(s$jalon), logical(1)))
+  }, numeric(1))
+  libelles <- sprintf("[Semaine%s%d]{.escalier-semaine}", ESPACE_INSECABLE, sort(unique(semaines)))
   legende <- paste0(
     "[[[]{.pastille .etat-fait} fait]{.legende-item} [[]{.pastille .etat-a-planifier} à planifier]{.legende-item} ",
-    "[[]{.pastille .etat-prevu} prévu]{.legende-item} [[L]{.jalon} jalon]{.legende-item}]{.legende}"
+    "[[]{.pastille .etat-prevu} prévu]{.legende-item} [[]{.pastille .palier} jalon]{.legende-item}]{.legende}"
   )
   paste0(
-    "::: {.carte .bloc .bloc-parcours}\n\n### Où j'en suis\n\n",
-    "::: {.parcours-corps}\n\n",
-    "::: {.parcours-labo}\n\n[Séances]{.sous-libelle}\n\n",
-    "::: {.parcours role=\"list\"}\n\n", paste(lignes, collapse = ""), ":::\n\n",
-    legende, "\n\n:::\n\n",
-    avancement_cours(d),
-    ":::\n\n:::\n\n"
+    "::: {.escalier}\n\n",
+    sprintf(
+      '::: {.escalier-marches role="list" aria-label="Les %d séances du laboratoire, une marche par séance" style="--colonnes: %d"}\n\n',
+      total, length(marches)
+    ),
+    paste(marches, collapse = ""),
+    ":::\n\n",
+    sprintf(
+      '::: {.escalier-semaines aria-hidden="true" style="grid-template-columns: %s"}\n\n',
+      paste0(colonnes, "fr", collapse = " ")
+    ),
+    paste(libelles, collapse = " "), "\n\n:::\n\n",
+    "::: {.escalier-pied}\n\n", legende, " ", source_fichier("data/seances.yml"), "\n\n:::\n\n",
+    ":::\n\n"
+  )
+}
+
+# Les jalons du plan, chacun avec son critère.
+cartes_jalons <- function(d) {
+  jalons <- Filter(function(s) !is.null(s$jalon), seances_labo(d))
+  cartes <- vapply(jalons, function(s) {
+    atteint <- s$statut == "fait"
+    sprintf(
+      "::: {.jalon-carte%s}\n\n[%s]{.jalon-nom} [%s]{.jalon-critere}%s\n\n:::\n\n",
+      if (atteint) " .jalon-atteint" else "", s$jalon$id, s$jalon$critere,
+      if (atteint) paste0(" ", badge("fait")) else ""
+    )
+  }, character(1))
+  paste0("::: {.jalons}\n\n", paste(cartes, collapse = ""), ":::\n\n")
+}
+
+# Étiquette en tête de carte, à la couleur d'un état.
+etiquette <- function(texte, etat = NULL) {
+  sprintf("[%s]{.etiquette%s}", texte, if (is.null(etat)) "" else paste0(" .", CLASSES_ETAT[[etat]]))
+}
+
+# Titre d'une section de la vue d'ensemble, avec un aparté facultatif à droite.
+# Le titre n'a pas de classe : Pandoc reporte sur le bloc entier les classes
+# d'un titre placé en tête de bloc. Les styles ciblent « .section-tete > h2 ».
+titre_section <- function(titre, apart = NULL) {
+  paste0(
+    "::: {.section-tete}\n\n## ", titre, "\n\n",
+    if (!is.null(apart)) paste0("[", apart, "]{.section-apart}\n\n") else "",
+    ":::\n\n"
   )
 }
 
@@ -258,14 +320,14 @@ avancement_cours <- function(d) {
     sprintf("[Séance %d : %s](%s)", as.integer(s$numero), s$titre, s$cours)
   }, character(1))
   paste0(
-    "::: {.cours-avancement}\n\n[Cours]{.sous-libelle}\n\n",
+    "::: {.carte .carte-cours}\n\n### Cours\n\n",
     "[", n, "]{.indicateur-valeur} [", pluriel(n, "séance rédigée", "séances rédigées"), " sur ", total, "]{.indicateur-total}\n\n",
-    barre_progression("Séances du cours rédigées", n, total), "\n\n",
+    pastilles(rep("plein", n), total), "\n\n",
     if (n > 0) paste0(liste_md(chapitres), "\n\n") else "",
     if (length(suivante) > 0) {
       sprintf("[Prochain chapitre : séance %d, %s]{.indicateur-detail}\n\n", as.integer(suivante[[1]]$numero), titre_complet(suivante[[1]]))
     } else "",
-    "[Plan complet du cours](/cours/index.qmd)\n\n",
+    "::: {.boutons}\n\n[Plan complet du cours](/cours/index.qmd){.bouton .bouton-second}\n\n:::\n\n",
     ":::\n\n"
   )
 }
@@ -273,11 +335,12 @@ avancement_cours <- function(d) {
 resume_derniere <- function(d) {
   s <- derniere_seance(d)
   paste0(
-    "::: {.carte .bloc}\n\n### Dernière séance\n\n",
+    "::: {.carte .carte-derniere}\n\n",
+    etiquette("Dernière séance", s$statut), "\n\n",
+    "### ", titre_lien(s), "\n\n",
     "[", surtitre_seance(s), " · ", duree_texte(s, d), "]{.carte-surtitre}\n\n",
-    "#### ", titre_lien(s), " {.carte-titre}\n\n",
     if (!is.null(s$journal$fait)) paste0(remplacer_references(s$journal$fait, d), "\n\n") else "",
-    sprintf("[Voir la séance](%s) · [Lire le cours](%s)\n\n", s$lien, s$cours),
+    sprintf("::: {.boutons}\n\n[Voir la séance](%s){.bouton} [Lire le cours](%s){.bouton .bouton-second}\n\n:::\n\n", s$lien, s$cours),
     ":::\n\n"
   )
 }
@@ -285,9 +348,10 @@ resume_derniere <- function(d) {
 resume_prochaine <- function(d) {
   s <- prochaine_seance(d)
   paste0(
-    "::: {.carte .bloc}\n\n### Prochaine étape\n\n",
-    "[", surtitre_seance(s), "]{.carte-surtitre} ", badge(s$statut), "\n\n",
-    "#### ", titre_lien(s), " {.carte-titre}\n\n",
+    "::: {.carte .carte-prochaine}\n\n",
+    etiquette("Prochaine étape", s$statut), "\n\n",
+    "### ", titre_lien(s), "\n\n",
+    "[", surtitre_seance(s), "]{.carte-surtitre}\n\n",
     if (!is.null(s$objectif)) paste0(remplacer_references(s$objectif, d), "\n\n") else "",
     "Livrables\n", definition_liste(livrables_de(s, d)), "\n\n",
     ":::\n\n"
@@ -304,11 +368,16 @@ bloc_points <- function(d) {
   s <- derniere_seance(d)
   points <- Filter(function(p) p$statut == "en attente", s$points_en_attente)
   paste0(
-    "::: {.carte .bloc}\n\n### Points en attente\n\n",
+    "::: {.carte .carte-points}\n\n### Points en attente\n\n",
     liste_md(vapply(points, point_md, character(1))), "\n\n",
     sprintf("[Clôture de la séance %d : vérifications à cocher](%s#cloture)\n\n", as.integer(s$numero), s$lien),
     ":::\n\n"
   )
+}
+
+# Ligne « libellé, pastilles ou barre, compte » (compétences, heures).
+rang <- function(libelle, dessin, compte) {
+  paste0("::: {.rang}\n\n[", libelle, "]{.rang-nom} ", dessin, " [", compte, "]{.rang-val}\n\n:::\n\n")
 }
 
 competences_par_semaine <- function(d) {
@@ -317,17 +386,19 @@ competences_par_semaine <- function(d) {
   lignes <- vapply(sort(unique(semaines)), function(w) {
     nv <- niveaux[semaines == w]
     vus <- sum(nv != "non vu")
-    paste0(
-      "::: {.niveaux-ligne}\n\n",
-      "[Semaine ", w, "]{.niveaux-libelle} ", barre_niveaux(nv),
-      " [", vus, " ", pluriel(vus, "vu"), " sur ", length(nv), "]{.niveaux-compte}\n\n:::\n\n"
+    rang(
+      paste("Semaine", w), pastilles_niveaux(nv),
+      paste0("[", vus, "]{.rang-nombre} ", pluriel(vus, "vu"), " sur ", length(nv))
     )
   }, character(1))
+  vus <- sum(niveaux != "non vu")
   paste0(
-    "::: {.carte .bloc}\n\n### Compétences, par semaine du plan\n\n",
-    paste(lignes, collapse = ""), legende_niveaux(), "\n\n",
-    source_fichier("data/concepts.csv"), "\n\n",
-    ":::\n\n"
+    titre_section(
+      "Compétences, par semaine du plan",
+      paste(vus, pluriel(vus, "concept vu", "concepts vus"), "sur", length(niveaux))
+    ),
+    "::: {.rangs}\n\n", paste(lignes, collapse = ""), ":::\n\n",
+    "::: {.section-pied}\n\n", legende_niveaux(), " ", source_fichier("data/concepts.csv"), "\n\n:::\n\n"
   )
 }
 
@@ -343,25 +414,28 @@ heures_par_semaine <- function(d) {
   if (length(heures) < 2) return("")
   maxi <- max(heures)
   lignes <- vapply(names(heures), function(l) {
-    paste0(
-      "::: {.niveaux-ligne}\n\n[Semaine du ", date_longue(l), "]{.niveaux-libelle} ",
-      sprintf('[[]{.segment .niveau-vu style="--part: %s%%"}]{.barre-niveaux}', format(round(100 * heures[[l]] / maxi, 1), nsmall = 1)),
-      " [", format_nombre(heures[[l]]), ESPACE_INSECABLE, "h]{.niveaux-compte}\n\n:::\n\n"
+    rang(
+      paste("Semaine du", date_longue(l)), barre(100 * heures[[l]] / maxi),
+      paste0("[", format_nombre(heures[[l]]), "]{.rang-nombre}", ESPACE_INSECABLE, "h")
     )
   }, character(1))
   paste0(
-    "::: {.carte .bloc}\n\n### Heures par semaine\n\n", paste(lignes, collapse = ""),
-    source_fichier("data/mesures.yml"), "\n\n:::\n\n"
+    titre_section("Heures par semaine"),
+    "::: {.rangs}\n\n", paste(lignes, collapse = ""), ":::\n\n",
+    "::: {.section-pied}\n\n", source_fichier("data/mesures.yml"), "\n\n:::\n\n"
   )
 }
 
 vue_ensemble <- function(d) {
   paste0(
+    cartes_jalons(d),
     indicateurs(d),
-    parcours(d),
-    "::: {.colonnes-accueil}\n\n", resume_derniere(d), resume_prochaine(d), ":::\n\n",
-    "::: {.colonnes-accueil}\n\n", bloc_points(d), competences_par_semaine(d), ":::\n\n",
-    heures_par_semaine(d)
+    titre_section("Où j'en suis"),
+    "::: {.duo}\n\n", resume_derniere(d), resume_prochaine(d), ":::\n\n",
+    "::: {.duo}\n\n", avancement_cours(d), bloc_points(d), ":::\n\n",
+    competences_par_semaine(d),
+    heures_par_semaine(d),
+    apercu_veille(d)
   )
 }
 
@@ -386,7 +460,7 @@ onglet_laboratoire <- function(d) {
   par_semaine <- vapply(semaines, function(w) {
     etapes <- Filter(function(s) s$semaine == w, labo)
     paste0(
-      "### Semaine ", w, "\n\n::: {.frise role=\"list\"}\n\n",
+      "## Semaine ", w, "\n\n::: {.frise role=\"list\"}\n\n",
       paste(vapply(etapes, etape_frise, character(1), d = d), collapse = ""),
       ":::\n\n"
     )
@@ -410,7 +484,7 @@ onglet_competences <- function(d) {
       sprintf("| %s | %s | %s |", cc$concept[[k]], sub("^J", "", cc$etape[[k]]), niveau)
     }, character(1))
     paste0(
-      "### Semaine ", w, "\n\n",
+      "## Semaine ", w, "\n\n",
       "| Concept | Séance | Niveau |\n|:---|---:|:---|\n",
       paste(lignes, collapse = "\n"), "\n\n"
     )
@@ -418,8 +492,8 @@ onglet_competences <- function(d) {
   vus <- sum(niveaux != "non vu")
   paste0(
     "::: {.onglet-etroit}\n\n",
-    "[", vus, " ", pluriel(vus, "concept vu", "concepts vus"), " sur ", nrow(cc), "]{.niveaux-total} ",
-    barre_niveaux(niveaux), "\n\n", legende_niveaux(), "\n\n",
+    "[", vus, " ", pluriel(vus, "concept vu", "concepts vus"), " sur ", nrow(cc), "]{.niveaux-total}\n\n",
+    pastilles_niveaux(niveaux), "\n\n", legende_niveaux(), "\n\n",
     paste(tableaux, collapse = ""),
     source_fichier("data/concepts.csv"), "\n\n:::\n\n"
   )
@@ -432,7 +506,7 @@ onglet_journal <- function(d) {
     paste0(
       "::: {.carte .entree-journal}\n\n",
       "[", date_longue(s$date), " · séance ", as.integer(s$numero), " · ", duree_texte(s, d), "]{.carte-surtitre}\n\n",
-      "### ", titre_lien(s), " {.carte-titre}\n\n",
+      "## ", titre_lien(s), "\n\n",
       "Fait\n:   ", remplacer_references(ou_sinon(j$fait, "à compléter"), d), "\n\n",
       "Appris\n", definition_liste(appris), "\n\n",
       "Suite\n:   ", remplacer_references(ou_sinon(j$suite, "à compléter"), d), "\n\n",
@@ -445,13 +519,66 @@ onglet_journal <- function(d) {
   )
 }
 
-page_tableau_de_bord <- function(d) {
+# Les quatre vues du tableau de bord. Les boutons sont dans l'en-tête de la
+# page, à côté de l'escalier ; Bootstrap, que Quarto charge déjà, affiche le
+# volet du bouton choisi (data-bs-toggle="tab").
+ONGLETS <- c(
+  vue = "Vue d’ensemble", laboratoire = "Laboratoire", competences = "Compétences", journal = "Journal"
+)
+
+boutons_onglets <- function() {
+  boutons <- vapply(seq_along(ONGLETS), function(i) {
+    id <- names(ONGLETS)[[i]]
+    sprintf(
+      paste0(
+        '<li class="nav-item" role="presentation"><button type="button" class="nav-link%s" id="onglet-%s" ',
+        'data-bs-toggle="tab" data-bs-target="#%s" role="tab" aria-controls="%s" aria-selected="%s"%s>%s</button></li>'
+      ),
+      if (i == 1) " active" else "", id, id, id,
+      if (i == 1) "true" else "false", if (i == 1) "" else ' tabindex="-1"', ONGLETS[[i]]
+    )
+  }, character(1))
   paste0(
-    "::: {.panel-tabset}\n\n",
-    "## Vue d'ensemble\n\n", vue_ensemble(d),
-    "## Laboratoire\n\n", onglet_laboratoire(d),
-    "## Compétences\n\n", onglet_competences(d),
-    "## Journal\n\n", onglet_journal(d),
+    "```{=html}\n<ul class=\"nav onglets\" role=\"tablist\" aria-label=\"Vues du tableau de bord\">\n",
+    paste(boutons, collapse = "\n"), "\n</ul>\n```\n\n"
+  )
+}
+
+volet <- function(id, contenu, actif = FALSE) {
+  sprintf(
+    '::: {#%s .tab-pane%s role="tabpanel" aria-labelledby="onglet-%s" tabindex="0"}\n\n%s:::\n\n',
+    id, if (actif) " .active" else "", id, contenu
+  )
+}
+
+# En-tête de l'accueil : le titre, l'introduction et les onglets à gauche,
+# l'escalier des séances à droite.
+entete_accueil <- function(d, titre, intro) {
+  labo <- seances_labo(d)
+  jalons <- sum(vapply(labo, function(s) !is.null(s$jalon), logical(1)))
+  paste0(
+    "::: {.hero}\n\n::: {.hero-texte}\n\n",
+    sprintf(
+      "[Laboratoire · %d %s · %d %s]{.hero-pastille}\n\n",
+      length(labo), pluriel(length(labo), "séance"), jalons, pluriel(jalons, "jalon")
+    ),
+    "# ", titre, " {.hero-titre}\n\n",
+    if (!is.null(intro)) paste0("[", intro, "]{.intro}\n\n") else "",
+    boutons_onglets(),
+    ":::\n\n",
+    escalier(d),
+    ":::\n\n"
+  )
+}
+
+page_tableau_de_bord <- function(d, titre = "Carnet de bord", intro = NULL) {
+  paste0(
+    entete_accueil(d, titre, intro),
+    "::: {.tab-content}\n\n",
+    volet("vue", vue_ensemble(d), actif = TRUE),
+    volet("laboratoire", onglet_laboratoire(d)),
+    volet("competences", onglet_competences(d)),
+    volet("journal", onglet_journal(d)),
     ":::\n\n"
   )
 }
@@ -462,7 +589,7 @@ page_tableau_de_bord <- function(d) {
 corps_seance <- function(s, d, niveau = 3) {
   paste0(
     "[", surtitre_seance(s), "]{.carte-surtitre}\n\n",
-    strrep("#", niveau), " ", titre_lien(s), " {.carte-titre}\n\n",
+    strrep("#", niveau), " ", titre_lien(s), "\n\n",
     "Statut\n:   ", badge(s$statut), "\n\n",
     "Durée\n:   ", duree_texte(s, d), "\n\n",
     "Livrables\n", definition_liste(livrables_de(s, d)), "\n\n"
@@ -582,14 +709,14 @@ plan_du_cours <- function(d) {
         "[", titre, "]{.frise-titre}\n\n:::\n\n"
       )
     }, character(1))
-    paste0("### Semaine ", w, "\n\n::: {.frise role=\"list\"}\n\n", paste(etapes, collapse = ""), ":::\n\n")
+    paste0("## Semaine ", w, "\n\n::: {.frise role=\"list\"}\n\n", paste(etapes, collapse = ""), ":::\n\n")
   }, character(1))
   paste0(
     "::: {.onglet-etroit}\n\n",
     "Chaque séance du laboratoire ajoute un chapitre à ce cours, rédigé à partir de son ",
     "fichier de séance. Les séances à venir suivent le plan du laboratoire.\n\n",
-    "[", n, " ", pluriel(n, "séance rédigée", "séances rédigées"), " sur ", length(labo), "]{.niveaux-total} ",
-    barre_progression("Séances du cours rédigées", n, length(labo)), "\n\n",
+    "[", n, " ", pluriel(n, "séance rédigée", "séances rédigées"), " sur ", length(labo), "]{.niveaux-total}\n\n",
+    pastilles(rep("plein", n), length(labo)), "\n\n",
     paste(blocs, collapse = ""),
     source_fichier("data/seances.yml"), "\n\n:::\n\n"
   )
