@@ -1,9 +1,9 @@
 ---
 title: "Méthode"
-subtitle: "Les principes du laboratoire, tels que les énonce le cours de la séance 1"
+subtitle: "Les principes du laboratoire, tels que les cours les énoncent, séance après séance"
 ---
 
-Le laboratoire suit trois principes. Chacun est cité ici avec les mots du [cours de la séance 1](/cours/seance-01-cours.md), qui les développe.
+Le laboratoire suit six principes. Chacun est cité ici avec les mots du cours qui l'a établi : les trois premiers viennent du [cours de la séance 1](/cours/seance-01-cours.md), les trois suivants du [cours de la séance 2](/cours/seance-02-cours.md).
 
 ## Mesurer avant de construire
 
@@ -15,7 +15,7 @@ Le serveur peut aussi changer : « Un modèle servi par un tiers est une dépend
 On ne conçoit pas sur des hypothèses : on mesure d'abord. Un modèle hébergé par un tiers peut changer sans prévenir ; seule une mesure rejouable le détecte. On commence simple et on ne complique que sur preuve. Enfin, aucun chiffre publiable ne vient du modèle.
 :::
 
-[Chapitre 1 du cours](/cours/seance-01-cours.md#chapitre-1){.lien-cours}
+[Chapitre 1 du cours de la séance 1](/cours/seance-01-cours.md#chapitre-1){.lien-cours}
 
 ## Journal et rejeu
 
@@ -31,7 +31,7 @@ Relancer un appel ne le reproduit pas : on enregistre donc ce que le modèle a r
 Une refactorisation change la structure sans changer le comportement, et c'est un test qui le prouve. Faute de tests unitaires, les relevés commités servent de tests de caractérisation, et le rejeu les vérifie. Il faut commiter avant de comparer. Le format du journal et la formule de la clé sont un contrat avec le passé.
 :::
 
-[Chapitres 4 et 5 du cours](/cours/seance-01-cours.md#chapitre-4){.lien-cours}
+[Chapitres 4 et 5 du cours de la séance 1](/cours/seance-01-cours.md#chapitre-4){.lien-cours}
 
 ## Aucun chiffre sans source
 
@@ -43,7 +43,47 @@ Une refactorisation change la structure sans changer le comportement, et c'est u
 
 Une sortie structurée n'y change rien : « Le schéma garantit la forme, jamais la vérité : un nombre produit par le modèle reste sans source. »
 
-[Chapitres 1 et 6 du cours](/cours/seance-01-cours.md#chapitre-6){.lien-cours}
+[Chapitres 1 et 6 du cours de la séance 1](/cours/seance-01-cours.md#chapitre-6){.lien-cours}
+
+## Écrire avant de mesurer
+
+« Le plan et les paris s'écrivent avant la première mesure et se datent par un commit. C'est cette date, et non la bonne foi, qui protège la lecture des résultats. » Un pari précis peut être démenti : c'est ce qui le rend utile. Un pari vague s'accommode de tout résultat et n'apprend rien.
+
+Avant le vrai serveur, le banc entier passe contre un faux, dont les réponses sont connues et certaines fautives exprès : « On répète sur un faux serveur pour séparer deux questions : l'instrument fonctionne-t-il ? Que vaut le modèle ? La première se règle gratuitement, avant de payer pour la seconde. »
+
+Quand l'instrument se révèle fautif en cours de route, on ne le corrige pas en douce : « Un défaut d'instrument se déclare, avec sa preuve, avant de lire les résultats ; il ne se corrige pas en silence. »
+
+::: {.callout-note title="À retenir"}
+Le plan et les paris sont commités avant la première mesure. La répétition générale contre un faux serveur éprouve l'instrument avant le modèle. Un écart au plan se déclare, avec sa cause et sa preuve. Devant un échec complet, on se demande d'abord si la réussite était possible.
+:::
+
+[Chapitres 4 à 6 du cours de la séance 2](/cours/seance-02-cours.md#chapitre-4){.lien-cours}
+
+## Un taux, pas un essai
+
+« Un essai ne prouve rien ; un taux sur des essais répétés, avec son intervalle, se discute. » D'où le banc : la même épreuve, répétée à l'identique, sur nos tâches et notre serveur, et relancée à chaque changement de modèle.
+
+La lecture suit trois règles : « Un taux se lit avec son n et son intervalle de Wilson. » Zéro échec ne prouve pas que l'échec est impossible : il en borne seulement le taux. Et « deux conditions sur les mêmes items se comparent par McNemar, sur les seules paires discordantes ».
+
+Encore faut-il mesurer la bonne chose : « Un test ne vaut que pour la tâche qu'il imite. »
+
+::: {.callout-note title="À retenir"}
+Un résultat se donne avec son nombre d'essais et son intervalle de Wilson. Zéro échec n'est pas zéro risque. L'unité d'observation est l'essai, pas chacune de ses parties. Un cas générique ne dit rien de l'usage visé : on mesure les tâches de l'agent.
+:::
+
+[Chapitres 1, 7 et 9 du cours de la séance 2](/cours/seance-02-cours.md#chapitre-7){.lien-cours}
+
+## Des décisions tirées des mesures
+
+Le banc ne sert qu'à décider. Chaque décision d'architecture s'écrit dans un enregistrement, l'`ADR`, avec ses preuves copiées du rapport : « Un ADR transforme des mesures en décisions vérifiables, et dit quand les revoir. »
+
+Les mesures répartissent le travail entre le serveur, le modèle et le code. La forme est garantie par le serveur, qui impose le schéma ; la vérité, par le code, qui contrôle chaque nombre. La recherche par le sens a sa place, mais pas pour les chiffres : « La recherche par le sens trouve où chercher ; les chiffres passent par le registre, rapprochés et contrôlés par le code. »
+
+::: {.callout-note title="À retenir"}
+« Le modèle est un composant mesuré, pas un oracle : ses forces mesurées allègent le code, ses faiblesses mesurées lui donnent du travail, et la règle des chiffres ne se délègue jamais. »
+:::
+
+[Chapitres 13 à 15 du cours de la séance 2](/cours/seance-02-cours.md#chapitre-14){.lien-cours}
 
 ## Dans ce carnet
 
