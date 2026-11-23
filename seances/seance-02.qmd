@@ -1,0 +1,12 @@
+---
+title: "Banc de fiabilité : taux et intervalles de confiance"
+subtitle: "Séance du laboratoire"
+toc: true
+toc-depth: 2
+---
+
+```{r}
+#| output: asis
+source("R/pages.R", encoding = "UTF-8")
+cat(page_seance(charger(), "labo-02"))
+```

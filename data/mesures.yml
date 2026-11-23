@@ -86,6 +86,36 @@ mesures:
     unite: s
     source: {seance: 1, partie: annexe A}
 
+  - id: duree-seance-02
+    libelle: Durée de la séance
+    valeur: 3
+    unite: h
+    source: {seance: 2, partie: en-tête du cours}
+
+  - id: plafond-tokens-consignes
+    libelle: Plafond de tokens des réponses, dans le cas des consignes
+    valeur: 300
+    unite: tokens
+    source: {seance: 2, partie: chapitre 6}
+
+  - id: budget-contexte-regle
+    libelle: Budget de contexte donné par la règle préenregistrée
+    valeur: 32000
+    unite: tokens
+    source: {seance: 2, partie: annexe A}
+
+  - id: budget-contexte-retenu
+    libelle: Budget de contexte retenu par la décision d'architecture
+    valeur: 24000
+    unite: tokens
+    source: {seance: 2, partie: chapitre 14}
+
+  - id: borne-sans-echec-dix
+    libelle: Taux d'échec encore possible après dix essais sans échec (borne à 95 %)
+    valeur: 25.9
+    unite: "%"
+    source: {seance: 2, partie: chapitre 7}
+
 # Formules, citées telles que le cours les donne.
 formules:
   - id: modele-cout
@@ -135,3 +165,95 @@ tableaux:
       - ["`debit-1`", 1.37, 216, 157.7]
       - ["`debit-2`", 1.41, 216, 153.2]
       - ["`debit-3`", 1.39, 220, 158.3]
+
+  # Séance 2 : résultats du banc, recopiés de l'annexe A du cours.
+  - id: campagne-banc
+    titre: La campagne du banc
+    source: {seance: 2, partie: annexe A}
+    colonnes: [Élément, Valeur]
+    lignes:
+      - ["Modèle de chat", "`gemma4-26b-moe`"]
+      - ["Modèle d'embeddings", "`qwen3-embedding-8b`"]
+      - ["Essais", 584]
+      - ["Appels au serveur", 684]
+      - ["Essais refusés par le serveur", 0]
+      - ["Début et fin, en temps universel", "22 novembre 2026, de 15 h 01 min 49 s à 15 h 13 min 11 s"]
+    note: "Chaque taux des tableaux suivants se lit avec son intervalle de Wilson. Le rapport de la campagne se régénère à l'identique en mode rejeu, sans réseau ni clé."
+
+  - id: banc-forme-json
+    titre: Forme JSON
+    source: {seance: 2, partie: annexe A}
+    colonnes: [Condition, Premier essai, Intervalle de Wilson, Lecture tolérante, Après deux reprises]
+    lignes:
+      - ["Schéma imposé", "50/50", "92,9 % à 100 %", "50/50", "50/50"]
+      - ["Objet JSON, sans schéma", "50/50", "92,9 % à 100 %", "50/50", "50/50"]
+      - ["Consigne seule, dans le texte", "0/50", "0 % à 7,1 %", "50/50", "0/50"]
+      - ["Schéma imposé, consigne contraire", "50/50", "92,9 % à 100 %", "50/50", "50/50"]
+    note: "La consigne seule échoue en lecture stricte parce que le modèle enveloppe chaque JSON dans une clôture Markdown ; le JSON à l'intérieur est juste. L'écart entre schéma imposé et consigne seule est très net (test exact de McNemar)."
+
+  - id: banc-consignes
+    titre: Consignes vérifiables
+    source: {seance: 2, partie: annexe A}
+    colonnes: [Consigne, Rédigée en français, Rédigée en anglais, Réponses coupées par le plafond]
+    lignes:
+      - ["Pas de Markdown (`sans_markdown`)", "20/20 (83,9 % à 100 %)", "20/20 (83,9 % à 100 %)", "20 sur 40"]
+      - ["Longueur maximale en mots (`mots_max`)", "19/20 (76,4 % à 99,1 %)", "20/20 (83,9 % à 100 %)", "0 sur 40"]
+      - ["Commencer par une formule imposée (`commence_par`)", "20/20 (83,9 % à 100 %)", "20/20 (83,9 % à 100 %)", "40 sur 40"]
+      - ["Terminer par une formule imposée (`termine_par`)", "0/20 (0 % à 16,1 %)", "0/20 (0 % à 16,1 %)", "40 sur 40"]
+      - ["Éviter un mot interdit (`mot_interdit`)", "20/20 (83,9 % à 100 %)", "20/20 (83,9 % à 100 %)", "40 sur 40"]
+      - ["Une liste de trois éléments (`liste_trois`)", "20/20 (83,9 % à 100 %)", "20/20 (83,9 % à 100 %)", "0 sur 40"]
+    note: "Le plafond de {plafond-tokens-consignes} tokens a coupé des réponses : `termine_par` n'est pas mesurable, et `mot_interdit` n'est vérifiée que sur le début des réponses. C'est l'écart au plan, déclaré avant la lecture. Aucune différence entre les deux langues (test exact de McNemar). Surtout, ces consignes génériques ne sont pas celles de l'agent : le cas sera refait avec des consignes de rédaction d'EcoDef."
+
+  - id: banc-contexte
+    titre: Plusieurs aiguilles et des nombres pièges
+    source: {seance: 2, partie: annexe A}
+    colonnes: [Tokens visés, Tokens lus (médiane), Essais complets, Intervalle de Wilson, Pièges choisis]
+    lignes:
+      - [8000, 8190, "10/10", "72,2 % à 100 %", "0 sur 60"]
+      - [16000, 16081, "10/10", "72,2 % à 100 %", "0 sur 60"]
+      - [24000, 23960, "10/10", "72,2 % à 100 %", "0 sur 60"]
+      - [32000, 31898, "10/10", "72,2 % à 100 %", "0 sur 60"]
+      - [48000, 47734, "5/10", "23,7 % à 76,3 %", "7 sur 60"]
+    note: "Un essai est complet si toutes ses aiguilles sont retrouvées. À la plus grande taille, les aiguilles manquées sont vers la fin du texte, et chaque erreur est un piège : une valeur voisine, présentée comme ancienne. La règle préenregistrée donne un budget de {budget-contexte-regle} tokens ; l'`ADR-001` retient {budget-contexte-retenu} tokens, parce que des essais sans échec à cette taille laissent encore possible un taux d'échec de {borne-sans-echec-dix}."
+
+  - id: banc-stabilite
+    titre: Stabilité des réponses
+    source: {seance: 2, partie: annexe A}
+    colonnes: [Requête, Réglage, Identiques à la réponse la plus fréquente, Intervalle de Wilson, Réponses distinctes]
+    lignes:
+      - ["`definition`", "température 0", "10/10", "72,2 % à 100 %", 1]
+      - ["`resume`", "température 0", "10/10", "72,2 % à 100 %", 1]
+      - ["`fiche`", "température 0", "10/10", "72,2 % à 100 %", 1]
+      - ["`ville`", "graine 42, température 1", "10/10", "72,2 % à 100 %", 1]
+      - ["`ville`", "graines 1 à 10, température 1", "2/10", "5,7 % à 51 %", 9]
+    note: "La série à graines différentes sert de témoin : elle prouve que le hasard est bien présent, donc que la stabilité vient du réglage. Ce constat vaut pour ce jour et ce serveur ; seul le journal garantit qu'on retrouve une réponse."
+
+  - id: banc-outil
+    titre: Appel d'outil
+    source: {seance: 2, partie: annexe A}
+    colonnes: [Condition, Appel correct, Intervalle de Wilson, Appel mal formé, Chiffre cité de mémoire, Réponse sans chiffre]
+    lignes:
+      - ["Sans consigne", "20/20", "83,9 % à 100 %", 0, 0, 0]
+      - ["Avec consigne", "20/20", "83,9 % à 100 %", 0, 0, 0]
+    note: "Le modèle demande l'outil de lui-même, avec ou sans consigne. Le banc mesure la demande d'appel, pas l'usage du résultat, qui reste à mesurer."
+
+  - id: banc-embeddings
+    titre: Embeddings et montants
+    source: {seance: 2, partie: annexe A}
+    colonnes: [Phrase comparée à la phrase de départ, Cosinus médian]
+    lignes:
+      - ["Paraphrase", "0,942"]
+      - ["Même phrase, autre montant", "0,990"]
+      - ["Phrase hors sujet", "0,144"]
+    note: "Dans tous les triplets, changer le montant déplace moins le vecteur que reformuler la phrase : la recherche par le sens trouve où chercher, jamais le bon chiffre."
+
+  - id: banc-debit
+    titre: Débit et modèle de coût
+    source: {seance: 2, partie: annexe A}
+    colonnes: [Grandeur, Valeur]
+    lignes:
+      - ["Appels de chat analysés", 680]
+      - ["Vitesse d'écriture des appels courts, médiane", "130 tokens par seconde"]
+      - ["Vitesse d'écriture des appels courts, quartiles", "123 et 169 tokens par seconde"]
+      - ["Modèle de coût", "durée ≈ 0,25 s + tokens lus / 16 238 + tokens écrits / 196"]
+    note: "Lire reste bien moins cher qu'écrire : la durée d'un appel tient surtout à la longueur de la réponse."

@@ -106,21 +106,177 @@ seances:
     projet: labo
     numero: 2
     semaine: 1
+    date: 2026-11-23
     titre: Banc de fiabilité
     sous_titre: taux et intervalles de confiance
-    statut: à planifier
+    statut: fait
+    duree: duree-seance-02
     objectif: >-
-      Chiffrer les faiblesses du modèle : chaque test est répété une cinquantaine de
-      fois, pour obtenir des taux avec leur intervalle de Wilson. Critère de fin :
-      l'`ADR-001` est écrit.
+      Chiffrer ce que le modèle réussit, et à quel taux, avant de concevoir
+      l'agent. D'où le nom de banc, emprunté aux ingénieurs : un dispositif fixe
+      où l'on fait passer la même épreuve, répétée à l'identique, pour obtenir
+      un taux avec son intervalle de Wilson plutôt qu'une impression tirée d'un
+      seul essai, et pour comparer un modèle à un autre. Six cas, choisis parce
+      que chacun commande une décision d'architecture : forme JSON, consignes,
+      longs contextes, stabilité, appel d'outil, embeddings. Le plan et les paris
+      sont écrits avant la première mesure, et le banc est répété contre un faux
+      serveur avant le vrai. Critère de fin : l'`ADR-001` est écrit, avec des
+      décisions tirées des mesures. Ce critère est atteint.
     livrables:
-      - "`mesures/rapport_banc.md`"
-      - Un premier enregistrement de décision d'architecture, l'`ADR-001`
+      - "L'enveloppe d'appel `llm.py` en deuxième version : reprise, index du journal, requêtes longues résumées"
+      - "Le banc `banc/` : six cas, leurs vérificateurs et leurs statistiques (`banc/stats.py`)"
+      - "Le faux serveur `outils/faux_serveur.py`, pour la répétition générale"
+      - "Le plan préenregistré et les paris, `banc/PLAN.md`"
+      - "Le rapport `mesures/2026-11-22-gemma4-26b-moe/rapport_banc.md`, rejouable sans réseau ni clé"
+      - "L'`ADR-001` : `docs/adr/0001-decisions-du-banc.md`"
+    lien: /seances/seance-02.qmd
+    cours: /cours/seance-02-cours.md
+    # Journal de la séance, repris du cours (chapitres 1 et 15)
+    journal:
+      fait: >-
+        Construction et lancement du banc de fiabilité, en deux demi-journées :
+        enveloppe d'appel renforcée, plan et paris écrits avant toute mesure,
+        répétition générale contre un faux serveur, campagne sur le serveur du
+        SSP Cloud, lecture des six cas avec leurs intervalles de Wilson et leurs
+        tests de McNemar, puis l'`ADR-001`, qui transforme les mesures en
+        décisions.
+      appris:
+        - "Écrire le plan et les paris avant de mesurer, et les dater par un commit : un pari précis peut être démenti, donc instruire."
+        - "Répéter tout le banc contre un faux serveur avant de dépenser un appel réel : on éprouve l'instrument avant le modèle."
+        - "Lire la raison de fin d'une réponse (`finish_reason`) avant de conclure à un échec du modèle."
+        - "Déclarer un écart au plan, avec sa cause et sa preuve, plutôt que de corriger en silence."
+        - "Lire un taux avec son intervalle de Wilson : zéro échec n'est pas zéro risque."
+        - "Comparer deux conditions sur les mêmes items par le test de McNemar, en comptant l'essai comme unité."
+        - "Faire garantir la forme par le serveur, et la vérité par le code."
+        - "Un test ne vaut que pour la tâche qu'il imite : un cas générique ne dit rien de l'usage visé."
+        - "Chercher par le sens pour localiser un passage, jamais pour vérifier un chiffre."
+        - "Écrire chaque décision d'architecture dans un ADR, avec ses preuves et le moment de la revoir."
+      suite: >-
+        La prochaine séance commence par le cas « consignes EcoDef » : des
+        consignes de rédaction d'une publication, vérifiables par le code,
+        préenregistrées et mesurées avec un plafond de tokens suffisant. Elle
+        aborde ensuite le graphe d'états de LangGraph.
+    # Annexe B du cours
+    incidents:
+      - incident: Variables d'environnement absentes
+        cause: Service fermé ; variables saisies à la main à la séance précédente
+        correction: "Bloc de rechargement : adresse relue dans `mesures/capacites.json`, clé saisie par `read -rsp` ; à terme, un secret Onyxia"
+        chapitre: 3
+      - incident: "`LLM_CLE: parameter null or not set` au contrôle de la clé"
+        cause: Commande lancée dans un autre terminal
+        correction: Recharger la clé seule sur sa ligne, puis contrôler
+        chapitre: 3
+      - incident: Confusion sur les paris
+        cause: Paris demandés avant la présentation des cas
+        correction: "Présenter chaque cas, puis faire parier ; exemple du taux de réponse d'une enquête"
+        chapitre: 4
+      - incident: Toutes les réponses `termine_par` en échec
+        cause: "Plafond de {plafond-tokens-consignes} tokens : réponses coupées"
+        correction: Écart au plan déclaré, seconde lecture sur les seules réponses terminées, plafond réglable à venir
+        chapitre: 6
+      - incident: Bloc de l'écart exécuté deux fois
+        cause: Double collage dans le terminal
+        correction: L'`assert` du script a empêché le doublon
+        chapitre: 6
+      - incident: Mesures commitées sous un message inexact (`2e91e81`)
+        cause: Fichiers déjà préparés quand le bloc de commit a été relancé
+        correction: "Signalé dans le journal ; historique non réécrit"
+        chapitre: 6
+      - incident: Contrôle de la clé sans valeur probante
+        cause: Différence préparée vide, tout étant déjà commité
+        correction: "Contrôle refait sur tout l'historique : aucune occurrence"
+        chapitre: 6
+      - incident: Confusion sur l'emplacement des résultats
+        cause: Programme qui séparait « comprendre » et « lire »
+        correction: "Un cas à la fois : lire sa section du rapport, interpréter, confronter aux paris"
+        chapitre: 6
+      - incident: Cas des consignes peu valide pour l'agent
+        cause: Consignes génériques, rien de spécifique à une publication EcoDef
+        correction: Cas « consignes EcoDef » au début de la prochaine séance
+        chapitre: 9
+      - incident: Modèle d'embeddings de la séance précédente mal noté dans le journal
+        cause: "`gemma4-26b-moe` écrit au lieu de `qwen3-embedding-8b`"
+        correction: Corrigé d'après `mesures/limites.json`
+        chapitre: 13
+      - incident: Conséquence de l'`ADR-001` contredisant la décision sur le budget de contexte
+        cause: Brouillon rédigé pour {budget-contexte-regle} tokens
+        correction: Phrase mise en cohérence avant la fusion
+        chapitre: 14
+    # Annexe C du cours. Messages repris des commits, selon la règle du carnet :
+    # un numéro s'écrit après « n° », un identifiant qui contient des chiffres en `code`.
+    commits:
+      - hash: 73eba0c
+        message: "feat: enveloppe `v2` (reprise, index du journal, requêtes longues résumées)"
+      - hash: 028d924
+        message: "docs: plan préenregistré du banc et prédictions"
+      - hash: c08fb6d
+        message: "docs: écart au plan, réponses coupées dans le cas n° 2"
+      - hash: 2e91e81
+        message: "docs: écart au plan, réponses coupées dans le cas n° 2 (contient en fait les mesures, le journal et `banc.log`)"
+      - hash: 3cda063
+        message: "docs: lecture des six cas du banc et seconde lecture du cas n° 2"
+      - hash: a59fed0
+        message: "docs: `ADR-001`, quatre décisions tirées du banc"
+      - hash: 7735ad0
+        message: "docs: clôture du jour n° 2 (journal, README)"
+      - hash: d371a59
+        message: "docs: `ADR-001`, décision n° 2 cohérente avec le budget de `24 000` tokens"
+      - hash: 490d457
+        message: "Merge pull request n° 2 from `MaryleneH/jour-2` (commit de fusion)"
+    a_cocher:
+      - Les sept tests de l'enveloppe passent sur le vrai serveur
+      - La séance précédente se rejoue à l'identique avec la nouvelle enveloppe
+      - Plan et paris commités avant le premier appel
+      - "Campagne rejouée sans réseau ni clé : rapport identique"
+      - "Contrôle de la clé sur tout l'historique : aucune occurrence"
+      - "`ADR-001` écrit et commité"
+      - Journal de la séance et README à jour
+      - Branche `jour-2` fusionnée par un commit de fusion
+      - Étiquette `jour-2` posée sur le commit de fusion et poussée
+    points_en_attente:
+      - intitule: Cas « consignes EcoDef »
+        detail: au début de la prochaine séance, préenregistré, dans une campagne complémentaire déclarée
+        statut: en attente
+      - intitule: Plafond de tokens réglable
+        detail: un paramètre du banc, dont la valeur par défaut garde rejouable la campagne déjà faite
+        statut: en attente
+      - intitule: Usage du résultat d'un outil
+        detail: à mesurer, avec le cas EcoDef puis dans l'agent
+        statut: en attente
+      - intitule: Schéma imposé
+        detail: "une campagne plus longue avant toute production, comme le prévoit l'`ADR-001`"
+        statut: en attente
+      - intitule: Budget de contexte
+        detail: une campagne plus longue à la taille donnée par la règle, avant de relever le budget
+        statut: en attente
+      - intitule: Scripts de mesure de la séance précédente
+        detail: à ranger dans `sondes/`, déplacement validé par rejeu
+        statut: en attente
+      - intitule: Accès à Albert
+        detail: relancer `capacites.py` et `limites.py` avec ses variables et `LLM_MODELE_EMB=bge-m3`
+        statut: en attente
+      - intitule: Données de l'EcoDef n° 273
+        detail: chercher un fichier plus précis que les chiffres arrondis de la publication
+        statut: en attente
+      - intitule: Carnet de bord
+        detail: séance et cours mis à jour, c'est cette page
+        statut: fait
 
   # Plan prévisionnel du laboratoire (repris de l'ancien plan_labo.csv).
-  - {id: labo-03, projet: labo, numero: 3, semaine: 1, statut: prévu,
-     titre: "Maîtriser état, nœuds, arêtes et arrêt humain",
-     livrables: [Graphe à trois nœuds avec checkpoint SQLite]}
+  - id: labo-03
+    projet: labo
+    numero: 3
+    semaine: 1
+    titre: "Maîtriser état, nœuds, arêtes et arrêt humain"
+    statut: à planifier
+    objectif: >-
+      Mesurer d'abord le cas « consignes EcoDef », préenregistré et lu comme les
+      autres cas du banc ; puis maîtriser le graphe d'états de LangGraph : un état
+      partagé, des nœuds, des arêtes, un point de reprise et un arrêt pour
+      validation humaine.
+    livrables:
+      - Le cas « consignes EcoDef » du banc, mesuré et lu
+      - Graphe à trois nœuds avec checkpoint SQLite
   - {id: labo-04, projet: labo, numero: 4, semaine: 1, statut: prévu,
      titre: Poser le cœur de la garantie sans modèle,
      livrables: [Registre de faits, Rendu et contrôleur]}
