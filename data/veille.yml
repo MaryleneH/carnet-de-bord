@@ -355,3 +355,33 @@ liens:
       cherche à démentir. À tester : le code est public, et le modèle assez
       petit pour un ordinateur portable.
     mots_cles: [interprétabilité mécaniste, circuits, hallucination, ablation, têtes d'attention, Pythia-70m, agents]
+
+  - url: https://claude.com/fr/resources/articles/skills-over-mcp-tasks-and-more
+    titre: "MCP : des serveurs qui livrent leurs skills, mènent des tâches longues et demandent un accord"
+    theme: protocoles-agents
+    type: article
+    langue: en
+    ajoute_le: 2026-11-24
+    resume: >-
+      Annonce d'Anthropic, deux ans après le lancement du Model Context
+      Protocol (MCP). Un serveur MCP peut désormais publier des skills avec
+      ses outils (en bêta publique) : des modes d'emploi, bonnes pratiques ou
+      marches à suivre, que Claude ne charge qu'au besoin, pour ménager le
+      contexte, et qui se mettent à jour avec le serveur. Trois autres
+      extensions : Tasks, pour
+      confier au serveur un travail long dont Claude reprend le résultat plus
+      tard ; Elicitation, pour qu'un serveur s'arrête et demande son accord à
+      l'utilisateur avant une dépense ou une suppression ; File Uploads, à
+      venir, pour lui transmettre des fichiers sans passer par le contexte.
+      Ces fonctions relèvent de la spécification ouverte de MCP : elles valent
+      pour tout client compatible. Texte d'annonce, sans évaluation
+      indépendante.
+    pourquoi: >-
+      MCP ne se limite plus à exposer des outils : il transporte aussi le mode
+      d'emploi, les travaux longs et la demande d'accord. Trois idées à garder
+      pour un assistant d'étude : charger une consigne seulement quand elle
+      sert, ce qui ménage le contexte ; reprendre plus tard un travail confié ;
+      s'arrêter avant un acte qui engage, comme l'arrêt pour validation
+      humaine d'un graphe d'états, mais porté par le protocole. L'intérêt est
+      dans le protocole, ouvert, plus que dans le produit.
+    mots_cles: [MCP, skills, tâches longues, validation humaine, contexte, Anthropic, Claude]
