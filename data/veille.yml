@@ -324,3 +324,34 @@ liens:
       système a été réglé surestime ce qu'il sait faire, d'où des cas de
       test gardés à part.
     mots_cles: [évaluation, horizon temporel, IRT, LLM juge, contamination, METR]
+
+  - url: https://open-interpretability.com/posts/explain/index.html
+    titre: "Open Interpretability : expliquer la réponse d'un modèle, neurone par neurone"
+    theme: interpretabilite
+    type: article
+    langue: en
+    ajoute_le: 2026-11-24
+    resume: >-
+      Open Interpretability fait mener par des agents des expériences
+      d'interprétabilité mécaniste sur des modèles ouverts. Sa commande
+      « explain » reconstitue comment un modèle a choisi le mot suivant. Sur
+      le petit Pythia-70m, qui complète « The sun rises in the » par « sky »,
+      elle repère les neurones et les têtes d'attention qui s'écartent de leur
+      comportement habituel, puis vérifie par l'expérience : quand on
+      neutralise le reste du modèle, 86 unités déjà expliquées rendent 81,9 %
+      de la probabilité de la réponse, contre 13 % pour des unités tirées au
+      hasard. Un agent rédige l'explication ; un autre, sans voir les mesures,
+      cherche les phrases qui la démentiraient. Même démarche sur une
+      hallucination, où le modèle recopie un motif au lieu de rappeler un
+      fait. Deux réponses d'un modèle minuscule, chiffres non relus par des
+      pairs.
+    pourquoi: >-
+      Pour voir d'où vient une hallucination : le modèle ne se souvient pas
+      mal, il recopie ce qui suivait le nombre précédent, à la manière des
+      têtes d'induction vues dans le Weight-Space Programming. Une raison de
+      plus de ne jamais lui laisser citer un chiffre de mémoire. La démarche
+      parle à une statisticienne : un état de référence, un témoin tiré au
+      hasard, des interventions plutôt que des corrélations, un relecteur qui
+      cherche à démentir. À tester : le code est public, et le modèle assez
+      petit pour un ordinateur portable.
+    mots_cles: [interprétabilité mécaniste, circuits, hallucination, ablation, têtes d'attention, Pythia-70m, agents]
