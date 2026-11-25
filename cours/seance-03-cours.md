@@ -120,14 +120,6 @@ La troisième se lit ainsi : « les commits accessibles depuis mes branches loca
 
 Le rejeu des jours 1 et 2, après le déplacement des sondes, a produit des mesures identiques à celles du dépôt : le rangement est prouvé, pas seulement supposé. L'étiquette `jour-2` est arrivée sur GitHub dans la journée. Le dépôt est reparti d'un état propre, daté, et comparable.
 
-### La question posée pendant la séance
-
-> « Je vais relancer mon pod. Est-ce que j'ai tout sous GitHub ? »
-
-La réponse avait deux moitiés. La première se vérifiait de mon côté : ce que GitHub contenait, branche par branche et étiquette par étiquette. La seconde ne pouvait se vérifier que dans le service : ce qui y existait sans avoir été poussé. D'où les trois commandes ci-dessus, à lancer dans le dossier du dépôt avant de relancer quoi que ce soit, et une liste de ce qui disparaît normalement : la clé, les variables, l'environnement virtuel, les fichiers hors du dépôt.
-
-Cette question est revenue le soir sous une autre forme : « dis-moi quand on pousse, car mon service peut disparaître ». La réponse a fixé une règle pour la suite de la séance : **pousser la branche de travail après chaque commit**. Pousser une branche ne fusionne rien ; cela met seulement le travail à l'abri.
-
 ### Pièges et bonnes pratiques
 
 - **Croire que `git push` envoie les étiquettes.** Il ne les envoie pas : une étiquette se pousse explicitement. Le jour 2 l'avait oublié, et le jour 3 a rencontré un autre piège, au chapitre 13.
