@@ -8,7 +8,7 @@ toc-depth: 2
 
 22 et 23 novembre 2026 · deux demi-journées, trois heures de travail · serveur de modèles du SSP Cloud
 
-> **En bref.** Ce document reprend la séance 2 du laboratoire étape par étape, comme un cours. La séance a mesuré, sur 584 essais, ce que le modèle sait faire de façon fiable avant de construire l'agent : produire du JSON, suivre des consignes, retrouver des nombres dans un long texte, répondre de façon stable, appeler un outil, distinguer deux montants par la recherche par le sens. Chaque chapitre dit ce que nous avons fait, puis pourquoi, comment cela fonctionne, ce que nous avons observé et quels pièges éviter. Les questions posées pendant la séance sont reprises telles quelles, avec leur réponse. Les chiffres viennent du rapport du banc et du journal des appels ; ceux tirés d'articles sont attribués à leurs auteurs.
+> **En bref.** Ce document reprend la séance 2 du laboratoire étape par étape, comme un cours. La séance a mesuré, sur 584 essais, ce que le modèle sait faire de façon fiable avant de construire l'agent : produire du JSON, suivre des consignes, retrouver des nombres dans un long texte, répondre de façon stable, appeler un outil, distinguer deux montants par la recherche par le sens. Chaque chapitre dit ce que nous avons fait, puis pourquoi, comment cela fonctionne, ce que nous avons observé et quels pièges éviter. Les questions posées pendant la séance sont reformulées, avec leur réponse. Les chiffres viennent du rapport du banc et du journal des appels ; ceux tirés d'articles sont attribués à leurs auteurs.
 
 ## Comment lire ce cours
 
@@ -20,7 +20,7 @@ Chaque chapitre correspond à une étape de la séance et suit le même plan :
 - **Pourquoi cette étape** : le problème qu'elle résout et ce qui se passerait sans elle.
 - **Comment ça marche** : le mécanisme, avec le niveau technique nécessaire pour le comprendre vraiment.
 - **Ce que nous avons observé** : nos résultats, et ce qu'ils permettent ou non de conclure.
-- **La question posée pendant la séance** : quand une question a été posée, elle est citée, puis sa réponse est développée.
+- **La question posée pendant la séance** : quand une question a été posée, elle est reformulée, puis sa réponse est développée.
 - **Pièges et bonnes pratiques** : les erreurs classiques, dont celles que nous avons commises.
 - **Pour vérifier que vous avez compris** : deux questions. Le corrigé est à l'annexe E.
 - **Références** : deux ou trois lectures, avec ce que chacune apporte. L'annexe F les rassemble.
@@ -99,7 +99,7 @@ Le banc a tourné de bout en bout, puis s'est rejoué à l'identique sans résea
 
 ### La question posée pendant la séance
 
-*« Il faudra aussi expliquer pourquoi on appelle ça "banc", pourquoi on fait ça. »*
+*Pourquoi parle-t-on de « banc », et à quoi sert-il ?*
 
 Parce qu'on y fait ce qu'on fait sur un banc d'essai : on sort la pièce de son contexte d'usage pour la mesurer dans des conditions contrôlées, avant de bâtir autour d'elle. Et parce que le résultat devient un repère, qui servira à comparer chaque nouveau modèle. Un banc est un **instrument permanent**, pas une expérience faite une fois.
 
@@ -153,7 +153,7 @@ Le rangement n'a rien cassé : au bloc 1, le jour 1 s'est rejoué à l'identique
 
 ### La question posée pendant la séance
 
-*« Je pense que j'organise mal mon dépôt de travail sur GitHub : comment organiser mes différents jours ? »*
+*Comment organiser le dépôt pour suivre les jours de travail, l'un après l'autre ?*
 
 En rangeant par fonction et en marquant les jours dans l'historique, pas dans l'arborescence. Les messages de commit étaient déjà bons (`feat:`, `fix:`, `docs:`, un par étape) ; il manquait une règle de rangement, un README et une trace des jours dans git.
 
@@ -283,7 +283,7 @@ Un bon pari est précis et justifié, même s'il est faux. Sur la stabilité à 
 
 *Cette partie est écrite à la première personne : c'est mon expérience de la séance.*
 
-J'ai eu du mal à comprendre la partie « paris ». La consigne demandait d'écrire mes prédictions, mais les six cas ne m'avaient pas encore été présentés : je ne savais pas sur quoi parier. J'ai cru avoir manqué une étape et j'ai demandé : *« Mais je lis quoi ? J'ai loupé une étape, je devais lancer quelque chose ? »* Rien n'était à lancer, et rien n'était à lire : c'était voulu.
+J'ai eu du mal à comprendre la partie « paris ». La consigne demandait d'écrire mes prédictions, mais les six cas ne m'avaient pas encore été présentés : je ne savais pas sur quoi parier. J'ai cru avoir manqué une étape, et j'ai demandé s'il fallait lire ou lancer quelque chose avant de parier. Rien n'était à lancer, et rien n'était à lire : c'était voulu.
 
 Ce qui m'a débloquée, c'est l'exemple du taux de réponse d'une enquête, puis les deux paris opposés sur la stabilité. J'ai compris que :
 
@@ -444,7 +444,7 @@ L'écart a été écrit dans le plan avant la lecture du rapport, avec ces chiff
 
 ### La question posée pendant la séance
 
-*« Mais où je trouve les résultats de ces tests ? Je comprends rien. »*
+*Où trouver les résultats de la campagne ?*
 
 Dans `mesures/2026-11-22-gemma4-26b-moe/rapport_banc.md`, à ouvrir dans VS Code avec l'aperçu Markdown (Ctrl+Maj+V) : une section par cas. La confusion venait de l'ordre du programme, qui faisait « comprendre » les cas avant de « lire » leurs résultats. Nous l'avons simplifié : un cas à la fois, on lit sa section du rapport, on l'interprète, on la confronte aux paris. Lire les résultats ne faussait rien : règles et paris étaient datés par un commit depuis la veille.
 
@@ -509,7 +509,7 @@ Ces bornes sont calculées par la fonction `borne_sans_echec` de `banc/stats.py`
 
 ### La question posée pendant la séance
 
-*« C'est quoi l'intervalle de Wilson ? »*
+*Qu'est-ce que l'intervalle de Wilson ?*
 
 Une fourchette d'incertitude autour d'un taux observé : après 47 réponses valides sur 50, quelles valeurs du vrai taux restent plausibles ? Le banc l'affiche à 95 % pour chaque taux. On le préfère à la formule de Wald parce qu'il reste juste quand l'échantillon est petit et le taux proche de 0 ou de 100 %, ce qui est exactement notre situation.
 
@@ -633,7 +633,7 @@ La méthode vient d'IFEval (Zhou et al., 2023) : des consignes vérifiables par 
 
 ### La question posée pendant la séance
 
-*« Je n'aime pas les `cas_consignes` : on n'y retrouve rien de spécifique à un EcoDef. »*
+*Ce cas mesure-t-il ce qui compte ? Ses consignes sont génériques : rien n'y est propre à une publication EcoDef.*
 
 C'est une critique de **validité** : le cas mesure l'obéissance à des consignes génériques, pas aux consignes que l'agent recevra pour rédiger une publication statistique. Un taux sur « commence par En résumé » ne dit presque rien de ce qui importe. Raji et ses coauteurs (2021) font la même critique à l'échelle des grands benchmarks.
 
@@ -781,7 +781,7 @@ Dans `banc/cas_outil.py`, la requête part avec `tool_choice="auto"` : le modèl
 
 ### La question posée pendant la séance
 
-*« Comment est-on sûr que l'outil a bien été appelé et utilisé ? Comment ça se passe dans le code ? »*
+*Comment s'assurer que l'outil a bien été appelé, puis utilisé ? Et comment le code le vérifie-t-il ?*
 
 « Appelé », oui : le journal garde la réponse brute du serveur, avec sa demande d'appel, et chacun peut la relire. « Utilisé », non : le banc s'arrête à la demande d'appel. Il n'y a pas de vrai registre derrière l'outil ; le banc ne l'exécute jamais et ne renvoie aucun résultat au modèle. Il mesure la décision d'appeler et la forme de la demande, pas ce que le modèle fait du chiffre renvoyé : le recopie-t-il exactement, l'arrondit-il, le mélange-t-il avec un chiffre de mémoire ? Deux garde-fous couvrent cette seconde moitié : le contrôle par le code de chaque nombre du texte contre le registre, et le cas EcoDef du jour 3, dont la fiche de faits jouera le rôle du registre.
 
