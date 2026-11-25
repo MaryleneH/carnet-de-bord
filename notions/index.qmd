@@ -1,0 +1,13 @@
+---
+title: "Notions"
+subtitle: "Un cours par notion, à relire quand il le faut"
+page-layout: full
+# pas de <section> autour des titres : les cartes gardent un balisage simple
+section-divs: false
+---
+
+```{r}
+#| output: asis
+source("R/pages.R", encoding = "UTF-8")
+cat(page_notions(charger()))
+```

@@ -11,11 +11,12 @@ Adresse du site : `https://maryleneh.github.io/carnet-de-bord/`
 | Tableau de bord | `index.qmd` | en tête, l'**escalier** du laboratoire : une marche par séance, colorée selon son état, et un drapeau par jalon ; la marche d'une séance faite mène à sa page. Puis quatre onglets : **Vue d'ensemble** (jalons, indicateurs d'avancement, dernière séance, prochaine étape, avancement du cours, points en attente, compétences par semaine du plan, heures par semaine dès que deux semaines sont entamées, derniers liens de la veille), **Laboratoire** (frise des séances et jalons), **Compétences** (niveau de chaque concept), **Journal** (fait, appris, suite) |
 | Séances | `seances/` | une carte par séance, une page par séance faite, avec ses résultats sourcés |
 | Cours | `cours/` | le fil conducteur du carnet : le **plan du cours** (`cours/index.qmd`), qui grandit séance après séance, puis un chapitre par séance (`cours/seance-NN-cours.md`), avec barre latérale, table des matières et navigation d'un chapitre à l'autre |
+| Notions | `notions/` | un cours par notion, à relire sans refaire toute une séance : le sommaire (`notions/index.qmd`) montre une carte par cours, et chaque cours a sa page, avec barre latérale et navigation d'une notion à l'autre |
 | Méthode | `methode.qmd` | les principes du laboratoire, cités du cours |
 | Veille | `veille/` | les liens de ma veille, rangés par thème, chacun avec un résumé et la raison de le garder ; recherche (sans tenir compte des accents) et filtre par thème |
 
 - **Données** : `data/seances.yml` (séances et journal), `data/mesures.yml` (résultats et durées des séances, chacun avec sa source dans le cours), `data/concepts.csv` (suivi des compétences : vu, pratiqué, maîtrisé) et `data/veille.yml` (thèmes et liens de la veille).
-- **Rendu des pages** : `R/pages.R` lit ces données, calcule les indicateurs et produit le contenu des pages.
+- **Rendu des pages** : `R/pages.R` lit ces données, calcule les indicateurs et produit le contenu des pages. Les notions n'ont pas de fichier de données : `R/notions.R` lit l'en-tête de chaque cours du dossier `notions/`.
 - **Mise en forme** : un seul fichier, `styles/carnet.scss` (variables en tête, thèmes clair et sombre). Le thème, « Ascension », tient en trois couleurs : un indigo pour les titres, un corail pour ce qui est fait, des lilas pour les fonds et les marches. Polices Bricolage Grotesque (titres) et DM Sans (texte), auto-hébergées dans `styles/polices/` avec le texte de leur licence (OFL). Aucun CDN, aucune police distante.
 - **Icône du site** : `icones/favicon.svg`, une création originale aux couleurs du thème : un escalier qui monte vers un jalon, comme celui du tableau de bord. Son fond s'éclaircit en thème sombre. La même icône sert de marque devant le titre, dans la barre de navigation. `scripts/icones.sh` en tire deux PNG de repli (nécessite `rsvg-convert`) : `favicon-32.png`, pour les navigateurs qui n'affichent pas une icône SVG, et `apple-touch-icon.png`, pour l'écran d'accueil d'un téléphone. À relancer après toute modification du SVG.
 - **Filtres Lua** (`filters/`) : encadrés du cours en callouts, typographie française (espaces insécables), tableaux défilants sur téléphone, icônes de repli dans l'en-tête des pages.
@@ -28,6 +29,7 @@ Adresse du site : `https://maryleneh.github.io/carnet-de-bord/`
 - **Aucun chiffre sans source** : aucun nombre n'est tapé dans une page. Les indicateurs d'avancement sont calculés depuis `seances.yml` et `concepts.csv`, et le tableau de bord indique de quel fichier ils viennent. Les résultats des séances viennent de `data/mesures.yml`, où chacun a sa source (séance et partie du cours) ; dans `seances.yml`, un chiffre se cite par `{identifiant}`, et un chiffre écrit en dur est refusé. Les identifiants (`404`, numéro de commit, `ADR-001`, n° de publication) s'écrivent en `code` ou après « n° ».
 - **Cohérence** : statuts autorisés, dates valides, une séance faite a une date et une durée en heures.
 - **Cours** : chaque chapitre du dossier `cours/` est déclaré par sa séance (champ `cours` de `seances.yml`) sous le nom `cours/seance-NN-cours.md`, et chaque chapitre déclaré existe. La barre latérale, qui lit le dossier, et le plan du cours, qui lit `seances.yml`, disent donc toujours la même chose.
+- **Notions** : chaque fichier du dossier `notions/`, sauf le sommaire, est le cours d'une notion. Son nom s'écrit en minuscules sans accent, avec chiffres et tirets, et ne sert qu'à une page ; son en-tête donne un titre et une date d'ajout valide ; ni le titre ni le sous-titre ne mentionnent d'autre projet.
 - **Veille** : chaque lien a une adresse https publique (ni adresse IP, ni nom de réseau privé), unique et d'origine (ni redirection, ni lien raccourci, ni paramètre de suivi comme `utm_source`), un titre, un thème déclaré, une date d'ajout, un type, une langue (`fr` ou `en`) et un résumé ; aucun texte ne mentionne d'autre projet.
 
 ## Ajouter une séance
@@ -37,6 +39,26 @@ Adresse du site : `https://maryleneh.github.io/carnet-de-bord/`
 3. Mettre à jour les niveaux des concepts dans `data/concepts.csv` (dates de vu, pratiqué, maîtrisé).
 4. Ajouter le chapitre du cours, `cours/seance-NN-cours.md`, et la page `seances/seance-NN.qmd`. Le chapitre entre seul dans la barre latérale du cours.
 5. Renseigner `cours: /cours/seance-NN-cours.md` pour la séance dans `data/seances.yml` : elle passe à « rédigé » dans le plan du cours et dans « Où j'en suis ». Si ce champ manque, la validation échoue.
+
+## Ajouter une notion
+
+Un cours de notion est un fichier Markdown déposé dans `notions/`. Son nom reprend le titre, en minuscules, sans accent, avec des tirets (`intervalle-de-wilson.md`) : il fait l'adresse de la page et sa place dans la liste. Son en-tête le décrit :
+
+```yaml
+---
+title: "Intervalle de Wilson"
+subtitle: "Lire un taux mesuré sur peu d'essais"   # facultatif : le résumé affiché sur sa carte
+date: 2026-11-23                                    # date d'ajout
+toc: true                                           # table des matières, utile pour un cours long
+toc-depth: 2
+---
+```
+
+Le fichier entre seul dans la rubrique : une carte sur la page **Notions** et une ligne dans la barre latérale, dans le même ordre, celui des noms de fichiers. Aucune autre déclaration n'est nécessaire.
+
+Le texte s'écrit comme un chapitre du cours. Un encadré commence par son libellé en gras, dans une citation : `> **Définition.**`, `> **Formule.**`, `> **Exemple.**`, `> **Attention.**`, `> **À retenir.**` ou `> **En bref.**`.
+
+Le carnet est public : une notion s'illustre avec les exemples du laboratoire, ou avec des exemples inventés pour l'occasion.
 
 ## Ajouter un lien de veille
 

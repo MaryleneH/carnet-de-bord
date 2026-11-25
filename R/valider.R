@@ -195,6 +195,40 @@ valider_cours <- function(seances, dossier_cours) {
   }
 }
 
+# ── Notions (dossier notions/) ───────────────────────────────────────────────
+
+# Le nom du fichier fait l'adresse de la page : minuscules, chiffres et tirets.
+MOTIF_FICHIER_NOTION <- "^[a-z0-9]+(-[a-z0-9]+)*\\.(md|qmd)$"
+
+# Tout fichier du dossier notions/, sauf le sommaire, est le cours d'une notion.
+# La rubrique le liste d'après son en-tête : il lui faut un titre et une date.
+valider_notions <- function(notions) {
+  for (n in notions) {
+    f <- paste0("notions/", n$fichier)
+    if (!grepl(MOTIF_FICHIER_NOTION, n$fichier)) {
+      arreter_regle(f, "nom du fichier", "minuscules sans accent, chiffres et tirets, comme intervalle-de-wilson.md")
+    }
+    if (!is.character(n$titre) || length(n$titre) != 1 || !nzchar(n$titre)) {
+      arreter_regle(f, "en-tête", "titre manquant (title)")
+    }
+    if (is.null(n$date) || !est_date_valide(n$date)) {
+      arreter_regle(f, "en-tête", "date manquante ou invalide (date, au format AAAA-MM-JJ)")
+    }
+    if (!is.null(n$resume) && !(is.character(n$resume) && length(n$resume) == 1)) {
+      arreter_regle(f, "en-tête", "sous-titre invalide (subtitle)")
+    }
+    if (any(grepl("intern", c(n$titre, n$resume), ignore.case = TRUE))) {
+      arreter_regle(f, "en-tête", MESSAGE_CONFIDENTIALITE)
+    }
+  }
+  # idempotence.md et idempotence.qmd donneraient la même page
+  noms <- tools::file_path_sans_ext(vapply(notions, function(n) n$fichier, character(1)))
+  if (anyDuplicated(noms) > 0) {
+    arreter_regle(sprintf("notions/%s", notions[[anyDuplicated(noms)]]$fichier), "nom du fichier",
+                  "une autre notion porte déjà ce nom")
+  }
+}
+
 # ── Veille (veille.yml) ──────────────────────────────────────────────────────
 
 TYPES_LIENS <- c(
@@ -354,5 +388,6 @@ valider_tout <- function(dossier = "data") {
   valider_cours(d$seances, file.path(dirname(dossier), "cours"))
   valider_concepts(d$concepts)
   valider_veille(d$veille)
+  valider_notions(d$notions)
   invisible(d)
 }
