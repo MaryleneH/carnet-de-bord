@@ -3,7 +3,7 @@ title: "Méthode"
 subtitle: "Les principes du laboratoire, tels que les cours les énoncent, séance après séance"
 ---
 
-Le laboratoire suit six principes. Chacun est cité ici avec les mots du cours qui l'a établi : les trois premiers viennent du [cours de la séance 1](/cours/seance-01-cours.md), les trois suivants du [cours de la séance 2](/cours/seance-02-cours.md).
+Le laboratoire suit neuf principes. Chacun est cité ici avec les mots du cours qui l'a établi : les trois premiers viennent du [cours de la séance 1](/cours/seance-01-cours.md), les trois suivants du [cours de la séance 2](/cours/seance-02-cours.md), les trois derniers du [cours de la séance 3](/cours/seance-03-cours.md).
 
 ## Mesurer avant de construire
 
@@ -84,6 +84,42 @@ Les mesures répartissent le travail entre le serveur, le modèle et le code. La
 :::
 
 [Chapitres 13 à 15 du cours de la séance 2](/cours/seance-02-cours.md#chapitre-14){.lien-cours}
+
+## Vérifier l'étalon avant de mesurer
+
+Une mesure ne vaut que ce que vaut son étalon. Au cas n° 7 du banc, l'étalon était la fiche de faits contre laquelle le code contrôle chaque nombre : « La fiche est l'étalon : elle se vérifie contre la source avant toute mesure. » Un libellé qui omet son champ suffit à faire certifier une phrase fausse.
+
+La vérification a ses règles. « Sur des nombres arrondis, on raisonne par intervalles » : un écart d'un dixième ne prouve rien, une partie plus grande que son tout prouve une erreur. Et l'on regarde un résultat là où il servira : « Un fichier se vérifie là où il sera lu. »
+
+::: {.callout-note title="À retenir"}
+On vérifie la source avant l'instrument, et l'instrument avant la mesure. Sur des nombres arrondis, on calcule l'intervalle avant de conclure. Un fichier destiné à GitHub se vérifie sur GitHub, pas dans le terminal.
+:::
+
+[Chapitres 3 et 10 du cours de la séance 3](/cours/seance-03-cours.md#chapitre-3){.lien-cours}
+
+## Le code garantit les chiffres, l'humain le sens
+
+La séance 3 tient en une phrase : « le code garantit les chiffres, l'humain garantit le sens ». Elle l'a montré deux fois. D'abord par un résultat parfait, qui mesurait surtout la recopie d'une fiche déjà formatée : « Un résultat trop beau se vérifie : on calcule ce qu'il borne, puis on lit des sorties. » Ensuite par un paragraphe sans anomalie pour le code, mais faux : il présentait une grandeur comme une partie d'une autre. Le code vérifie que chaque chiffre est dans la fiche, pas qu'il est attaché à la bonne grandeur.
+
+D'où la place de l'humain dans le graphe : la décision de publier n'est pas automatisée, et elle se prend en lisant. Pour le code, « aucune anomalie » veut dire « chiffres conformes », pas « texte publiable ».
+
+::: {.callout-note title="À retenir"}
+Le code contrôle la forme et la traçabilité des chiffres ; il ne voit ni la grandeur à laquelle un chiffre est attaché, ni la réponse à la question. On lit chaque texte avant de le valider, et une remarque précise suffit à le faire corriger.
+:::
+
+[Chapitres 6, 11 et 12 du cours de la séance 3](/cours/seance-03-cours.md#chapitre-6){.lien-cours}
+
+## Une étape refaite ne refait pas son effet
+
+Un agent s'arrête : pour attendre une décision, ou parce que son processus meurt. « Le graphe n'attend pas dans un processus : il attend dans sa sauvegarde. » À la reprise, LangGraph relance l'étape interrompue depuis son début ; il faut donc pouvoir la refaire sans dommage. Deux outils s'en chargent : « La sauvegarde garde les étapes finies ; le journal garde les appels faits. » Et une règle d'écriture : rien avant `interrupt()` qu'on ne puisse refaire sans dommage.
+
+Cette propriété ne se suppose pas, elle se prouve : « Une reprise qui n'a jamais été éprouvée n'est qu'une promesse. » D'où la panne provoquée exprès, et les tests du graphe.
+
+::: {.callout-note title="À retenir"}
+Une étape relancée doit avoir le même effet qu'une seule exécution : c'est l'idempotence. La sauvegarde garde les étapes finies, le journal les appels faits. Une reprise se prouve en tuant le processus, puis en vérifiant que rien n'a été refait.
+:::
+
+[Chapitres 9 et 12 du cours de la séance 3](/cours/seance-03-cours.md#chapitre-9){.lien-cours}
 
 ## Dans ce carnet
 
