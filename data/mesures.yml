@@ -116,6 +116,36 @@ mesures:
     unite: "%"
     source: {seance: 2, partie: chapitre 7}
 
+  - id: duree-seance-03
+    libelle: Durée de la séance
+    valeur: 3
+    unite: h
+    source: {seance: 3, partie: en-tête du cours}
+
+  - id: essais-cas-ecodef
+    libelle: Essais du cas des consignes EcoDef, tous réussis
+    valeur: 60
+    unite: essais
+    source: {seance: 3, partie: annexe A}
+
+  - id: borne-sans-echec-vingt
+    libelle: Taux d'échec encore possible après vingt essais sans échec (borne à 95 %)
+    valeur: 13.9
+    unite: "%"
+    source: {seance: 3, partie: chapitre 6}
+
+  - id: paquets-installes
+    libelle: Paquets installés pour deux dépendances choisies
+    valeur: 41
+    unite: paquets
+    source: {seance: 3, partie: chapitre 8}
+
+  - id: limite-recursion-langgraph
+    libelle: Nombre maximal de super-étapes d'une exécution, par défaut, dans LangGraph
+    valeur: 10007
+    unite: super-étapes
+    source: {seance: 3, partie: chapitre 9}
+
 # Formules, citées telles que le cours les donne.
 formules:
   - id: modele-cout
@@ -257,3 +287,80 @@ tableaux:
       - ["Vitesse d'écriture des appels courts, quartiles", "123 et 169 tokens par seconde"]
       - ["Modèle de coût", "durée ≈ 0,25 s + tokens lus / 16 238 + tokens écrits / 196"]
     note: "Lire reste bien moins cher qu'écrire : la durée d'un appel tient surtout à la longueur de la réponse."
+
+  # Séance 3 : résultats du cas des consignes EcoDef et du graphe, recopiés de l'annexe A du cours.
+  - id: cas-ecodef-campagne
+    titre: Le cas des consignes EcoDef
+    source: {seance: 3, partie: annexe A}
+    colonnes: [Élément, Valeur]
+    lignes:
+      - ["Campagne", "`2026-11-24-gemma4-26b-moe-ecodef`"]
+      - ["Conditions", "`fiche`, `outil`, `anglais`"]
+      - ["Sujets par condition", 20]
+      - ["Essais", 60]
+      - ["Appels au serveur", "60, envoyés en 58 s"]
+      - ["Réponses coupées, refus, réponses en anglais", "0, 0, 0"]
+    note: "Les sujets viennent d'une seule publication, l'EcoDef n° 273. Sa fiche de faits a été vérifiée contre le PDF avant le préenregistrement. Le plan et les paris ont été commités avant le premier appel, les mesures avant leur lecture."
+
+  - id: cas-ecodef-consignes
+    titre: Les six consignes, dans chaque condition
+    source: {seance: 3, partie: annexe A}
+    colonnes: [Consigne, "`fiche`", "`outil`", "`anglais`"]
+    lignes:
+      - ["Aucun chiffre hors de la fiche (`fidelite`)", "20/20", "20/20", "20/20"]
+      - ["Un identifiant après chaque chiffre (`identifiants`)", "20/20", "20/20", "20/20"]
+      - ["Montants en Md€ (`format_md`)", "20/20", "20/20", "20/20"]
+      - ["Évolutions signées (`signes`)", "20/20", "20/20", "20/20"]
+      - ["Texte brut (`sans_markdown`)", "20/20", "20/20", "20/20"]
+      - ["Ligne de source (`source`)", "20/20", "20/20", "20/20"]
+      - ["Les six à la fois", "20/20", "20/20", "20/20"]
+    note: "Chaque 20/20 a pour intervalle de Wilson [83,9 % ; 100 %] et laisse encore possible un taux d'échec de {borne-sans-echec-vingt}. Aucune paire discordante entre conditions (test exact de McNemar, p = 1). Surtout, le modèle a recopié une fiche qui donnait déjà chaque valeur au format demandé : le cas a mesuré la recopie autant que l'obéissance."
+
+  - id: cas-ecodef-paris
+    titre: Les paris, écrits avant la mesure
+    source: {seance: 3, partie: annexe A}
+    colonnes: [Mesure en condition `fiche`, Mon pari, Pari de Claude, Résultat]
+    lignes:
+      - ["Aucun chiffre hors de la fiche", "18/20", "17/20", "20/20"]
+      - ["Un identifiant après chaque chiffre", "20/20", "13/20", "20/20"]
+      - ["Montants en Md€", "20/20", "16/20", "20/20"]
+      - ["Évolutions signées", "20/20", "14/20", "20/20"]
+      - ["Texte brut", "17/20", "19/20", "20/20"]
+      - ["Ligne de source", "19/20", "17/20", "20/20"]
+      - ["Les six à la fois", "16/20", "6/20", "20/20"]
+    note: "Mes paris, écrits par intuition, étaient les plus proches du résultat. Ceux de Claude supposaient un modèle qui rédige en prose libre ; le modèle a recopié la fiche."
+
+  - id: cas-ecodef-repetition
+    titre: La répétition contre le faux serveur
+    source: {seance: 3, partie: annexe A}
+    colonnes: [Consigne, "`fiche`", "`outil`", "`anglais`"]
+    lignes:
+      - ["Fidélité", 18, 18, 19]
+      - ["Identifiants", 15, 17, 18]
+      - ["Md€", 15, 17, 18]
+      - ["Signes", 19, 18, 19]
+      - ["Sans Markdown", 20, 17, 18]
+      - ["Source", 19, 19, 17]
+      - ["Les six à la fois", 10, 13, 11]
+    note: "Réussites sur vingt essais par condition. Chaque ligne compte au moins un échec : chaque vérificateur trouve les fautes que le faux serveur glisse exprès."
+
+  - id: fiche-intervalles
+    titre: La fiche de faits, vérifiée par intervalles
+    source: {seance: 3, partie: annexe A}
+    colonnes: [Rapport, Intervalle compatible avec les arrondis, Valeur publiée]
+    lignes:
+      - ["`F09 / F03` = 17,7 / 25,1", "70,2 % à 70,9 %", "`F10` = 70,7 % : compatible"]
+      - ["`F03 / F01` = 25,1 / 30,3", "82,5 % à 83,1 %", "`F04` = 82,9 % : compatible"]
+      - ["`F15 × F09` = 90,6 % × 17,7", "au moins 15,98 Md€", "`F11` au plus 15,85 Md€ : contradiction"]
+      - ["`F11 / F09` = 15,8 / 17,7", "88,7 % à 89,8 %", "90,6 % dans un texte de `Q2` : faux"]
+    note: "Un écart d'un dixième ne prouve rien ; une partie plus grande que son tout prouve une erreur. Ici, `F11` omettait le mot « privées »."
+
+  - id: graphe-fils
+    titre: Le graphe, fil par fil
+    source: {seance: 3, partie: annexe A}
+    colonnes: [Fil, Déroulé, Appels au modèle]
+    lignes:
+      - ["`essai`, sur le faux serveur", "faute corrigée seule au tour 2 ; remarque ; validé au tour 3", 3]
+      - ["`q1-premier`", "aucune anomalie au tour 1, mais réponse en deuxième phrase ; remarque ; validé au tour 2", 2]
+      - ["`panne-q2`", "processus tué, repris sans second appel ; erreur de contexte au tour 1 ; remarque ; validé au tour 2", 2]
+    note: "Les cinq tests du graphe passent : arrêt humain, décisions prises dans d'autres processus, panne dans `rediger`, panne dans `verifier`, rejeu sans serveur ni clé."

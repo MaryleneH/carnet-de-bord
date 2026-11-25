@@ -1,0 +1,12 @@
+---
+title: "Consignes EcoDef et graphe d'états : rédiger, vérifier, valider"
+subtitle: "Séance du laboratoire"
+toc: true
+toc-depth: 2
+---
+
+```{r}
+#| output: asis
+source("R/pages.R", encoding = "UTF-8")
+cat(page_seance(charger(), "labo-03"))
+```

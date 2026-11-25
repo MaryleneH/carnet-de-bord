@@ -262,24 +262,219 @@ seances:
         detail: séance et cours mis à jour, c'est cette page
         statut: fait
 
-  # Plan prévisionnel du laboratoire (repris de l'ancien plan_labo.csv).
   - id: labo-03
     projet: labo
     numero: 3
     semaine: 1
-    titre: "Maîtriser état, nœuds, arêtes et arrêt humain"
+    date: 2026-11-25
+    titre: Consignes EcoDef et graphe d'états
+    sous_titre: rédiger, vérifier, valider
+    statut: fait
+    duree: duree-seance-03
+    objectif: >-
+      Deux parties. D'abord mesurer si le modèle respecte, toutes à la fois,
+      six consignes de rédaction tirées d'une publication EcoDef : le cas n° 7
+      du banc, préenregistré, sur une fiche de faits vérifiée contre la
+      publication. Puis découvrir LangGraph et construire la première pièce de
+      l'agent : un graphe d'états à trois nœuds, `rediger`, `verifier` et
+      `valider`, qui sauvegarde son état à chaque étape et s'arrête pour une
+      décision humaine. Critère de fin : le processus est tué en pleine
+      rédaction, puis repris sans perte ni appel en double. Ce critère est
+      atteint.
+    livrables:
+      - "La fiche de faits de l'EcoDef n° 273, vérifiée contre la publication : `redaction/fiche_ecodef273.json`"
+      - "Le cas n° 7 du banc, préenregistré, mesuré et lu : `banc/PLAN.md` et `mesures/`"
+      - "L'`ADR-002`, qui dit qui se charge de chaque consigne : `docs/adr/0002-consignes-de-redaction.md`"
+      - "Les versions épinglées et figées : `requirements.txt` et `requirements-fige.txt`"
+      - "Le graphe `graphe/`, son dessin `docs/graphe.md` et ses cinq tests `verifier_graphe.py`"
+      - "Deux textes validés, avec leurs faits, leurs décisions et leurs preuves : `sorties/`"
+      - "L'`ADR-003` : `docs/adr/0003-graphe-et-enveloppe.md`"
+    lien: /seances/seance-03.qmd
+    cours: /cours/seance-03-cours.md
+    # Journal de la séance, repris du cours (fil rouge et chapitre 14)
+    journal:
+      fait: >-
+        Mesure des consignes de rédaction d'EcoDef, préenregistrée puis lue
+        avec méfiance, et décisions consignées dans l'`ADR-002` ; puis
+        découverte de LangGraph et construction d'un graphe d'états qui
+        rédige, fait contrôler les chiffres par le code, attend la décision
+        humaine et survit à une panne provoquée, avec l'`ADR-003`.
+      appris:
+        - "Le code garantit les chiffres, l'humain garantit le sens : un texte peut passer tous les contrôles et rester faux."
+        - "Vérifier l'étalon avant de mesurer : une fiche de faits se confronte à sa source, libellé par libellé."
+        - "Sur des nombres arrondis, raisonner par intervalles avant de conclure à une contradiction."
+        - "Lire un résultat parfait avant de le croire : {essais-cas-ecodef} essais réussis laissent encore possible un taux d'échec de {borne-sans-echec-vingt} par condition, et un modèle peut simplement recopier le format qu'on lui montre."
+        - "Épingler ses dépendances et figer tout ce qui est installé : deux bibliothèques choisies en ont installé {paquets-installes}."
+        - "LangGraph : un état, des nœuds qui rendent ce qu'ils changent, des arêtes et des réducteurs ; une sauvegarde à chaque super-étape, sous le nom d'un fil."
+        - "Le graphe attend la décision humaine dans sa sauvegarde, pas dans un processus ; à la reprise, le nœud repart de son début."
+        - "Ne rien faire avant `interrupt()` qu'on ne puisse refaire sans dommage."
+        - "Borner soi-même les tours d'un graphe : la limite par défaut de LangGraph est de {limite-recursion-langgraph} super-étapes."
+        - "Reprendre après une panne avec une sauvegarde et un journal : relancer une étape ne refait pas son effet coûteux. Et le prouver en provoquant la panne."
+        - "Vérifier un fichier là où il sera lu."
+      suite: >-
+        La prochaine séance pose le cœur de la garantie sans modèle : un
+        registre de faits produit par du code, puis le rendu, où le code écrit
+        lui-même les chiffres à partir des identifiants que cite le modèle.
+    # Annexe B du cours
+    incidents:
+      - incident: L'étiquette `jour-2` manquait sur GitHub
+        cause: "`git push` n'envoie pas les étiquettes"
+        correction: Étiquette posée, puis poussée explicitement
+        chapitre: 1
+      - incident: Premières lignes du journal décrivant le code souhaité, pas le code réel
+        cause: "Un arrondi et « milliards d'euros » supposés acceptés par la vérification"
+        correction: "Chaque consigne essayée sur des phrases choisies, avec le vrai vérificateur ; une règle se discute avant le préenregistrement"
+        chapitre: 2
+      - incident: Deux erreurs du programme sur la fiche de faits
+        cause: "Un écart d'arrondi pris pour un autre champ (`F10`) ; le mauvais fait soupçonné (`F15` au lieu de `F11`)"
+        correction: "Arithmétique d'intervalles et lecture des figures de la publication ; `F11` à `F14` précisés « privées »"
+        chapitre: 3
+      - incident: Paris écrits sans unité
+        cause: Des nombres seuls, lisibles de plusieurs façons
+        correction: Chaque pari réécrit avec son unité, avant le commit du plan
+        chapitre: 4
+      - incident: "`no changes added to commit`"
+        cause: Bloc de commit relancé, fichiers déjà commités au premier passage
+        correction: "Rien à faire ; `git log` le confirme"
+        chapitre: 5
+      - incident: Port du faux serveur déjà occupé
+        cause: Le faux serveur de la veille était resté allumé
+        correction: "`pgrep -af faux_serveur`, puis `pkill -f faux_serveur`"
+        chapitre: 11
+      - incident: Commande lancée hors du dépôt
+        cause: "Un `cd ..` de trop"
+        correction: "`cd ~/work/assistant-etude-sourcee`"
+        chapitre: 11
+      - incident: Sortie de l'essai introuvable dans l'explorateur
+        cause: "`/tmp` est hors de l'espace de travail de VS Code"
+        correction: "`ls` et `cat`, ou « File: Open File… »"
+        chapitre: 11
+      - incident: Chemin du journal faux dans la sortie de l'essai
+        cause: "Chemin écrit en dur dans la fonction `exporter`"
+        correction: "Correctif `10f7c4c`, les cinq tests du graphe toujours verts"
+        chapitre: 11
+      - incident: Fil déjà existant au lancement
+        cause: Le fil avait été lancé plus tôt
+        correction: "`etat` et `historique`, puis `decider` ; `lancer` refuse d'écraser un fil"
+        chapitre: 11
+      - incident: "Question « je valide ? » posée sur un simple résumé"
+        cause: "`etat` ne montre pas le texte, et le code ne juge pas le sens"
+        correction: Afficher le texte, puis le relire avec trois questions avant de décider
+        chapitre: 11
+      - incident: Texte de `Q2` faux, sans anomalie pour le code
+        cause: "Le modèle a fusionné deux faits de champs différents (`F11` et `F15`)"
+        correction: Remarque humaine nommant les deux défauts, suivie en un tour
+        chapitre: 12
+      - incident: Explication incomplète de la reprise
+        cause: "« ne relance pas le tour » : en fait, le nœud est relancé, mais l'appel au modèle n'est pas refait"
+        correction: Mécanisme en trois temps ajouté au journal
+        chapitre: 12
+      - incident: Étiquette `jour-3` refusée au premier envoi
+        cause: Une branche et une étiquette de même nom
+        correction: "`git push origin tag jour-3`"
+        chapitre: 13
+      - incident: Dessin du graphe illisible sur GitHub
+        cause: "Codes invisibles du terminal de VS Code, capturés par une redirection de groupe"
+        correction: Correctif d'une ligne au début de la séance suivante
+        chapitre: 10
+    # Annexe C du cours. Messages repris des commits, selon la règle du carnet :
+    # un numéro s'écrit après « n° », un identifiant qui contient des chiffres en `code`.
+    commits:
+      - hash: de67afe
+        message: "refactor: sondes du jour n° 1 rangées dans `sondes/`, rejouées à l'identique"
+      - hash: 24a9ba2
+        message: "docs: plan du cas n° 7 (consignes EcoDef) et prédictions"
+      - hash: 0fd6657
+        message: "chore: mesures du cas n° 7 (campagne complémentaire, consignes EcoDef)"
+      - hash: 059a1a6
+        message: "docs: `ADR-002`, consignes de rédaction (cas n° 7), et lecture du cas"
+      - hash: bb02d66
+        message: "build: LangGraph `1.2.24` et sauvegarde SQLite `3.1.3`, versions épinglées"
+      - hash: 1bb1d07
+        message: "feat: graphe d'états rediger, verifier, valider, et son dessin"
+      - hash: d08e830
+        message: "docs: première rédaction par le graphe (`Q1`), corrigée puis validée"
+      - hash: d85a22a
+        message: "docs: panne et reprise du graphe (`Q2`), texte corrigé puis validé"
+      - hash: 10f7c4c
+        message: "fix: la sortie du graphe indique le vrai chemin du journal"
+      - hash: 4751874
+        message: "docs: `ADR-003` accepté, et les cinq tests du graphe"
+      - hash: ebb459d
+        message: "docs: clôture du jour n° 3 (journal, README)"
+      - hash: 19446e4
+        message: "Merge pull request n° 3 from `MaryleneH/jour-3` (commit de fusion)"
+    a_cocher:
+      - Sondes de la séance précédente rangées, rejouées à l'identique
+      - Fiche de faits vérifiée contre la publication avant le préenregistrement
+      - Plan et paris commités avant le premier appel
+      - "Répétition contre le faux serveur : chaque consigne trouve des fautes"
+      - Mesures commitées avant d'être lues
+      - "`ADR-002` écrit et commité"
+      - Versions épinglées et figées
+      - Les cinq tests du graphe passent
+      - "Panne provoquée à la main : processus tué, appel non renvoyé à la reprise"
+      - Deux fils validés sur le vrai serveur, chacun après une remarque
+      - "`ADR-003` accepté"
+      - "Cas n° 7 rejoué sans réseau ni clé : identique"
+      - "Contrôle de la clé sur tout l'historique : aucune occurrence"
+      - Journal de la séance et README à jour
+      - Branche `jour-3` fusionnée par un commit de fusion
+      - Étiquette `jour-3` posée sur le commit de fusion et poussée
+    points_en_attente:
+      - intitule: Cas « consignes EcoDef »
+        detail: "mesuré et lu à cette séance, c'est le cas n° 7"
+        statut: fait
+      - intitule: Scripts de mesure de la première séance
+        detail: rangés dans `sondes/`, déplacement validé par rejeu
+        statut: fait
+      - intitule: Usage du résultat d'un outil
+        detail: "mesuré au cas n° 7 : la fidélité reste entière quand les faits arrivent par un outil ; à revoir dans l'agent"
+        statut: fait
+      - intitule: Dessin du graphe
+        detail: corriger `docs/graphe.md`, que GitHub n'affiche pas, au début de la prochaine séance
+        statut: en attente
+      - intitule: Hypothèse de la recopie
+        detail: refaire le cas n° 7 avec une fiche aux valeurs non formatées, pour départager recopie et obéissance
+        statut: en attente
+      - intitule: Plafond de tokens réglable
+        detail: un paramètre du banc, pour rejouer le cas des consignes génériques avec un plafond suffisant
+        statut: en attente
+      - intitule: Schéma imposé
+        detail: "une campagne plus longue avant toute production, comme le prévoit l'`ADR-001`"
+        statut: en attente
+      - intitule: Budget de contexte
+        detail: une campagne plus longue à la taille donnée par la règle, avant de relever le budget
+        statut: en attente
+      - intitule: Accès à Albert
+        detail: relancer `sondes.capacites` et `sondes.limites` avec ses variables
+        statut: en attente
+      - intitule: Données de l'EcoDef n° 273
+        detail: chercher un fichier plus précis que les chiffres arrondis de la publication
+        statut: en attente
+      - intitule: Clé de l'API
+        detail: à ranger dans les secrets d'Onyxia
+        statut: en attente
+      - intitule: Carnet de bord
+        detail: séance et cours mis à jour, c'est cette page
+        statut: fait
+
+  # Plan prévisionnel du laboratoire (repris de l'ancien plan_labo.csv).
+  - id: labo-04
+    projet: labo
+    numero: 4
+    semaine: 1
+    titre: Poser le cœur de la garantie sans modèle
     statut: à planifier
     objectif: >-
-      Mesurer d'abord le cas « consignes EcoDef », préenregistré et lu comme les
-      autres cas du banc ; puis maîtriser le graphe d'états de LangGraph : un état
-      partagé, des nœuds, des arêtes, un point de reprise et un arrêt pour
-      validation humaine.
+      Transformer la fiche de faits, saisie à la main, en registre de faits
+      produit par du code : identifiant, valeur, unité, source et script de
+      calcul. Puis faire écrire les chiffres par le code : le modèle cite des
+      identifiants, le rendu les remplace par les valeurs au bon format, et le
+      nœud `verifier` devient le contrôleur.
     livrables:
-      - Le cas « consignes EcoDef » du banc, mesuré et lu
-      - Graphe à trois nœuds avec checkpoint SQLite
-  - {id: labo-04, projet: labo, numero: 4, semaine: 1, statut: prévu,
-     titre: Poser le cœur de la garantie sans modèle,
-     livrables: [Registre de faits, Rendu et contrôleur]}
+      - Registre de faits
+      - Rendu et contrôleur
   - {id: labo-05, projet: labo, numero: 5, semaine: 1, statut: prévu,
      titre: Traverser les neuf étapes,
      livrables: [Graphe complet, "Note d'une page en `.docx`"],
