@@ -125,6 +125,14 @@ test_that("statut, date et durée des séances sont cohérents", {
   expect_error(valider_tout(dir), "absent de mesures.yml")
 })
 
+test_that("les incidents ne sont plus admis dans les données", {
+  dir <- modifier_yaml(copier_fixture_valide(), "seances.yml", function(x) {
+    x$seances[[1]]$incidents <- list(list(incident = "Un incident", cause = "Une cause", correction = "Une correction", chapitre = 1L))
+    x
+  })
+  expect_error(valider_tout(dir), "champ incidents")
+})
+
 test_that("le plan du cours et la barre latérale citent les mêmes chapitres", {
   # un chapitre déclaré existe
   dir <- copier_fixture_valide()

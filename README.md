@@ -33,7 +33,7 @@ Adresse du site : `https://maryleneh.github.io/carnet-de-bord/`
 ## Ajouter une séance
 
 1. Ajouter les chiffres de la séance dans `data/mesures.yml`, chacun avec sa source.
-2. Compléter la séance dans `data/seances.yml` (statut, date, durée, livrables, journal, incidents, points en attente).
+2. Compléter la séance dans `data/seances.yml` (statut, date, durée, livrables, journal, points en attente).
 3. Mettre à jour les niveaux des concepts dans `data/concepts.csv` (dates de vu, pratiqué, maîtrisé).
 4. Ajouter le chapitre du cours, `cours/seance-NN-cours.md`, et la page `seances/seance-NN.qmd`. Le chapitre entre seul dans la barre latérale du cours.
 5. Renseigner `cours: /cours/seance-NN-cours.md` pour la séance dans `data/seances.yml` : elle passe à « rédigé » dans le plan du cours et dans « Où j'en suis ». Si ce champ manque, la validation échoue.

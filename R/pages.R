@@ -646,23 +646,6 @@ resultats <- function(d, s) {
   paste0(paste(blocs, collapse = ""), paste(formules, collapse = ""))
 }
 
-incidents <- function(d, s) {
-  items <- vapply(s$incidents, function(i) {
-    paste0(
-      "::: {.incident}\n\n",
-      "**", remplacer_references(i$incident, d), "**\n\n",
-      "Cause\n:   ", remplacer_references(i$cause, d), "\n\n",
-      "Correction\n:   ", remplacer_references(i$correction, d), "\n\n",
-      sprintf("[Chapitre %d du cours](%s#chapitre-%d){.incident-chapitre}\n\n", as.integer(i$chapitre), s$cours, as.integer(i$chapitre)),
-      ":::\n\n"
-    )
-  }, character(1))
-  paste0(
-    "::: {.incidents}\n\n", paste(items, collapse = ""), ":::\n\n",
-    ligne_source(d, list(seance = s$numero, partie = "annexe B")), "\n\n"
-  )
-}
-
 cloture <- function(d, s) {
   commits <- vapply(s$commits, function(co) paste0("`", co$hash, "` ", co$message), character(1))
   a_cocher <- vapply(s$a_cocher, function(x) paste0("[ ] ", x), character(1), USE.NAMES = FALSE)
@@ -683,7 +666,6 @@ page_seance <- function(d, id) {
     "Durée\n:   ", duree_texte(s, d), "\n\n:::\n\n",
     "## Objectif {#objectif}\n\n", remplacer_references(s$objectif, d), "\n\n",
     "## Résultats {#resultats}\n\n", resultats(d, s),
-    "## Incidents et corrections {#incidents}\n\n", incidents(d, s),
     "## Commits et points en attente {#cloture}\n\n", cloture(d, s),
     "## Livrable {#livrable}\n\n", liste_md(livrables_de(s, d)), "\n\n",
     if (!is.null(s$cours)) sprintf("Le détail, chapitre par chapitre, est dans le [cours de la séance](%s).\n\n", s$cours) else ""

@@ -409,7 +409,7 @@ footer.footer, footer.footer .nav-footer { background-color: var(--c-fond); }
   color: var(--c-texte-doux);
 }
 
-.source, .lien-cours, .incident-chapitre {
+.source, .lien-cours {
   font-size: 0.84rem;
   color: var(--c-texte-doux);
 }
@@ -509,20 +509,20 @@ main.content .carte :is(h2, h3) {
 .carte li + li { margin-top: 0.35rem; }
 
 // Fiches « terme : définition » (statut, durée, livrables, cause, correction)
-.carte dl, .incident dl, .seance-entete dl {
+.carte dl, .seance-entete dl {
   display: grid;
   grid-template-columns: max-content minmax(0, 1fr);
   gap: 0.45rem 1.1rem;
   margin: 0 0 0.6rem;
 }
-.carte dt, .incident dt, .seance-entete dt {
+.carte dt, .seance-entete dt {
   padding-top: 0.15rem;
   font-size: 0.86rem;
   font-weight: 600;
   color: var(--c-texte-doux);
 }
-.carte dd, .incident dd, .seance-entete dd { margin: 0; }
-.carte dd p, .incident dd p, .seance-entete dd p { margin: 0; }
+.carte dd, .seance-entete dd { margin: 0; }
+.carte dd p, .seance-entete dd p { margin: 0; }
 .carte dd ul { margin: 0; padding-left: 1.1rem; }
 
 // ── Tableau de bord : en-tête, onglets, escalier ───────────────────────────
@@ -919,22 +919,6 @@ main.content .onglet-etroit > section > h2 { margin: 2.25rem 0 1rem; font-size: 
   background-color: var(--c-fond-doux);
 }
 .seance-entete > :last-child { margin-bottom: 0; }
-
-.incidents {
-  display: grid;
-  gap: 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
-  margin-bottom: 0.6rem;
-}
-.incident {
-  min-width: 0;
-  padding: 1.1rem 1.25rem;
-  background-color: var(--c-surface);
-  border: 1.5px solid var(--c-bordure);
-  border-radius: $rayon-moyen;
-}
-.incident > p:first-child { margin-bottom: 0.6rem; }
-.incident > :last-child { margin-bottom: 0; }
 
 ul.task-list { padding-left: 0.3rem; }
 ul.task-list li input[type="checkbox"] { margin-right: 0.45rem; accent-color: var(--c-plein); }
@@ -1371,8 +1355,8 @@ h3.veille-titre a:hover::after { color: var(--c-titre); transform: translate(2px
   .rang p { grid-template-columns: minmax(0, 1fr) auto; }
   .rang .pips, .rang .barre { grid-column: 1 / -1; order: 3; }
   .rang .pip { width: 1.3rem; height: 1.3rem; border-radius: 0.45rem; }
-  .carte dl, .incident dl, .seance-entete dl { grid-template-columns: minmax(0, 1fr); gap: 0.15rem; }
-  .carte dt, .incident dt, .seance-entete dt { padding-top: 0.35rem; }
+  .carte dl, .seance-entete dl { grid-template-columns: minmax(0, 1fr); gap: 0.15rem; }
+  .carte dt, .seance-entete dt { padding-top: 0.35rem; }
   main.content h2.veille-theme-titre { font-size: 1.55rem; }
   main.content h3.veille-titre { font-size: 1.25rem; }
   .veille-lien { padding: 1.2rem 1.15rem 1.1rem; border-radius: 1.35rem; }
