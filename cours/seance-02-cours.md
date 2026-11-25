@@ -559,7 +559,7 @@ Avec `impose`, le serveur applique un **décodage contraint** : à chaque token,
 
 `impose_contre` distingue deux explications d'un JSON conforme : le modèle obéit, ou le serveur le contraint. Si la contrainte est réelle, une consigne contraire ne peut pas l'emporter.
 
-Dans `banc/cas_json.py`, `diagnostic()` décide du succès : en **lecture stricte**, le texte entier doit être du JSON, et une simple clôture ```json suffit à échouer ; en **lecture tolérante**, on retire d'abord la clôture. Puis `valider()` contrôle le schéma : types, champs obligatoires, valeurs permises, aucun champ en trop. En cas d'échec, `mesurer()` fait jusqu'à deux reprises, en renvoyant au modèle son écart. Le succès retenu est la lecture stricte au premier essai.
+Dans `banc/cas_json.py`, `diagnostic()` décide du succès : en **lecture stricte**, le texte entier doit être du JSON, et une simple clôture ```` ```json ```` suffit à échouer ; en **lecture tolérante**, on retire d'abord la clôture. Puis `valider()` contrôle le schéma : types, champs obligatoires, valeurs permises, aucun champ en trop. En cas d'échec, `mesurer()` fait jusqu'à deux reprises, en renvoyant au modèle son écart. Le succès retenu est la lecture stricte au premier essai.
 
 > **Définition.** Le **décodage contraint** restreint, à chaque étape de la génération, les tokens que le modèle peut produire, pour que la sortie respecte une grammaire ou un schéma.
 
