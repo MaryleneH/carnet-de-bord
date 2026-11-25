@@ -21,7 +21,7 @@ Chaque chapitre correspond à une étape de la séance, sauf le chapitre 9, ajou
 - **Comment ça marche** : le mécanisme, avec le niveau technique nécessaire pour le comprendre vraiment.
 - **Ce que nous avons observé** : nos résultats, et ce qu'ils permettent ou non de conclure.
 - **La question posée pendant la séance** : quand une question a été posée, elle est reformulée, puis sa réponse est développée.
-- **Ce qui m'a posé problème, et ce que j'ai compris** : quand une réponse de ma part était fausse ou incomplète, elle est citée, puis corrigée. Ces sections sont souvent les plus instructives.
+- **Ce qui m'a posé problème, et ce que j'ai compris** : quand une réponse de ma part était fausse ou incomplète, elle est résumée, puis corrigée. Ces sections sont souvent les plus instructives.
 - **Pièges et bonnes pratiques** : les erreurs classiques, dont celles que nous avons commises.
 - **Pour vérifier que vous avez compris** : deux questions. Le corrigé est à l'annexe E.
 - **Références** : deux ou trois lectures, avec ce que chacune apporte. L'annexe F les rassemble.
@@ -209,7 +209,7 @@ Le tableau ci-dessus en est la réponse. Il a été obtenu en faisant passer cha
 
 ### Ce qui m'a posé problème, et ce que j'ai compris
 
-Mes deux premières lignes disaient : « `fidelite` : par exemple, un arrondi "près de 25 milliards" doit passer ; l'agent l'accepte » et « `format_md` : euros ou €, l'agent accepte ».
+Mes deux premières lignes supposaient deux choses : pour `fidelite`, qu'un arrondi comme « près de 25 milliards » passait la vérification ; pour `format_md`, qu'un montant écrit en euros, ou avec le seul signe €, était accepté.
 
 Elles décrivaient ce que je souhaitais, pas ce que fait le code : « près de 25 milliards » échoue (25 n'est pas 25,1), et « 25,1 milliards d'euros » aussi. J'ai compris la différence entre les deux questions. La première est factuelle : elle décrit le code tel qu'il est. La seconde est une décision : mon avis sur la règle y a sa place.
 
@@ -1150,12 +1150,12 @@ Il me restait `valider`, avec la même méthode.
 
 ### Ce qui m'a posé problème, et ce que j'ai compris
 
-Ma ligne disait : « lit question, brouillon, anomalies, tours, retourne decision – interrupt : on récupère decision et remarque et on refait la decision ».
+Ma ligne disait que le nœud lit `question`, `brouillon`, `anomalies` et `tours`, qu'il rend `decision`, et qu'à la reprise la décision est refaite.
 
 La lecture était juste : les quatre champs. Deux choses manquaient.
 
 - **Ce qu'il écrit.** `decision`, oui, mais aussi `decisions`, à chaque fois : la trace de ma décision, ajoutée à la liste par le réducteur. Et, selon le cas, `texte_valide` si je valide, ou `remarques` si je demande une correction. Un nœud à plusieurs `return` n'écrit pas toujours les mêmes champs.
-- **Pourquoi la relance est sans dommage.** J'avais l'idée que le nœud recommence. Mais « on refait la décision » laisse croire qu'on me la redemande. Ce n'est pas le cas : à la reprise, `interrupt()` ne s'arrête pas une seconde fois, il rend directement ma réponse. Et la relance est sûre parce qu'aucune action n'est faite avant `interrupt()`. S'il y avait, avant cette ligne, un appel au modèle ou l'envoi d'un courriel, il serait refait à chaque reprise.
+- **Pourquoi la relance est sans dommage.** J'avais l'idée que le nœud recommence. Mais dire que la décision est « refaite » laisse croire qu'on me la redemande. Ce n'est pas le cas : à la reprise, `interrupt()` ne s'arrête pas une seconde fois, il rend directement ma réponse. Et la relance est sûre parce qu'aucune action n'est faite avant `interrupt()`. S'il y avait, avant cette ligne, un appel au modèle ou l'envoi d'un courriel, il serait refait à chaque reprise.
 
 Le jouet du chapitre 9 rend ce mécanisme visible : « début du nœud » s'y affiche deux fois.
 
@@ -1279,7 +1279,7 @@ La question accompagnait la sortie d'`etat` et d'`historique` : `tours 1 ; anoma
 
 ### Ce qui m'a posé problème, et ce que j'ai compris
 
-Après avoir affiché le texte du tour 1, j'ai répondu : « ça me va ». Le texte était juste, et le valider se défendait. Mais il ne passait pas la première des trois questions : la réponse n'arrivait qu'à la deuxième phrase, après un total que la question ne demandait pas.
+Après avoir affiché le texte du tour 1, j'étais prête à le valider. Le texte était juste, et la validation se défendait. Mais il ne passait pas la première des trois questions : la réponse n'arrivait qu'à la deuxième phrase, après un total que la question ne demandait pas.
 
 J'ai compris que valider n'est pas un sentiment, c'est une lecture contre des critères. Le code m'avait dit « aucune anomalie » ; cela voulait dire « aucun chiffre hors fiche, aucun format faux », pas « texte publiable ». Et une remarque précise coûte un tour, quelques secondes.
 
@@ -1394,7 +1394,7 @@ Une maladresse demeure : « 15,8 Md€, soit une évolution de +24,0 % ». « So
 
 ### Ce qui m'a posé problème, et ce que j'ai compris
 
-À la question « pourquoi le second `grep` affiche-t-il 1, et pas 2 ? », j'ai répondu : « 1 car si meurt après l'appel ne relance pas le tour ».
+À la question « pourquoi le second `grep` affiche-t-il 1, et pas 2 ? », j'ai répondu que le tour n'était pas relancé, puisque le processus était mort après l'appel.
 
 C'était presque juste, mais pas tout à fait : le nœud `rediger` est bien relancé, depuis sa première ligne. Ce qui n'est pas refait, c'est l'appel au modèle. Le mécanisme tient en trois temps :
 
