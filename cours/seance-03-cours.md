@@ -8,7 +8,7 @@ toc-depth: 2
 
 24 et 25 novembre 2026 · deux demi-journées, trois heures de travail · serveur de modèles du SSP Cloud
 
-> **En bref.** Ce document reprend la séance 3 du laboratoire étape par étape, comme un cours. La séance a deux parties. La première mesure si le modèle respecte, toutes à la fois, six consignes de rédaction tirées d'une publication EcoDef : 60 essais, préenregistrés, et un résultat parfait qu'il a fallu lire avec méfiance. La seconde construit la première pièce de l'agent : un graphe d'états à trois nœuds qui rédige, fait vérifier les chiffres par le code, s'arrête pour une décision humaine, et survit à l'arrêt brutal de son processus. Un chapitre ajouté après la séance présente LangGraph pas à pas, sur un exemple jouet à lancer soi-même. Chaque chapitre dit ce que nous avons fait, puis pourquoi, comment cela fonctionne, ce que nous avons observé et quels pièges éviter. Les questions posées pendant la séance sont reprises telles quelles, avec leur réponse. Les chiffres viennent du rapport du banc, du journal des appels et des sorties du graphe ; ceux tirés d'articles sont attribués à leurs auteurs.
+> **En bref.** Ce document reprend la séance 3 du laboratoire étape par étape, comme un cours. La séance a deux parties. La première mesure si le modèle respecte, toutes à la fois, six consignes de rédaction tirées d'une publication EcoDef : 60 essais, préenregistrés, et un résultat parfait qu'il a fallu lire avec méfiance. La seconde construit la première pièce de l'agent : un graphe d'états à trois nœuds qui rédige, fait vérifier les chiffres par le code, s'arrête pour une décision humaine, et survit à l'arrêt brutal de son processus. Un chapitre ajouté après la séance présente LangGraph pas à pas, sur un exemple jouet à lancer soi-même. Chaque chapitre dit ce que nous avons fait, puis pourquoi, comment cela fonctionne, ce que nous avons observé et quels pièges éviter. Les questions posées pendant la séance sont reformulées, avec leur réponse. Les chiffres viennent du rapport du banc, du journal des appels et des sorties du graphe ; ceux tirés d'articles sont attribués à leurs auteurs.
 
 ## Comment lire ce cours
 
@@ -20,7 +20,7 @@ Chaque chapitre correspond à une étape de la séance, sauf le chapitre 9, ajou
 - **Pourquoi cette étape** : le problème qu'elle résout et ce qui se passerait sans elle.
 - **Comment ça marche** : le mécanisme, avec le niveau technique nécessaire pour le comprendre vraiment.
 - **Ce que nous avons observé** : nos résultats, et ce qu'ils permettent ou non de conclure.
-- **La question posée pendant la séance** : quand une question a été posée, elle est citée, puis sa réponse est développée.
+- **La question posée pendant la séance** : quand une question a été posée, elle est reformulée, puis sa réponse est développée.
 - **Ce qui m'a posé problème, et ce que j'ai compris** : quand une réponse de ma part était fausse ou incomplète, elle est citée, puis corrigée. Ces sections sont souvent les plus instructives.
 - **Pièges et bonnes pratiques** : les erreurs classiques, dont celles que nous avons commises.
 - **Pour vérifier que vous avez compris** : deux questions. Le corrigé est à l'annexe E.
@@ -199,11 +199,11 @@ Les trois dernières lignes sont les angles morts du vérificateur : la grandeur
 
 ### La question posée pendant la séance
 
-> « Quand tu dis, au début, pour chaque consigne, réponds à deux questions dans ton journal : que dois-je faire ? »
+*Que faut-il écrire dans le journal, pour chaque consigne ?*
 
 Il s'agissait d'un exercice de lecture de code, à rendre sous une forme fixe : une ligne par consigne, avec ce que vérifie le code et ce que doit faire l'agent. L'exemple de la consigne la plus simple a servi de modèle : « `source` : la dernière ligne non vide doit valoir exactement la phrase de source, et des guillemets suffisent à échouer. Si le modèle la rate, le code l'écrit lui-même : la ligne est connue d'avance. »
 
-> « Donne des exemples de fidélité. »
+*Quels exemples permettent de comprendre la consigne de fidélité ?*
 
 Le tableau ci-dessus en est la réponse. Il a été obtenu en faisant passer chaque phrase par le vrai vérificateur, et non en raisonnant sur le code : c'est la seule façon d'être sûr de ce qu'il fait.
 
@@ -350,7 +350,7 @@ Pour les comparaisons, nous pariions tous deux qu'il n'y aurait pas d'écart net
 
 ### La question posée pendant la séance
 
-> « Donne-moi tes paris, moi je n'ai pas d'autres idées, malheureusement (j'apprends). »
+*Comment parier avec une simple intuition, et peut-on s'aider des paris d'un autre ?*
 
 Trois réponses. D'abord, « par intuition » est une raison honnête, bien meilleure qu'une raison inventée après coup : elle sera confrontée au résultat comme les autres. Ensuite, on ne retouche pas ses chiffres après avoir lu ceux d'un autre : c'est l'écart entre son intuition et le résultat qui apprend quelque chose. Enfin, un pari préenregistré ne doit permettre qu'une lecture. Mes trois derniers paris étaient écrits « 4 », « 0 » et « 20 » : quatre réponses avec un chiffre inventé en `outil`, aucun écart avec l'anglais, vingt réponses sur vingt menées au bout. Nous les avons réécrits avec leur unité.
 
@@ -548,7 +548,7 @@ Les décisions n'ont demandé aucune délibération : la règle les donnait. Le 
 
 ### La question posée pendant la séance
 
-> « Dis-moi quand on pousse, car mon service peut disparaître. »
+*À quel moment pousser le travail sur GitHub, quand le service peut disparaître ?*
 
 La réponse : maintenant, puis après chaque commit. La première fois, `git push -u origin jour-3` crée la branche sur GitHub et la relie à la branche locale (`-u` pour *upstream*) ; ensuite, `git push` suffit. Pousser une branche ne fusionne rien : la pull request viendrait à la clôture. Les fichiers de la partie B, pas encore commités, restaient dans le paquet `jour3.zip`, à récupérer sans écraser les commits si le service disparaissait.
 
@@ -1130,9 +1130,9 @@ graph TD;
 
 ### La question posée pendant la séance
 
-> « Je comprends pas cette partie […] : que dois-je faire ? »
+*Comment remplir, pour chaque nœud, le modèle proposé dans le journal ?*
 
-La question portait sur le modèle à remplir dans le journal, avec `verifier` comme exemple. La réponse a d'abord donné la méthode : les `etat["…"]` pour ce qu'il lit, les clés du `return` pour ce qu'il écrit, et l'ascenseur contre la facture pour l'idempotence. Puis nous avons fait `rediger` ensemble, en annotant chaque ligne :
+Le modèle à remplir prenait `verifier` comme exemple. La réponse a d'abord donné la méthode : les `etat["…"]` pour ce qu'il lit, les clés du `return` pour ce qu'il écrit, et l'ascenseur contre la facture pour l'idempotence. Puis nous avons fait `rediger` ensemble, en annotant chaque ligne :
 
 ```python
 def rediger(etat):
@@ -1265,11 +1265,11 @@ Les chiffres n'ont pas bougé, et le code n'a toujours rien trouvé à redire. I
 
 ### Les questions posées pendant la séance
 
-> « Je trouve pas essai.md. » Puis : « Je trouve pas /tmp/graphe/sorties/. »
+*Où trouver la sortie de l'essai, invisible dans l'explorateur de VS Code ?*
 
 L'explorateur de VS Code ne montre que l'espace de travail, `~/work`. `/tmp` est un dossier du système, en dehors. Deux façons de le voir quand même : dans le terminal, `ls -l /tmp/graphe/sorties/` et `cat /tmp/graphe/sorties/essai.md` ; dans VS Code, la palette de commandes (Ctrl+Maj+P), « File: Open File… », puis le chemin. Le contenu était d'ailleurs déjà affiché dans le terminal, sous « Texte validé écrit dans… ». Pour le vrai serveur, la sortie va dans `sorties/`, visible dans l'explorateur.
 
-> « Je valide ? »
+*Peut-on valider dès que le code ne signale aucune anomalie ?*
 
 La question accompagnait la sortie d'`etat` et d'`historique` : `tours 1 ; anomalies 0`. La réponse : pas encore, on ne valide jamais sans lire. `etat` ne montre qu'un résumé, et le code ne vérifie ni le sens des phrases, ni la réponse à la question. Il fallait d'abord afficher le texte, puis le relire avec trois questions :
 
