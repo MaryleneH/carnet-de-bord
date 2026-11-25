@@ -7,6 +7,8 @@ project:
     - seances/*.qmd
     - cours/*.qmd
     - cours/*.md
+    - notions/*.qmd
+    - notions/*.md
     - methode.qmd
     - veille/index.qmd
   pre-render: R/date_maj.R
@@ -19,7 +21,7 @@ lang: fr
 
 website:
   title: "Carnet de bord"
-  description: "Carnet de bord du laboratoire d'agent d'études statistiques : séances, planning, cours et méthode."
+  description: "Carnet de bord du laboratoire d'agent d'études statistiques : séances, planning, cours, notions et méthode."
   site-url: "https://maryleneh.github.io/carnet-de-bord/"
   search: false
   # un escalier qui monte vers un jalon, comme celui du tableau de bord
@@ -32,6 +34,12 @@ website:
       title: "Cours"
       contents:
         - auto: "cours"
+    # Barre latérale des notions : le sommaire (notions/index.qmd), puis chaque
+    # cours du dossier notions/, ajouté seul dès que son fichier existe.
+    - id: notions
+      title: "Notions"
+      contents:
+        - auto: "notions"
   navbar:
     # toujours dépliée : sur téléphone, les rubriques passent à la ligne
     collapse: false
@@ -42,6 +50,8 @@ website:
         href: seances/index.qmd
       - text: Cours
         href: cours/index.qmd
+      - text: Notions
+        href: notions/index.qmd
       - text: Méthode
         href: methode.qmd
       - text: Veille

@@ -1329,6 +1329,19 @@ h3.veille-titre a:hover::after { color: var(--c-titre); transform: translate(2px
   .veille-filtre-nom { flex: none; white-space: nowrap; }
 }
 
+// ── Notions ────────────────────────────────────────────────────────────────
+
+// Le texte garde une largeur de lecture ; les cartes prennent toute la page.
+.notions-intro { max-width: 44rem; margin-bottom: 1.75rem; }
+.notions-intro > :last-child { margin-bottom: 0; }
+.notions-vide {
+  max-width: 44rem;
+  padding: 1.35rem 1.6rem;
+  background-color: var(--c-fond-doux);
+  border-radius: $rayon-moyen;
+}
+.notions-vide > :last-child { margin-bottom: 0; }
+
 // ── Écrans moyens et téléphone ─────────────────────────────────────────────
 
 @media (max-width: 991.98px) {

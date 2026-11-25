@@ -7,6 +7,8 @@ source(if (file.exists("R/valider.R")) "R/valider.R" else "../../R/valider.R", e
 source(if (file.exists("R/calculs.R")) "R/calculs.R" else "../../R/calculs.R", encoding = "UTF-8")
 # la veille : sa page, et ses derniers liens sur le tableau de bord
 source(if (file.exists("R/veille.R")) "R/veille.R" else "../../R/veille.R", encoding = "UTF-8")
+# les notions : la page qui liste leurs cours
+source(if (file.exists("R/notions.R")) "R/notions.R" else "../../R/notions.R", encoding = "UTF-8")
 
 URL_DEPOT <- "https://github.com/MaryleneH/carnet-de-bord/blob/main/"
 
