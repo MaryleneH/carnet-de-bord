@@ -1468,22 +1468,6 @@ Les deux contrôles ont donné le résultat attendu. Le `README.md` a reçu la d
 
 **Une étiquette annotée est un objet.** `git ls-remote --tags origin` a affiché deux lignes pour `jour-3` : `97148df…`, l'objet étiquette lui-même, avec son auteur, sa date et son message ; puis `jour-3^{}`, `19446e4…`, le commit qu'il désigne. Le suffixe `^{}` « épluche » l'étiquette jusqu'au commit.
 
-### La question posée pendant la séance
-
-> « Comment j'ouvre la PR ? J'ai pas envie de me tromper. »
-
-La réponse a pris la forme d'une fiche en sept étapes :
-
-1. ouvrir la page de comparaison, et vérifier le sens : « base: main ← compare: jour-3 », avec « Able to merge » en vert ;
-2. cliquer sur « Create pull request » ;
-3. remplir le titre et la description, puis valider par « Create pull request », et non « Create draft pull request » ;
-4. vérifier le mode de fusion : « Create a merge commit » ;
-5. fusionner : « Merge pull request », puis « Confirm merge » ;
-6. ignorer « Delete branch », pour garder la branche comme au jour 2 ;
-7. poser l'étiquette depuis le terminal.
-
-Rien n'est irréversible tant que la fusion n'est pas confirmée : en cas de doute, une capture d'écran avant de cliquer.
-
 ### Ce que nous avons observé
 
 Onze commits sur la branche `jour-3`, puis le commit de fusion `19446e4`, qui a bien deux parents. Leur liste, avec leurs messages, est à l'annexe C.
