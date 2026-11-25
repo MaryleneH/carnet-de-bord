@@ -49,36 +49,6 @@ seances:
       suite: >-
         Le banc de fiabilité : chiffrer les faiblesses du modèle, avec des taux et
         leur intervalle de Wilson. Critère de fin : l'`ADR-001` est écrit.
-    # Annexe B du cours
-    incidents:
-      - incident: Erreur `404` sur l'adresse de base du serveur
-        cause: Une adresse de base n'est pas un point d'arrivée
-        correction: Appeler `/api/models` ou `/api/chat/completions`
-        chapitre: 2
-      - incident: Formulaire d'accès à Albert introuvable
-        cause: Remplacé par une connexion ProConnect
-        correction: Passer par le Playground d'Albert ; formulaire DataPass en cas de refus
-        chapitre: 2
-      - incident: Approximation de {approximation-initiale} caractères par token trop basse
-        cause: Règle empirique valable pour l'anglais
-        correction: "Mesure sur notre texte : {caracteres-par-token} caractères par token"
-        chapitre: 3
-      - incident: Vérification du rejeu sans effet
-        cause: "`git diff` ignore un fichier non suivi"
-        correction: Commiter d'abord, rejouer ensuite, comparer enfin
-        chapitre: 5
-      - incident: Version de `llm.py` commitée en retard
-        cause: Le dépôt contient la première version ({lignes-llm-v1} lignes)
-        correction: Commiter la version avec embeddings et durées
-        chapitre: 5
-      - incident: "`ModuleNotFoundError: No module named 'llm'`"
-        cause: Fichier nommé `LLM.py` ; la casse compte sous Linux
-        correction: Noms de modules en minuscules
-        chapitre: 14
-      - incident: Fichiers écrits hors du dépôt
-        cause: Chemins relatifs au dossier de lancement
-        correction: Chemins ancrés sur le dossier du script
-        chapitre: 14
     # Annexe C du cours
     commits:
       - hash: a124409

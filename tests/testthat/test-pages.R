@@ -130,7 +130,15 @@ test_that("les résultats de la séance citent leur source dans le cours", {
   d <- charger(dossier_data)
   rendu <- page_seance(d, "labo-01")
   expect_match(rendu, "(/cours/seance-01-cours.md#annexe-a)", fixed = TRUE)
-  expect_match(rendu, "(/cours/seance-01-cours.md#annexe-b)", fixed = TRUE)
+})
+
+test_that("une page de séance ne montre plus les incidents", {
+  d <- charger(dossier_data)
+  for (s in seances_faites(d)) {
+    rendu <- page_seance(d, s$id)
+    expect_false(grepl("Incidents et corrections", rendu, fixed = TRUE), info = s$id)
+    expect_false(grepl("annexe-b", rendu, fixed = TRUE), info = s$id)
+  }
 })
 
 test_that("le plan et l'avancement du cours viennent des données", {

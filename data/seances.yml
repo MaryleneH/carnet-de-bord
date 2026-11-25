@@ -49,36 +49,6 @@ seances:
       suite: >-
         Le banc de fiabilité : chiffrer les faiblesses du modèle, avec des taux et
         leur intervalle de Wilson. Critère de fin : l'`ADR-001` est écrit.
-    # Annexe B du cours
-    incidents:
-      - incident: Erreur `404` sur l'adresse de base du serveur
-        cause: Une adresse de base n'est pas un point d'arrivée
-        correction: Appeler `/api/models` ou `/api/chat/completions`
-        chapitre: 2
-      - incident: Formulaire d'accès à Albert introuvable
-        cause: Remplacé par une connexion ProConnect
-        correction: Passer par le Playground d'Albert ; formulaire DataPass en cas de refus
-        chapitre: 2
-      - incident: Approximation de {approximation-initiale} caractères par token trop basse
-        cause: Règle empirique valable pour l'anglais
-        correction: "Mesure sur notre texte : {caracteres-par-token} caractères par token"
-        chapitre: 3
-      - incident: Vérification du rejeu sans effet
-        cause: "`git diff` ignore un fichier non suivi"
-        correction: Commiter d'abord, rejouer ensuite, comparer enfin
-        chapitre: 5
-      - incident: Version de `llm.py` commitée en retard
-        cause: Le dépôt contient la première version ({lignes-llm-v1} lignes)
-        correction: Commiter la version avec embeddings et durées
-        chapitre: 5
-      - incident: "`ModuleNotFoundError: No module named 'llm'`"
-        cause: Fichier nommé `LLM.py` ; la casse compte sous Linux
-        correction: Noms de modules en minuscules
-        chapitre: 14
-      - incident: Fichiers écrits hors du dépôt
-        cause: Chemins relatifs au dossier de lancement
-        correction: Chemins ancrés sur le dossier du script
-        chapitre: 14
     # Annexe C du cours
     commits:
       - hash: a124409
@@ -156,52 +126,6 @@ seances:
         consignes de rédaction d'une publication, vérifiables par le code,
         préenregistrées et mesurées avec un plafond de tokens suffisant. Elle
         aborde ensuite le graphe d'états de LangGraph.
-    # Annexe B du cours
-    incidents:
-      - incident: Variables d'environnement absentes
-        cause: Service fermé ; variables saisies à la main à la séance précédente
-        correction: "Bloc de rechargement : adresse relue dans `mesures/capacites.json`, clé saisie par `read -rsp` ; à terme, un secret Onyxia"
-        chapitre: 3
-      - incident: "`LLM_CLE: parameter null or not set` au contrôle de la clé"
-        cause: Commande lancée dans un autre terminal
-        correction: Recharger la clé seule sur sa ligne, puis contrôler
-        chapitre: 3
-      - incident: Confusion sur les paris
-        cause: Paris demandés avant la présentation des cas
-        correction: "Présenter chaque cas, puis faire parier ; exemple du taux de réponse d'une enquête"
-        chapitre: 4
-      - incident: Toutes les réponses `termine_par` en échec
-        cause: "Plafond de {plafond-tokens-consignes} tokens : réponses coupées"
-        correction: Écart au plan déclaré, seconde lecture sur les seules réponses terminées, plafond réglable à venir
-        chapitre: 6
-      - incident: Bloc de l'écart exécuté deux fois
-        cause: Double collage dans le terminal
-        correction: L'`assert` du script a empêché le doublon
-        chapitre: 6
-      - incident: Mesures commitées sous un message inexact (`2e91e81`)
-        cause: Fichiers déjà préparés quand le bloc de commit a été relancé
-        correction: "Signalé dans le journal ; historique non réécrit"
-        chapitre: 6
-      - incident: Contrôle de la clé sans valeur probante
-        cause: Différence préparée vide, tout étant déjà commité
-        correction: "Contrôle refait sur tout l'historique : aucune occurrence"
-        chapitre: 6
-      - incident: Confusion sur l'emplacement des résultats
-        cause: Programme qui séparait « comprendre » et « lire »
-        correction: "Un cas à la fois : lire sa section du rapport, interpréter, confronter aux paris"
-        chapitre: 6
-      - incident: Cas des consignes peu valide pour l'agent
-        cause: Consignes génériques, rien de spécifique à une publication EcoDef
-        correction: Cas « consignes EcoDef » au début de la prochaine séance
-        chapitre: 9
-      - incident: Modèle d'embeddings de la séance précédente mal noté dans le journal
-        cause: "`gemma4-26b-moe` écrit au lieu de `qwen3-embedding-8b`"
-        correction: Corrigé d'après `mesures/limites.json`
-        chapitre: 13
-      - incident: Conséquence de l'`ADR-001` contredisant la décision sur le budget de contexte
-        cause: Brouillon rédigé pour {budget-contexte-regle} tokens
-        correction: Phrase mise en cohérence avant la fusion
-        chapitre: 14
     # Annexe C du cours. Messages repris des commits, selon la règle du carnet :
     # un numéro s'écrit après « n° », un identifiant qui contient des chiffres en `code`.
     commits:
@@ -315,68 +239,6 @@ seances:
         La prochaine séance pose le cœur de la garantie sans modèle : un
         registre de faits produit par du code, puis le rendu, où le code écrit
         lui-même les chiffres à partir des identifiants que cite le modèle.
-    # Annexe B du cours
-    incidents:
-      - incident: L'étiquette `jour-2` manquait sur GitHub
-        cause: "`git push` n'envoie pas les étiquettes"
-        correction: Étiquette posée, puis poussée explicitement
-        chapitre: 1
-      - incident: Premières lignes du journal décrivant le code souhaité, pas le code réel
-        cause: "Un arrondi et « milliards d'euros » supposés acceptés par la vérification"
-        correction: "Chaque consigne essayée sur des phrases choisies, avec le vrai vérificateur ; une règle se discute avant le préenregistrement"
-        chapitre: 2
-      - incident: Deux erreurs du programme sur la fiche de faits
-        cause: "Un écart d'arrondi pris pour un autre champ (`F10`) ; le mauvais fait soupçonné (`F15` au lieu de `F11`)"
-        correction: "Arithmétique d'intervalles et lecture des figures de la publication ; `F11` à `F14` précisés « privées »"
-        chapitre: 3
-      - incident: Paris écrits sans unité
-        cause: Des nombres seuls, lisibles de plusieurs façons
-        correction: Chaque pari réécrit avec son unité, avant le commit du plan
-        chapitre: 4
-      - incident: "`no changes added to commit`"
-        cause: Bloc de commit relancé, fichiers déjà commités au premier passage
-        correction: "Rien à faire ; `git log` le confirme"
-        chapitre: 5
-      - incident: Port du faux serveur déjà occupé
-        cause: Le faux serveur de la veille était resté allumé
-        correction: "`pgrep -af faux_serveur`, puis `pkill -f faux_serveur`"
-        chapitre: 11
-      - incident: Commande lancée hors du dépôt
-        cause: "Un `cd ..` de trop"
-        correction: "`cd ~/work/assistant-etude-sourcee`"
-        chapitre: 11
-      - incident: Sortie de l'essai introuvable dans l'explorateur
-        cause: "`/tmp` est hors de l'espace de travail de VS Code"
-        correction: "`ls` et `cat`, ou « File: Open File… »"
-        chapitre: 11
-      - incident: Chemin du journal faux dans la sortie de l'essai
-        cause: "Chemin écrit en dur dans la fonction `exporter`"
-        correction: "Correctif `10f7c4c`, les cinq tests du graphe toujours verts"
-        chapitre: 11
-      - incident: Fil déjà existant au lancement
-        cause: Le fil avait été lancé plus tôt
-        correction: "`etat` et `historique`, puis `decider` ; `lancer` refuse d'écraser un fil"
-        chapitre: 11
-      - incident: "Question « je valide ? » posée sur un simple résumé"
-        cause: "`etat` ne montre pas le texte, et le code ne juge pas le sens"
-        correction: Afficher le texte, puis le relire avec trois questions avant de décider
-        chapitre: 11
-      - incident: Texte de `Q2` faux, sans anomalie pour le code
-        cause: "Le modèle a fusionné deux faits de champs différents (`F11` et `F15`)"
-        correction: Remarque humaine nommant les deux défauts, suivie en un tour
-        chapitre: 12
-      - incident: Explication incomplète de la reprise
-        cause: "« ne relance pas le tour » : en fait, le nœud est relancé, mais l'appel au modèle n'est pas refait"
-        correction: Mécanisme en trois temps ajouté au journal
-        chapitre: 12
-      - incident: Étiquette `jour-3` refusée au premier envoi
-        cause: Une branche et une étiquette de même nom
-        correction: "`git push origin tag jour-3`"
-        chapitre: 13
-      - incident: Dessin du graphe illisible sur GitHub
-        cause: "Codes invisibles du terminal de VS Code, capturés par une redirection de groupe"
-        correction: Correctif d'une ligne au début de la séance suivante
-        chapitre: 10
     # Annexe C du cours. Messages repris des commits, selon la règle du carnet :
     # un numéro s'écrit après « n° », un identifiant qui contient des chiffres en `code`.
     commits:

@@ -40,7 +40,6 @@ chiffre_hors_registre <- function(texte) {
 textes_libres <- function(s) {
   c(
     s$titre, s$sous_titre, s$objectif, unlist(s$livrables),
-    unlist(lapply(s$incidents, function(i) c(i$incident, i$cause, i$correction))),
     vapply(s$commits, function(co) ou_sinon(co$message, ""), character(1)),
     unlist(s$a_cocher),
     unlist(lapply(s$points_en_attente, function(p) c(p$intitule, p$detail))),
@@ -141,9 +140,9 @@ valider_seances <- function(seances, mesures) {
     if (!is.null(s$duree) && !identical(unites[[s$duree]], "h")) {
       arreter_regle(f, ou, "durée : la mesure citée doit être en heures (h)")
     }
-    for (i in s$incidents) {
-      if (!est_entier(i$chapitre)) arreter_regle(f, ou, "incident sans chapitre du cours")
-    }
+    # Les incidents restent dans l'annexe B du cours : le carnet ne les affiche plus.
+    # Un champ resté dans les données ne serait ni affiché ni contrôlé.
+    if (!is.null(s$incidents)) arreter_regle(f, ou, "champ incidents : le carnet ne l'affiche plus")
     for (p in s$points_en_attente) {
       if (!(identical(length(p$statut), 1L) && p$statut %in% STATUTS_POINTS)) {
         arreter_regle(f, ou, "point en attente : statut hors liste autorisée")
