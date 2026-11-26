@@ -28,6 +28,14 @@ themes:
       Ce qu'un modèle garde sous les yeux, et comment il s'en sert : contexte
       long, sorties d'outils, compression, mémoire.
 
+  - id: architecture-agents
+    titre: Architecture des agents
+    couleur: violet
+    description: >-
+      Ce qui entoure le modèle et fait un agent fiable : le « harness »
+      (boucle, outils, contexte, état, accords, évaluation) et la plateforme
+      qui le porte.
+
   - id: agents-de-codage
     titre: Agents de codage
     couleur: orange
@@ -385,3 +393,43 @@ liens:
       humaine d'un graphe d'états, mais porté par le protocole. L'intérêt est
       dans le protocole, ouvert, plus que dans le produit.
     mots_cles: [MCP, skills, tâches longues, validation humaine, contexte, Anthropic, Claude]
+
+  - url: https://moderndata101.substack.com/p/the-latent-harness-model
+    titre: "Latent Harness Model : la plateforme de données est déjà un harness d'agent, à l'état latent"
+    theme: architecture-agents
+    type: article
+    langue: en
+    ajoute_le: 2026-11-26
+    resume: >-
+      Article d'Animesh Kumar dans la lettre Modern Data 101. Un agent, c'est
+      un modèle plus un « harness », tout ce qui l'entoure. L'auteur reprend
+      de Meng et al. (2026) ses six fonctions : la boucle d'exécution, le
+      registre d'outils, le gestionnaire de contexte, le stockage de l'état,
+      les crochets de cycle de vie (authentification, accord, règles) et
+      l'interface d'évaluation. Sa thèse : une plateforme de données mûre
+      contient déjà un précurseur de chacune, conçu pour des humains et
+      dispersé entre des outils, d'où « latent ». Le modèle note chaque
+      fonction de 0 (absente) à 3 (appliquée à chaque action de l'agent) et
+      ajoute une septième note, la liaison : une seule identité, un seul
+      contexte, une seule décision d'autorisation et une seule trace par
+      action. La note d'ensemble est la plus basse des sept, pas leur
+      moyenne. La conversion suit trois phases : le sens (contexte et
+      outils), la permission (cycle de vie et évaluation), puis le mouvement
+      (état et exécution). Texte de position : la lettre est liée à un
+      éditeur de plateforme de données, l'enquête citée vient de lui
+      (résultats provisoires, corrélations seulement, l'auteur le dit), et la
+      conclusion plaide pour une plateforme unifiée.
+    pourquoi: >-
+      Pour le vocabulaire d'abord. Les six fonctions donnent une grille pour
+      décrire ce qui entoure un modèle, et je les retrouve dans l'assistant
+      du laboratoire : la boucle bornée du graphe, l'état sauvegardé à chaque
+      étape, la pause pour la décision humaine, la fiche de faits qui tient
+      lieu de contexte, le banc et le journal des appels pour l'évaluation.
+      Pour deux idées ensuite. La note d'ensemble est un minimum, pas une
+      moyenne : une moyenne laisserait un point fort cacher un maillon faible,
+      et une garantie ne vaut que par ce maillon. Et l'ordre « sens,
+      permission, mouvement » : un agent qui agit avant de comprendre, ou
+      avant de pouvoir être arrêté, change un problème de qualité des données
+      en incident. À lire avec recul : c'est un cadre proposé, que l'auteur
+      dit lui-même réfutable, pas un résultat mesuré.
+    mots_cles: [harness, agents, plateforme de données, couche de contexte, gouvernance, produits de données, MCP]
