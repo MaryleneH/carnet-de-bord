@@ -83,6 +83,16 @@ test_that("la rubrique publiée est valide et sa page se construit", {
   page <- page_notions(d)
   expect_match(page, "par notion", fixed = TRUE)
   expect_false(grepl("intern", page, ignore.case = TRUE))
-  # aucun nombre n'est écrit à la main dans le texte de la page
-  expect_false(grepl("[0-9]", gsub("\\[[0-9]+ notions?\\]|Ajouté le [^]]*|\\(/notions/[^)]*\\)", "", page)))
+  # une carte par cours du dossier, et une seule
+  cours <- setdiff(list.files(file.path(racine, "notions"), "\\.(md|qmd)$"), "index.qmd")
+  expect_identical(lengths(regmatches(page, gregexpr("{.carte .carte-notion}", page, fixed = TRUE))), length(cours))
+  for (f in cours) expect_match(page, paste0("](/notions/", f, ")"), fixed = TRUE, info = f)
+})
+
+test_that("aucun nombre n'est écrit à la main dans le texte de la rubrique", {
+  # Le texte fixe de la page n'en contient pas : le titre d'un cours, lui, est libre.
+  expect_false(grepl("[0-9]", page_notions(list(notions = list()))))
+  avec <- page_notions(list(notions = list(list(fichier = "top-p.md", titre = "Top-p à 0,9", resume = NULL, date = "2026-11-26"))))
+  sans_carte <- sub("(?s)::: \\{\\.carte \\.carte-notion\\}.*?\n:::\n", "", avec, perl = TRUE)
+  expect_false(grepl("[0-9]", sub("\\[[0-9]+ notions?\\]", "", sans_carte)))
 })
