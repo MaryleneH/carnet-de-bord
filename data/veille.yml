@@ -433,3 +433,44 @@ liens:
       en incident. À lire avec recul : c'est un cadre proposé, que l'auteur
       dit lui-même réfutable, pas un résultat mesuré.
     mots_cles: [harness, agents, plateforme de données, couche de contexte, gouvernance, produits de données, MCP]
+
+  - url: https://modaic.dev/blog/latency-doesnt-lie
+    titre: "Latency doesn't lie : retrouver le modèle caché derrière une API, à sa seule vitesse"
+    theme: evaluation
+    type: article
+    langue: en
+    ajoute_le: 2026-11-27
+    resume: >-
+      Billet de recherche de Modaic (Tyrin-Ian Todd et Farouk Adeleke). Jev
+      est un modèle de jugement, dit « System One » : il rend des jugements
+      calibrés au lieu de rédiger du texte. Son éditeur, TypeSafe, ne dit pas
+      sur quel modèle ouvert il repose, et son API ne donne pas le vrai nombre
+      de tokens lus. Les auteurs remontent la piste par le comportement. Les
+      temps de réponse restent serrés quand l'entrée s'allonge, ce qui évoque
+      un mélange d'experts (MoE), où chaque token ne traverse qu'une petite
+      partie des « experts » de chaque couche. Interrogé de 22 façons sur son
+      identité, Jev écarte nettement DeepSeek et Gemma, et penche vers Qwen.
+      Puis l'idée centrale : sur 9 984 requêtes, le nombre de tokens compté
+      avec le tokenizer de Qwen prédit mieux le temps de réponse que le nombre
+      annoncé par l'API. Deux modèles d'origine connue servent de témoins :
+      chacun suit le mieux son propre tokenizer, donc la méthode tient. Qwen
+      et Gemma font pourtant presque jeu égal à ce test ; c'est
+      l'auto-identification qui écarte Gemma. Enfin le débit de lecture colle
+      à celui d'un MoE Qwen3.5-35B-A3B, et exclut un modèle dense de
+      27 milliards de paramètres. La conclusion reste un « probablement » :
+      matériel inconnu, latence qui inclut le réseau, et un successeur de même
+      architecture impossible à départager. Les auteurs développent des
+      modèles concurrents.
+    pourquoi: >-
+      Pour la méthode, qui est celle d'une bonne étude : plusieurs indices
+      indépendants, de force inégale et dite comme telle ; des témoins
+      d'origine connue pour valider l'instrument avant de s'en servir ; des
+      corrélations de rang avec leurs intervalles ; des limites écrites. Pour
+      l'idée qu'un chiffre déclaré par une API, ici un nombre de tokens, se
+      vérifie par une mesure : c'est l'esprit de la première séance du
+      laboratoire, mesurer ce que le serveur fait réellement. Et parce que le
+      modèle que mesure le banc du laboratoire, `gemma4-26b-moe`, est lui
+      aussi un mélange d'experts : ces modèles lisent vite de longues entrées,
+      ce qui compte pour un assistant dont les requêtes sont surtout du
+      contexte à lire.
+    mots_cles: [identification de modèle, latence, tokenizer, mélange d'experts, MoE, Qwen, Gemma, débit, corrélation de Spearman]
